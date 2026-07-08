@@ -25,6 +25,7 @@ local plugins = {
   'undotree',
   'fugitive',
   'vim-tmux-navigator',
+  'markdown-preview',
 }
 
 for _, name in ipairs(plugins) do

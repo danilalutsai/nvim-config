@@ -48,20 +48,17 @@ do
   -- clear search highlights when pressing <esc>
   vim.keymap.set('n', '<esc>', '<cmd>nohlsearch<cr>')
 
-
   -- indent/outdent in visual mode
   vim.keymap.set('v', '<tab>', '>gv')
   vim.keymap.set('v', '<s-tab>', '<gv')
   vim.keymap.set('n', '<tab>', '>>')
   vim.keymap.set('n', '<s-tab>', '<<')
 
-
   -- Move current line or selected text
   vim.keymap.set('n', '<C-S-j>', '<cmd>move .+1<CR>==', { desc = 'Move line down' })
   vim.keymap.set('n', '<C-S-k>', '<cmd>move .-2<CR>==', { desc = 'Move line up' })
   vim.keymap.set('x', '<C-S-j>', ":move '>+1<CR>gv=gv", { desc = 'Move selection down' })
   vim.keymap.set('x', '<C-S-k>', ":move '<-2<CR>gv=gv", { desc = 'Move selection up' })
-
 
   local function get_visual_selection()
     local start_pos = vim.fn.getpos("'<")

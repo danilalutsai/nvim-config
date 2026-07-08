@@ -33,8 +33,10 @@ oil.setup({
     ["<Tab>"] = "actions.select",
     ["<S-Tab>"] = "actions.parent",
 
-    ["v"] = "actions.select_vsplit",
-    ["V"] = "actions.select_split",
+    ["<C-v>"] = "actions.select_vsplit",
+    ["<C-s>"] = "actions.select_split",
+    ["v"] = false,
+    ["V"] = false,
 
     ["<C-p>"] = "actions.preview",
     ["<C-h>"] = "<cmd><C-U>TmuxNavigateLeft<cr>",
