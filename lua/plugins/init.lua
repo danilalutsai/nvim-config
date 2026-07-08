@@ -1,9 +1,9 @@
 local plugins = {
-  'guess-indent',
+  -- 'guess-indent',
   'gitsigns',
   -- 'which-key',
   'catppuccin',
-  'onedark',
+  'tokyonight',
   'mini',
   'plenary',
   'telescope-ui-select',
@@ -24,11 +24,12 @@ local plugins = {
   'nvim-treesitter-textobjects',
   'undotree',
   'fugitive',
+  'vim-tmux-navigator',
 }
 
 for _, name in ipairs(plugins) do
-  local ok, err = pcall(require, 'plugins.' .. name)
-  if not ok then
-    vim.notify(('Failed to load plugin %s: %s'):format(name, err), vim.log.levels.ERROR)
-  end
+	local ok, err = pcall(require, "plugins." .. name)
+	if not ok then
+		vim.notify(("Failed to load plugin %s: %s"):format(name, err), vim.log.levels.ERROR)
+	end
 end

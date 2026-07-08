@@ -4,49 +4,49 @@ vim.pack.add { gh 'navarasu/onedark.nvim' }
 
 require('onedark').setup {
   style = 'warm',
+  code_style = {
+    comments = 'none',
+    functions = 'none',
+    variables = 'none',
+    keywords = 'none',
+    strings = 'none',
+  }
 }
 
 vim.cmd.colorscheme 'onedark'
 
-vim.api.nvim_set_hl(0, 'MatchParen', { fg = '#e06c75', bold = true })
-vim.api.nvim_create_autocmd('ColorScheme', {
-  callback = function()
-    vim.api.nvim_set_hl(0, 'MatchParen', { fg = '#e06c75', bold = true })
-  end,
-})
+local function apply_custom_highlights()
+  vim.api.nvim_set_hl(0, 'MatchParen', { fg = '#f7ff5c', bold = true })
+  vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#f7ff5c' })
+  vim.api.nvim_set_hl(0, 'FoldColumn', { fg = '#f7ff5c', bg = 'none' })
+  vim.api.nvim_set_hl(0, 'Folded', { fg = '#abb2bf', bg = '#343a46' })
 
--- Disable italics and bold in all current highlight groups
-local function disable_italic_and_bold()
-  for _, group in ipairs(vim.fn.getcompletion("", "highlight")) do
-    local ok, hl = pcall(vim.api.nvim_get_hl, 0, {
-      name = group,
-      link = false,
+  for _, group in ipairs { 'Visual', 'VisualNOS' } do
+    vim.api.nvim_set_hl(0, group, {
+      bg = '#55452f',
+      fg = 'none',
     })
+  end
+end
 
-    if ok and hl then
-      hl.italic = false
-      hl.bold = false
-      hl.cterm = nil
+local function remove_bold_except_matchparen()
+  for _, group in ipairs(vim.fn.getcompletion('', 'highlight')) do
+    if group ~= 'MatchParen' then
+      local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group, link = false })
+      if ok and next(hl) ~= nil and hl.bold then
+        hl.bold = false
+        vim.api.nvim_set_hl(0, group, hl)
+      end
     end
   end
 end
 
-disable_italic_and_bold()
+apply_custom_highlights()
+remove_bold_except_matchparen()
 
--- Re-apply after any colorscheme or plugin changes highlight groups
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("DisableItalicAndBold", { clear = true }),
+vim.api.nvim_create_autocmd('ColorScheme', {
   callback = function()
-    vim.schedule(disable_italic_and_bold)
+    apply_custom_highlights()
+    remove_bold_except_matchparen()
   end,
-})
-
-vim.api.nvim_set_hl(0, "Visual", {
-  bg = "#6c7086",
-  fg = "#cdd6f4",
-})
-
-vim.api.nvim_set_hl(0, "VisualNOS", {
-  bg = "#585b70",
-  fg = "#cdd6f4",
 })
