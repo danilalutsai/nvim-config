@@ -1,17 +1,34 @@
-do
-vim.loader.enable()
+  do
+  vim.loader.enable()
 
-  vim.g.netrw_bufsettings = "noma nomod nu nobl nowrap ro"
+    vim.g.netrw_bufsettings = "noma nomod nu nobl nowrap ro"
 
-  vim.g.mapleader = " "
-  vim.g.maplocalleader = " "
+    vim.g.mapleader = " "
+    vim.g.maplocalleader = " "
 
-  vim.g.have_nerd_font = false
+    vim.g.have_nerd_font = false
 
   vim.o.number = true
   vim.o.relativenumber = true
   vim.o.numberwidth = 4
   vim.o.statuscolumn = ' %{v:virtnum == 0 ? (v:relnum == 0 ? v:lnum : " ") : ""}%=%{v:virtnum == 0 && v:relnum != 0 ? v:relnum : ""} '
+
+  local function clear_special_buffer_columns()
+    local filetype = vim.bo.filetype:lower()
+
+    if vim.bo.buftype == "help" or filetype == "help" or filetype:find("^fugitive") then
+      vim.opt_local.number = false
+      vim.opt_local.relativenumber = false
+      vim.opt_local.statuscolumn = ""
+    end
+  end
+
+  vim.api.nvim_create_autocmd({ "FileType", "BufWinEnter", "WinEnter" }, {
+    group = vim.api.nvim_create_augroup("SpecialBufferColumns", { clear = true }),
+    callback = function()
+      vim.schedule(clear_special_buffer_columns)
+    end,
+  })
 
   vim.o.textwidth = 80
 
