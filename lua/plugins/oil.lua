@@ -2,6 +2,7 @@ local gh = require "gh"
 
 vim.pack.add {
   gh "stevearc/oil.nvim",
+  gh "nvim-mini/mini.icons",
 }
 
 local oil = require "oil"
@@ -18,6 +19,9 @@ oil.setup({
   },
 
   win_options = {
+    number = false,
+    relativenumber = false,
+    statuscolumn = "",
     signcolumn = "no",
     list = false,
   },

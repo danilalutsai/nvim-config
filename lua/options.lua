@@ -6,7 +6,7 @@
     vim.g.mapleader = " "
     vim.g.maplocalleader = " "
 
-    vim.g.have_nerd_font = false
+    vim.g.have_nerd_font = true
 
   vim.o.number = true
   vim.o.relativenumber = true
@@ -15,8 +15,9 @@
 
   local function clear_special_buffer_columns()
     local filetype = vim.bo.filetype:lower()
+    local bufname = vim.api.nvim_buf_get_name(0):lower()
 
-    if vim.bo.buftype == "help" or filetype == "help" or filetype:find("^fugitive") then
+    if filetype == "oil" or ((vim.bo.buftype == "help" or filetype == "help") and bufname:find("fugitive", 1, true)) then
       vim.opt_local.number = false
       vim.opt_local.relativenumber = false
       vim.opt_local.statuscolumn = ""

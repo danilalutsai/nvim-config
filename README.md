@@ -27,6 +27,7 @@ nvim-treesitter-textobjects
 oil</br>
 onedark</br>
 plenary</br>
+surround</br>
 telescope-ui-select</br>
 telescope</br>
 tokyonight</br>
@@ -34,3 +35,5 @@ treesitter</br>
 undotree</br>
 vim-tmux-navigator</br>
 which-key</br>
+surround</br>
+mini-icons</br>

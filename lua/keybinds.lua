@@ -113,6 +113,11 @@ do
     expr = true,
     desc = 'Select to toggled line start',
   })
+  vim.keymap.set('o', '<S-l>', '$', { desc = 'To end of line' })
+  vim.keymap.set('o', '<S-h>', toggle_line_start_motion, {
+    expr = true,
+    desc = 'To toggled line start',
+  })
 
   -- Window commands
   vim.keymap.set('n', '<C-w>v', '<cmd>vnew<CR>', { desc = 'Open new vertical window' })

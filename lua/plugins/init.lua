@@ -5,6 +5,7 @@ local plugins = {
   'catppuccin',
   'tokyonight',
   'mini',
+  'surround',
   'plenary',
   'telescope-ui-select',
   'telescope',
