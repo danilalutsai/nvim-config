@@ -17,10 +17,10 @@
     local filetype = vim.bo.filetype:lower()
     local bufname = vim.api.nvim_buf_get_name(0):lower()
 
-    if filetype == "oil" or ((vim.bo.buftype == "help" or filetype == "help") and bufname:find("fugitive", 1, true)) then
+    if (vim.bo.buftype == "help" or filetype == "help") and bufname:find("fugitive", 1, true) then
       vim.opt_local.number = false
       vim.opt_local.relativenumber = false
-      vim.opt_local.statuscolumn = ""
+      vim.opt_local.statuscolumn = " "
     end
   end
 

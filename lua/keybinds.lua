@@ -101,6 +101,10 @@ do
     rename_matches('n')
   end, { desc = 'Rename word in buffer' })
 
+  vim.keymap.set('n', '<leader>rn', function()
+    rename_matches('n')
+  end, { desc = 'Rename search matches in buffer' })
+
   vim.keymap.set('x', '<C-r>n', function()
     rename_matches('x')
   end, { desc = 'Rename selection in buffer' })
@@ -123,12 +127,10 @@ do
   vim.keymap.set('n', '<C-w>v', '<cmd>vnew<CR>', { desc = 'Open new vertical window' })
   vim.keymap.set('n', '<C-w>s', '<cmd>new<CR>', { desc = 'Open new horizontal window' })
   vim.keymap.set('n', '<C-w>x', '<cmd>close<CR>', { desc = 'Close current window' })
-  vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-  vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-  vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-  vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
   vim.keymap.set('n', 'N', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
   vim.keymap.set('n', 'P', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
+  vim.keymap.set('n', '<C-n>', 'n', { desc = 'Next search result' })
+  vim.keymap.set('n', '<C-p>', 'N', { desc = 'Previous search result' })
   -- netrw: navigate with h/l (like Oil)
   vim.api.nvim_create_autocmd('FileType', {
     pattern = 'netrw',

@@ -199,6 +199,7 @@ require("mason-tool-installer").setup({
     "typescript-language-server",
     "html-lsp",
     "css-lsp",
+    "prettierd",
     "stylua",
     "lua-language-server",
   },

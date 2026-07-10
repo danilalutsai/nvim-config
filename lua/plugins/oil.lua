@@ -7,6 +7,12 @@ vim.pack.add {
 
 local oil = require "oil"
 
+local function tmux_navigate(command)
+  return function()
+    vim.cmd(command)
+  end
+end
+
 oil.setup({
   default_file_explorer = true,
 
@@ -19,9 +25,8 @@ oil.setup({
   },
 
   win_options = {
-    number = false,
+    number = true,
     relativenumber = false,
-    statuscolumn = "",
     signcolumn = "no",
     list = false,
   },
@@ -43,10 +48,11 @@ oil.setup({
     ["V"] = false,
 
     ["<C-p>"] = "actions.preview",
-    ["<C-h>"] = "<cmd><C-U>TmuxNavigateLeft<cr>",
-    ["<C-j>"] = "<cmd><C-U>TmuxNavigateDown<cr>",
-    ["<C-k>"] = "<cmd><C-U>TmuxNavigateUp<cr>",
-    ["<C-l>"] = "<cmd><C-U>TmuxNavigateRight<cr>",
+    ["<BS>"] = tmux_navigate("TmuxNavigateLeft"),
+    ["<C-h>"] = tmux_navigate("TmuxNavigateLeft"),
+    ["<C-j>"] = tmux_navigate("TmuxNavigateDown"),
+    ["<C-k>"] = tmux_navigate("TmuxNavigateUp"),
+    ["<C-l>"] = tmux_navigate("TmuxNavigateRight"),
     ["q"] = "actions.close",
   },
 })
