@@ -16,11 +16,11 @@ require('tokyonight').setup {
     colors.yellow = '#d9b27e'
     colors.red = '#d9868d'
     colors.magenta = '#b08ee8'
-    colors.purple = '#d18cc1'
+    colors.purple = '#d494c5'
     colors.blue = '#7291d4'
-    colors.blue1 = '#69bdd6'
-    colors.blue5 = '#69bdd6'
-    colors.cyan = '#69bdd6'
+    colors.blue1 = '#77bcd1'
+    colors.blue5 = '#77bcd1'
+    colors.cyan = '#77bcd1'
   end,
 }
 
@@ -31,14 +31,6 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, 'Folded', { fg = '#c8d3f5', bg = '#2f3549' })
   vim.api.nvim_set_hl(0, 'FoldArrow', { fg = '#c99e63', bg = '#2f3549' })
 
-  for _, group in ipairs {
-    '@lsp.typemod.class.defaultLibrary.javascript',
-    '@lsp.typemod.class.defaultLibrary.javascriptreact',
-    '@lsp.typemod.class.defaultLibrary.typescript',
-    '@lsp.typemod.class.defaultLibrary.typescriptreact',
-  } do
-    vim.api.nvim_set_hl(0, group, { fg = '#b08ee8' })
-  end
 end
 
 local function remove_bold_except_matchparen()

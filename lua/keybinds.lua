@@ -148,4 +148,27 @@ do
   -- Jump between functions
   vim.keymap.set("n", "]f", "]m", { desc = "Next function" })
   vim.keymap.set("n", "[f", "[m", { desc = "Previous function" })
+
+  -- Merge conflicts: choose left/ours or right/theirs
+  vim.keymap.set("n", "grch", "<cmd>diffget //2<CR>", {
+    desc = "Choose left conflict version",
+    silent = true,
+  })
+
+  vim.keymap.set("n", "grcl", "<cmd>diffget //3<CR>", {
+    desc = "Choose right conflict version",
+    silent = true,
+  })
+
+  -- Merge conflicts: choose the entire file
+  vim.keymap.set("n", "grcH", "<cmd>Gread //2<CR>", {
+    desc = "Choose entire file from ours/left",
+    silent = true,
+  })
+
+  vim.keymap.set("n", "grcL", "<cmd>Gread //3<CR>", {
+    desc = "Choose entire file from theirs/right",
+    silent = true,
+  })
+
 end

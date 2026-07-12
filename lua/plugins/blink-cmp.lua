@@ -10,6 +10,15 @@ require('blink.cmp').setup {
   },
   completion = {
     documentation = { auto_show = false, auto_show_delay_ms = 500 },
+    menu = {
+      draw = {
+        columns = {
+          { 'kind_icon' },
+          { 'label', 'label_description', gap = 1 },
+          { 'kind' },
+        },
+      },
+    },
   },
   sources = {
     default = { 'lsp', 'path', 'snippets' },
@@ -18,4 +27,3 @@ require('blink.cmp').setup {
   fuzzy = { implementation = 'lua' },
   signature = { enabled = true },
 }
-

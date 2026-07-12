@@ -13,6 +13,28 @@ local function tmux_navigate(command)
   end
 end
 
+local function resize_preview_split()
+  local preview_win = require("oil.util").get_preview_win()
+
+  if not preview_win or not vim.api.nvim_win_is_valid(preview_win) then
+    return
+  end
+
+  local oil_win = vim.api.nvim_get_current_win()
+  local total_width = vim.api.nvim_win_get_width(oil_win) + vim.api.nvim_win_get_width(preview_win)
+  local preview_width = math.max(1, math.floor(total_width * 0.7))
+
+  vim.api.nvim_win_set_width(preview_win, preview_width)
+end
+
+local function open_oil_preview()
+  oil.open_preview({}, function(err)
+    if not err then
+      resize_preview_split()
+    end
+  end)
+end
+
 oil.setup({
   default_file_explorer = true,
 
@@ -47,7 +69,7 @@ oil.setup({
     ["v"] = false,
     ["V"] = false,
 
-    ["<C-p>"] = "actions.preview",
+    ["<C-p>"] = open_oil_preview,
     ["<BS>"] = tmux_navigate("TmuxNavigateLeft"),
     ["<C-h>"] = tmux_navigate("TmuxNavigateLeft"),
     ["<C-j>"] = tmux_navigate("TmuxNavigateDown"),
@@ -88,7 +110,7 @@ vim.api.nvim_create_autocmd("User", {
       local entry = oil.get_cursor_entry()
 
       if entry and entry.type == "file" then
-        oil.open_preview({})
+        open_oil_preview()
         return
       end
 
