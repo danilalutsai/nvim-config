@@ -59,15 +59,46 @@ statusline.setup {
   use_icons = vim.g.have_nerd_font,
 }
 
-local mode_groups = {
-  'MiniStatuslineModeNormal',
-  'MiniStatuslineModeInsert',
-  'MiniStatuslineModeVisual',
-  'MiniStatuslineModeReplace',
-  'MiniStatuslineModeCommand',
-  'MiniStatuslineModeOther',
+local mode_colors = {
+  MiniStatuslineModeNormal = '#7291d4',
+  MiniStatuslineModeInsert = '#aabf71',
+  MiniStatuslineModeVisual = '#b08ee8',
+  MiniStatuslineModeReplace = '#d9868d',
+  MiniStatuslineModeCommand = '#d9b27e',
+  MiniStatuslineModeOther = '#77bcd1',
 }
 
-for _, group in ipairs(mode_groups) do
-  vim.api.nvim_set_hl(0, group, vim.tbl_extend('force', vim.api.nvim_get_hl(0, { name = group }), { bold = true }))
+local function apply_statusline_highlights()
+  for _, group in ipairs {
+    'MiniStatuslineDevinfo',
+    'MiniStatuslineFilename',
+    'MiniStatuslineFileinfo',
+    'MiniStatuslineInactive',
+  } do
+    vim.api.nvim_set_hl(0, group, vim.tbl_extend('force', vim.api.nvim_get_hl(0, { name = group }), {
+      fg = '#c8d3f5',
+      bg = '#222436',
+    }))
+  end
+
+  for group, color in pairs(mode_colors) do
+    vim.api.nvim_set_hl(0, group, vim.tbl_extend('force', vim.api.nvim_get_hl(0, { name = group }), {
+      fg = '#1a1b26',
+      bg = color,
+      bold = true,
+    }))
+  end
+
+  vim.api.nvim_set_hl(0, 'MiniStatuslineLocation', {
+    fg = '#1a1b26',
+    bg = mode_colors.MiniStatuslineModeNormal,
+    bold = true,
+  })
 end
+
+apply_statusline_highlights()
+
+vim.api.nvim_create_autocmd('ColorScheme', {
+  group = vim.api.nvim_create_augroup('MiniStatuslineCustomColors', { clear = true }),
+  callback = apply_statusline_highlights,
+})
