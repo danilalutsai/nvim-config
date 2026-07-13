@@ -4,7 +4,7 @@ local gh = require 'gh'
 vim.pack.add { gh 'sindrets/diffview.nvim' }
 --
 --
--- Catppuccin Mocha colors for Diffview changes
+
 local function set_diffview_colors()
   -- Added lines
   vim.api.nvim_set_hl(0, "DiffAdd", {
@@ -15,18 +15,16 @@ local function set_diffview_colors()
   -- Deleted lines
   vim.api.nvim_set_hl(0, "DiffDelete", {
     -- fg = "#f38ba8",
-    bg = "#432a35",
+    bg = "#612c35",
   })
 
   -- Changed lines / inline changed text
   vim.api.nvim_set_hl(0, "DiffChange", {
-    fg = "#cdd6f4",
-    bg = "#313244",
+    bg = "#211f33",
   })
 
   vim.api.nvim_set_hl(0, "DiffText", {
-    fg = "#cdd6f4",
-    bg = "#45475a",
+    bg = "#201e30",
   })
 end
 
