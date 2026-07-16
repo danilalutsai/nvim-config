@@ -31,7 +31,17 @@
     end,
   })
 
-  vim.o.textwidth = 80
+  vim.o.textwidth = 0
+  vim.o.colorcolumn = '81'
+  vim.opt.formatoptions:remove({ 't', 'c' })
+
+  vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
+    group = vim.api.nvim_create_augroup("DisableAutoTextWrap", { clear = true }),
+    callback = function()
+      vim.opt_local.textwidth = 0
+      vim.opt_local.formatoptions:remove({ 't', 'c' })
+    end,
+  })
 
   vim.o.mouse = 'a'
   vim.o.showmode = false
@@ -130,5 +140,6 @@
   vim.o.inccommand = 'split'
   vim.o.cursorline = false
   vim.o.scrolloff = 10
+
   vim.o.confirm = true
 end

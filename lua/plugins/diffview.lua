@@ -20,11 +20,11 @@ local function set_diffview_colors()
 
   -- Changed lines / inline changed text
   vim.api.nvim_set_hl(0, "DiffChange", {
-    bg = "#211f33",
+    bg = "#14131c",
   })
 
   vim.api.nvim_set_hl(0, "DiffText", {
-    bg = "#201e30",
+    bg = "#14131c",
   })
 end
 

@@ -120,9 +120,7 @@ require('lualine').setup {
     section_separators = '',
   },
   sections = {
-    lualine_a = {
-      block('mode', { padding = { left = 1, right = 1 } }),
-    },
+    lualine_a = {},
     lualine_b = {
       block(current_filename, { color = { fg = colors.text, bg = colors.status } }),
     },
@@ -135,7 +133,7 @@ require('lualine').setup {
     lualine_y = {},
     lualine_z = {
       block('progress', { color = { fg = colors.text, bg = colors.status } }),
-      block('location', { padding = { left = 0, right = 1 } }),
+      block('location', { padding = { left = 0, right = 1 }, color = { fg = colors.text, bg = colors.status } }),
     },
   },
 }

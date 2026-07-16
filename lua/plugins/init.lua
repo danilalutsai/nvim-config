@@ -1,7 +1,5 @@
 local plugins = {
-  -- 'guess-indent',
   'gitsigns',
-  -- 'which-key',
   'rosepine',
   'lualine',
   'mini',
