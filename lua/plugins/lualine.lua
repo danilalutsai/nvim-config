@@ -87,16 +87,20 @@ local function current_filename()
   return ' ' .. path
 end
 
-local git_cache = { value = '', time = 0 }
+local git_cache = { value = '', time = 0, cwd = nil }
 
 local function current_branch()
   local now = vim.uv.now()
+  local cwd = vim.fn.getcwd()
 
-  if git_cache.value ~= '' and (now - git_cache.time) < 5000 then
+  -- Lualine refreshes on CursorMoved. Cache an empty result too, otherwise
+  -- non-Git directories start a synchronous `git rev-parse` on every move.
+  if git_cache.cwd == cwd and (now - git_cache.time) < 5000 then
     return git_cache.value
   end
 
   git_cache.time = now
+  git_cache.cwd = cwd
 
   local ok, result = pcall(vim.fn.system, 'git rev-parse --abbrev-ref HEAD 2>/dev/null')
   if ok then

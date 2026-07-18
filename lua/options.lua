@@ -45,6 +45,7 @@
 
   vim.o.mouse = 'a'
   vim.o.showmode = false
+  vim.opt.guicursor = 'n-v-c-sm:block-blinkon0-blinkoff0,i-ci-ve:ver25-blinkon0-blinkoff0,r-cr-o:hor20-blinkon0-blinkoff0,t:block-blinkon0-blinkoff0-TermCursor'
 
   -- Smart automatic code folding using Tree-sitter
   function _G.treesitter_foldexpr()

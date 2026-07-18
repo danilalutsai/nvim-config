@@ -169,15 +169,6 @@ vim.api.nvim_create_autocmd('ColorScheme', {
   end,
 })
 
-vim.api.nvim_create_autocmd('LspTokenUpdate', {
-  callback = function(ev)
-    local token = ev.data.token
-    if token.modifiers and token.modifiers.unused then
-      vim.lsp.semantic_tokens.highlight_token(token, ev.buf, ev.data.client_id, 'UnusedValue')
-    end
-  end,
-})
-
 vim.api.nvim_create_autocmd({ 'DiagnosticChanged', 'BufEnter' }, {
   callback = function(ev)
     apply_unused_diagnostic_highlights(ev.buf)

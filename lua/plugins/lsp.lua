@@ -1,3 +1,7 @@
+-- Automatic symbol highlighting is disabled because it can cause frequent redraws
+-- while the cursor is idle in TypeScript buffers.
+local enable_document_highlight = false
+
 -- LSP keymaps triggered when LSP attaches
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
@@ -97,7 +101,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     local client = vim.lsp.get_client_by_id(event.data.client_id)
 
-    if client and client:supports_method("textDocument/documentHighlight", event.buf) then
+    if enable_document_highlight and client and client:supports_method("textDocument/documentHighlight", event.buf) then
       local highlight_augroup =
         vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
 
@@ -127,7 +131,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 
     if client and client:supports_method("textDocument/inlayHint", event.buf) then
-      map("<leader>th", function()
+      map("<leader>ih", function()
         vim.lsp.inlay_hint.enable(
           not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf })
         )

@@ -47,15 +47,22 @@ oil.setup({
   },
 
   win_options = {
-    number = true,
+    number = false,
     relativenumber = false,
     signcolumn = "no",
+    statuscolumn = "  ",
     list = false,
   },
 
   preview_win = {
     update_on_cursor_moved = true,
     preview_method = "fast_scratch",
+    win_options = {
+      number = false,
+      relativenumber = false,
+      signcolumn = "no",
+      statuscolumn = "  ",
+    },
   },
 
   keymaps = {
@@ -70,6 +77,9 @@ oil.setup({
     ["V"] = false,
 
     ["<C-p>"] = open_oil_preview,
+    ["y"] = "actions.copy_to_system_clipboard",
+    ["p"] = "actions.paste_from_system_clipboard",
+    ["x"] = { "actions.paste_from_system_clipboard", opts = { delete_original = true } },
     ["<BS>"] = tmux_navigate("TmuxNavigateLeft"),
     ["<C-h>"] = tmux_navigate("TmuxNavigateLeft"),
     ["<C-j>"] = tmux_navigate("TmuxNavigateDown"),
