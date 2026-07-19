@@ -1,4 +1,4 @@
-require('options')
+  require('options')
 require('plugins')
 require('keybinds')
 
@@ -31,6 +31,21 @@ do
       end,
     },
   }
+
+  vim.api.nvim_create_autocmd('InsertEnter', {
+    group = vim.api.nvim_create_augroup('HideDiagnosticsInInsertMode', { clear = true }),
+    callback = function(event)
+      vim.diagnostic.hide(nil, event.buf)
+    end,
+  })
+
+  -- Hide diagnostics straight entering Insert mode
+  vim.api.nvim_create_autocmd('InsertLeave', {
+    group = 'HideDiagnosticsInInsertMode',
+    callback = function(event)
+      vim.diagnostic.show(nil, event.buf)
+    end,
+  })
 
   -- Highlight when yanking text
   vim.api.nvim_create_autocmd('TextYankPost', {
