@@ -10,13 +10,13 @@ local colors = {
   muted = '#2d2c38',
   subtle = '#58556b',
   text = '#cbc7eb',
-  love = '#c27c91',
+  love = '#d47d97',
   -- Gold - #e8c189
-  gold = '#c9a877',
-  rose = '#c79595',
-  pine = '#7f8bc9',
-  foam = '#82babd',
-  iris = '#a489cc',
+  gold = '#e3bd84',
+  rose = '#d99e9e',
+  pine = '#8c9bed',
+  foam = '#a9d3d6',
+  iris = '#b093db',
   leaf = '#95b1ac',
   highlight_low = '#21202e',
   highlight_med = '#403d52',
@@ -79,7 +79,7 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, 'TelescopeResultsBorder', { fg = colors.muted, bg = colors.base })
   vim.api.nvim_set_hl(0, 'TelescopePreviewBorder', { fg = colors.muted, bg = colors.base })
   vim.api.nvim_set_hl(0, 'QuickFixLine', vim.tbl_extend('force', quickfix_line, { bg = colors.overlay }))
-  vim.api.nvim_set_hl(0, 'MatchParen', { fg = "#629bb3", bg = "#38354a", bold = true })
+  vim.api.nvim_set_hl(0, 'MatchParen', { fg = "#e65c86", bg = "#38354a", bold = true })
   vim.api.nvim_set_hl(0, 'Folded', { fg = colors.text, bg = 'none' })
   vim.api.nvim_set_hl(0, 'FoldArrow', { fg = colors.gold, bg = 'none' })
   vim.api.nvim_set_hl(0, 'LspReferenceText', { bg = '#201d29' })
