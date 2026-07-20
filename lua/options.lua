@@ -140,7 +140,7 @@
 
   vim.o.inccommand = 'split'
   vim.o.cursorline = false
-  vim.o.scrolloff = 10
+  vim.o.scrolloff = 8
 
   vim.o.confirm = true
 end

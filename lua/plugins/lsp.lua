@@ -209,7 +209,81 @@ require("mason-tool-installer").setup({
   },
 })
 
+
 for name, server in pairs(servers) do
   vim.lsp.config(name, server)
   vim.lsp.enable(name)
 end
+
+  -- Hide inline messages and underlines for unused TypeScript code,
+  -- while keeping its normal faded foreground color.
+
+  local unused_ts_codes = {
+    ["6133"] = true, -- variable/value declared but never read
+    ["6196"] = true, -- type, interface, enum, etc. declared but never used
+    ["6192"] = true, -- all imports in an import declaration are unused
+    ["6198"] = true, -- all destructured elements are unused
+    ["6138"] = true, -- property declared but never read
+  }
+
+  local function is_unused(diagnostic)
+    if unused_ts_codes[tostring(diagnostic.code)] then
+      return true
+    end
+
+    -- Also support LSP diagnostics explicitly tagged as unnecessary.
+    return diagnostic._tags and diagnostic._tags.unnecessary
+  end
+
+  local original_virtual_text = vim.diagnostic.handlers.virtual_text
+
+  vim.diagnostic.handlers.virtual_text = {
+    show = function(namespace, bufnr, diagnostics, opts)
+      local filtered = vim.tbl_filter(function(diagnostic)
+        return not is_unused(diagnostic)
+      end, diagnostics)
+
+      original_virtual_text.show(namespace, bufnr, filtered, opts)
+    end,
+
+    hide = original_virtual_text.hide,
+  }
+
+  local original_underline = vim.diagnostic.handlers.underline
+  local unused_fade_namespace = vim.api.nvim_create_namespace("unused-code-fade")
+
+  vim.diagnostic.handlers.underline = {
+    show = function(namespace, bufnr, diagnostics, opts)
+      -- Render Neovim's normal underlines for every diagnostic except unused code.
+      local normal_diagnostics = vim.tbl_filter(function(diagnostic)
+        return not is_unused(diagnostic)
+      end, diagnostics)
+
+      original_underline.show(namespace, bufnr, normal_diagnostics, opts)
+
+      -- Apply only DiagnosticUnnecessary to unused ranges: this keeps the faded
+      -- foreground color without combining it with an underline highlight.
+      vim.api.nvim_buf_clear_namespace(bufnr, unused_fade_namespace, 0, -1)
+
+      for _, diagnostic in ipairs(diagnostics) do
+        if is_unused(diagnostic) then
+          vim.hl.range(
+            bufnr,
+            unused_fade_namespace,
+            "DiagnosticUnnecessary",
+            { diagnostic.lnum, diagnostic.col },
+            {
+              diagnostic.end_lnum or diagnostic.lnum,
+              diagnostic.end_col or (diagnostic.col + 1),
+            },
+            { priority = vim.hl.priorities.diagnostics }
+          )
+        end
+      end
+    end,
+
+    hide = function(namespace, bufnr)
+      original_underline.hide(namespace, bufnr)
+      vim.api.nvim_buf_clear_namespace(bufnr, unused_fade_namespace, 0, -1)
+    end,
+  }

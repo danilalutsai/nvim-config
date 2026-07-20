@@ -131,6 +131,7 @@ do
   vim.keymap.set('n', 'P', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
   vim.keymap.set('n', '<C-n>', 'n', { desc = 'Next search result' })
   vim.keymap.set('n', '<C-p>', 'N', { desc = 'Previous search result' })
+  vim.keymap.set('n', 'zz', '<C-f>', { desc = 'Scroll full page down' })
   -- netrw: navigate with h/l (like Oil)
   vim.api.nvim_create_autocmd('FileType', {
     pattern = 'netrw',
@@ -141,6 +142,9 @@ do
   })
 
   vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+  vim.keymap.set('n', '<leader>d', function()
+    vim.diagnostic.open_float(nil, { scope = 'cursor' })
+  end, { desc = 'Show diagnostic message' })
 
   -- Exit terminal mode
   vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
