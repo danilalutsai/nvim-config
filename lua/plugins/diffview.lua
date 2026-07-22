@@ -6,16 +6,19 @@ vim.pack.add { gh 'sindrets/diffview.nvim' }
 --
 
 local function set_diffview_colors()
+  local add_fg = "#88b7ae"
+  local add_bg = "#14332f"
+  local delete_fg = "#c88b9d"
+  local delete_bg = "#471929"
+
   -- Added lines
   vim.api.nvim_set_hl(0, "DiffAdd", {
-    -- fg = "#a6e3a1",
-    bg = "#243b2a",
+    bg = add_bg,
   })
 
   -- Deleted lines
   vim.api.nvim_set_hl(0, "DiffDelete", {
-    -- fg = "#f38ba8",
-    bg = "#612c35",
+    bg = delete_bg,
   })
 
   -- Changed lines / inline changed text
@@ -26,6 +29,12 @@ local function set_diffview_colors()
   vim.api.nvim_set_hl(0, "DiffText", {
     bg = "#14131c",
   })
+
+  -- Fugitive expanded file diffs use git/diff syntax groups for +/- lines.
+  vim.api.nvim_set_hl(0, "diffAdded", { fg = add_fg, bg = add_bg })
+  vim.api.nvim_set_hl(0, "diffRemoved", { fg = delete_fg, bg = delete_bg })
+  vim.api.nvim_set_hl(0, "Added", { fg = add_fg, bg = add_bg })
+  vim.api.nvim_set_hl(0, "Removed", { fg = delete_fg, bg = delete_bg })
 end
 
 set_diffview_colors()

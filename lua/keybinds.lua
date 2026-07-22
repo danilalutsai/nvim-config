@@ -131,7 +131,7 @@ do
   vim.keymap.set('n', 'P', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
   vim.keymap.set('n', '<C-n>', 'n', { desc = 'Next search result' })
   vim.keymap.set('n', '<C-p>', 'N', { desc = 'Previous search result' })
-  vim.keymap.set('n', 'zz', '<C-f>', { desc = 'Scroll full page down' })
+  vim.keymap.set('n', 'zz', 'zt', { desc = 'Place current line at top' })
   -- netrw: navigate with h/l (like Oil)
   vim.api.nvim_create_autocmd('FileType', {
     pattern = 'netrw',

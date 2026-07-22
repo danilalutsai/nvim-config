@@ -1,12 +1,12 @@
-  do
+do
   vim.loader.enable()
 
-    vim.g.netrw_bufsettings = "noma nomod nu nobl nowrap ro"
+  vim.g.netrw_bufsettings = "noma nomod nu nobl nowrap ro"
 
-    vim.g.mapleader = " "
-    vim.g.maplocalleader = " "
+  vim.g.mapleader = " "
+  vim.g.maplocalleader = " "
 
-    vim.g.have_nerd_font = true
+  vim.g.have_nerd_font = true
 
   vim.o.number = true
   vim.o.relativenumber = true
@@ -140,7 +140,7 @@
 
   vim.o.inccommand = 'split'
   vim.o.cursorline = false
-  vim.o.scrolloff = 8
+  vim.o.scrolloff = 6
 
   vim.o.confirm = true
 end
