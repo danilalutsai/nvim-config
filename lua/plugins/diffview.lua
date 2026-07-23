@@ -12,12 +12,12 @@ local colors = {
   muted = '#2d2c38',
   subtle = '#58556b',
   text = '#cbc7eb',
-  love = '#db728e',
-  gold = '#f5c06c',
-  rose = '#e6a5a5',
-  pine = '#697edb',
-  foam = '#7cbfc4',
-  iris = '#b395e6',
+  love = '#eb7a98',
+  gold = '#ffc569',
+  rose = '#ffa87d',
+  pine = '#829bff',
+  foam = '#84ccd1',
+  iris = '#bd9df5',
   leaf = '#95b1ac',
   highlight_low = '#21202e',
   highlight_med = '#403d52',
@@ -25,10 +25,10 @@ local colors = {
 }
 
 local function set_diffview_colors()
-  local add_fg = "#88b7ae"
-  local add_bg = "#14332f"
-  local delete_fg = "#c88b9d"
-  local delete_bg = "#471929"
+  local add_fg = "#99cfc4"
+  local add_bg = "#164542"
+  local delete_fg = "#de99ad"
+  local delete_bg = "#471527"
   local change_bg = "#14131c"
 
   -- Added lines. No fg: treesitter/syntax colors show through, only bg is tinted.
