@@ -5,13 +5,33 @@ vim.pack.add { gh 'sindrets/diffview.nvim' }
 --
 --
 
+local colors = {
+  base = '#0c0c12',
+  surface = '#1f1d2e',
+  overlay = '#26233a',
+  muted = '#2d2c38',
+  subtle = '#58556b',
+  text = '#cbc7eb',
+  love = '#db728e',
+  gold = '#f5c06c',
+  rose = '#e6a5a5',
+  pine = '#697edb',
+  foam = '#7cbfc4',
+  iris = '#b395e6',
+  leaf = '#95b1ac',
+  highlight_low = '#21202e',
+  highlight_med = '#403d52',
+  highlight_high = '#524f67',
+}
+
 local function set_diffview_colors()
   local add_fg = "#88b7ae"
   local add_bg = "#14332f"
   local delete_fg = "#c88b9d"
   local delete_bg = "#471929"
+  local change_bg = "#14131c"
 
-  -- Added lines
+  -- Added lines. No fg: treesitter/syntax colors show through, only bg is tinted.
   vim.api.nvim_set_hl(0, "DiffAdd", {
     bg = add_bg,
   })
@@ -21,13 +41,16 @@ local function set_diffview_colors()
     bg = delete_bg,
   })
 
+  -- Deleted side of a two-way diff renders through diffview's own group.
+  vim.api.nvim_set_hl(0, "DiffviewDiffAddAsDelete", { bg = delete_bg })
+
   -- Changed lines / inline changed text
   vim.api.nvim_set_hl(0, "DiffChange", {
-    bg = "#14131c",
+    bg = change_bg,
   })
 
   vim.api.nvim_set_hl(0, "DiffText", {
-    bg = "#14131c",
+    bg = change_bg,
   })
 
   -- Fugitive expanded file diffs use git/diff syntax groups for +/- lines.
@@ -35,6 +58,7 @@ local function set_diffview_colors()
   vim.api.nvim_set_hl(0, "diffRemoved", { fg = delete_fg, bg = delete_bg })
   vim.api.nvim_set_hl(0, "Added", { fg = add_fg, bg = add_bg })
   vim.api.nvim_set_hl(0, "Removed", { fg = delete_fg, bg = delete_bg })
+
 end
 
 set_diffview_colors()
