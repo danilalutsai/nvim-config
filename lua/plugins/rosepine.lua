@@ -7,14 +7,14 @@ local colors = {
   surface = '#1f1d2e',
   overlay = '#26233a',
   muted = '#2d2c38',
-  subtle = '#58556b',
+  subtle = '#666666',
   text = '#cbc7eb',
-  love = '#d9849b',
+  love = '#c9758c',
   gold = '#e0b979',
-  rose = '#d6a09a',
-  pine = '#8896cf',
-  foam = '#95c5c9',
-  iris = '#bca6e3',
+  rose = '#c9918b',
+  pine = '#7788c9',
+  foam = '#82b3b8',
+  iris = '#ab94d4',
   leaf = '#95b1ac',
   highlight_low = '#21202e',
   highlight_med = '#403d52',
@@ -46,17 +46,17 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, 'FloatBorder', { fg = colors.muted, bg = colors.surface })
   vim.api.nvim_set_hl(0, 'ColorColumn', { bg = colors.surface })
   vim.api.nvim_set_hl(0, 'Operator', { fg = "#9290ad" })
-  vim.api.nvim_set_hl(0, '@keyword.operator.typescript', { fg = "#829bff" })
-  vim.api.nvim_set_hl(0, '@keyword.operator.javascript', { fg = "#829bff" })
+  vim.api.nvim_set_hl(0, '@keyword.operator.typescript', { fg = "#8697d9" })
+  vim.api.nvim_set_hl(0, '@keyword.operator.javascript', { fg = "#8697d9" })
   vim.api.nvim_set_hl(0, '@operator', { fg = "#9290ad" })
   vim.api.nvim_set_hl(0, '@comment', { fg = "#666666" })
   vim.api.nvim_set_hl(0, '@keyword.operator', { fg = "#9290ad" })
-  vim.api.nvim_set_hl(0, '@keyword', { fg = "#829bff", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.return', { fg = "#829bff", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.conditional', { fg = "#829bff", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword', { fg = "#8697d9", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.return', { fg = "#8697d9", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.conditional', { fg = "#8697d9", italic = false })
   vim.api.nvim_set_hl(0, '@keyword.conditional.ternary', { fg = "#9290ad", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.import', { fg = "#829bff", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.repeat', { fg = "#829bff", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.import', { fg = "#8697d9", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.repeat', { fg = "#8697d9", italic = false })
   vim.api.nvim_set_hl(0, '@punctuation.bracket', { fg = "#9290ad" })
   vim.api.nvim_set_hl(0, "@punctuation.delimiter", { fg = "#9290ad" })
   vim.api.nvim_set_hl(0, "@punctuation.optional", { fg = "#9290ad" })
