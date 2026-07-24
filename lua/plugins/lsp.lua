@@ -99,6 +99,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
     map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 
+    -- Organize / remove unused imports (very handy in React files)
+    map("<leader>co", function()
+      vim.lsp.buf.code_action({
+        apply = true,
+        context = { only = { "source.organizeImports" }, diagnostics = {} },
+      })
+    end, "[C]ode [O]rganize imports")
+
     local client = vim.lsp.get_client_by_id(event.data.client_id)
 
     if enable_document_highlight and client and client:supports_method("textDocument/documentHighlight", event.buf) then
@@ -140,8 +148,83 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
+-- Shared inlay hint settings for both the typescript and javascript sections
+local ts_inlay_hints = {
+  includeInlayParameterNameHints = "literal",
+  includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+  includeInlayFunctionParameterTypeHints = true,
+  includeInlayVariableTypeHints = false,
+  includeInlayPropertyDeclarationTypeHints = true,
+  includeInlayFunctionLikeReturnTypeHints = true,
+  includeInlayEnumMemberValueHints = true,
+}
+
 local servers = {
-  ts_ls = {},
+  -- Handles .js .jsx .ts .tsx — including all JSX tag and prop completion
+  ts_ls = {
+    cmd = { "typescript-language-server", "--stdio" },
+
+    filetypes = {
+      "javascript",
+      "javascriptreact",
+      "javascript.jsx",
+      "typescript",
+      "typescriptreact",
+      "typescript.tsx",
+    },
+
+    root_markers = {
+      "tsconfig.json",
+      "jsconfig.json",
+      "package.json",
+      ".git",
+    },
+
+    settings = {
+      typescript = {
+        inlayHints = ts_inlay_hints,
+        preferences = {
+          -- Auto-insert the closing JSX tag and quote style for props
+          jsxAttributeCompletionStyle = "auto",
+          includePackageJsonAutoImports = "auto",
+        },
+        updateImportsOnFileMove = { enabled = "always" },
+      },
+
+      javascript = {
+        inlayHints = ts_inlay_hints,
+        preferences = {
+          jsxAttributeCompletionStyle = "auto",
+        },
+        updateImportsOnFileMove = { enabled = "always" },
+      },
+    },
+  },
+
+  -- HTML-style abbreviation expansion, JSX-aware (emits className, not class)
+  emmet_language_server = {
+    cmd = { "emmet-language-server", "--stdio" },
+
+    filetypes = {
+      "html",
+      "css",
+      "scss",
+      "less",
+      "javascriptreact",
+      "typescriptreact",
+    },
+
+    root_markers = { "package.json", ".git" },
+
+    init_options = {
+      showExpandedAbbreviation = "always",
+      showAbbreviationSuggestions = true,
+      showSuggestionsAsSnippets = true,
+      preferences = {},
+      syntaxProfiles = {},
+      variables = {},
+    },
+  },
 
   html = {
     cmd = { "vscode-html-language-server", "--stdio" },
@@ -152,8 +235,6 @@ local servers = {
     cmd = { "vscode-css-language-server", "--stdio" },
     filetypes = { "css", "scss", "less" },
   },
-
-  stylua = {},
 
   lua_ls = {
     on_init = function(client)
@@ -198,9 +279,12 @@ local servers = {
   },
 }
 
+-- Formatters (stylua, prettierd) are NOT language servers.
+-- They belong here in the installer list, but never in the `servers` table above.
 require("mason-tool-installer").setup({
   ensure_installed = {
     "typescript-language-server",
+    "emmet-language-server",
     "html-lsp",
     "css-lsp",
     "prettierd",
@@ -209,81 +293,80 @@ require("mason-tool-installer").setup({
   },
 })
 
-
 for name, server in pairs(servers) do
   vim.lsp.config(name, server)
   vim.lsp.enable(name)
 end
 
-  -- Hide inline messages and underlines for unused TypeScript code,
-  -- while keeping its normal faded foreground color.
+-- Hide inline messages and underlines for unused TypeScript code,
+-- while keeping its normal faded foreground color.
 
-  local unused_ts_codes = {
-    ["6133"] = true, -- variable/value declared but never read
-    ["6196"] = true, -- type, interface, enum, etc. declared but never used
-    ["6192"] = true, -- all imports in an import declaration are unused
-    ["6198"] = true, -- all destructured elements are unused
-    ["6138"] = true, -- property declared but never read
-  }
+local unused_ts_codes = {
+  ["6133"] = true, -- variable/value declared but never read
+  ["6196"] = true, -- type, interface, enum, etc. declared but never used
+  ["6192"] = true, -- all imports in an import declaration are unused
+  ["6198"] = true, -- all destructured elements are unused
+  ["6138"] = true, -- property declared but never read
+}
 
-  local function is_unused(diagnostic)
-    if unused_ts_codes[tostring(diagnostic.code)] then
-      return true
-    end
-
-    -- Also support LSP diagnostics explicitly tagged as unnecessary.
-    return diagnostic._tags and diagnostic._tags.unnecessary
+local function is_unused(diagnostic)
+  if unused_ts_codes[tostring(diagnostic.code)] then
+    return true
   end
 
-  local original_virtual_text = vim.diagnostic.handlers.virtual_text
+  -- Also support LSP diagnostics explicitly tagged as unnecessary.
+  return diagnostic._tags and diagnostic._tags.unnecessary
+end
 
-  vim.diagnostic.handlers.virtual_text = {
-    show = function(namespace, bufnr, diagnostics, opts)
-      local filtered = vim.tbl_filter(function(diagnostic)
-        return not is_unused(diagnostic)
-      end, diagnostics)
+local original_virtual_text = vim.diagnostic.handlers.virtual_text
 
-      original_virtual_text.show(namespace, bufnr, filtered, opts)
-    end,
+vim.diagnostic.handlers.virtual_text = {
+  show = function(namespace, bufnr, diagnostics, opts)
+    local filtered = vim.tbl_filter(function(diagnostic)
+      return not is_unused(diagnostic)
+    end, diagnostics)
 
-    hide = original_virtual_text.hide,
-  }
+    original_virtual_text.show(namespace, bufnr, filtered, opts)
+  end,
 
-  local original_underline = vim.diagnostic.handlers.underline
-  local unused_fade_namespace = vim.api.nvim_create_namespace("unused-code-fade")
+  hide = original_virtual_text.hide,
+}
 
-  vim.diagnostic.handlers.underline = {
-    show = function(namespace, bufnr, diagnostics, opts)
-      -- Render Neovim's normal underlines for every diagnostic except unused code.
-      local normal_diagnostics = vim.tbl_filter(function(diagnostic)
-        return not is_unused(diagnostic)
-      end, diagnostics)
+local original_underline = vim.diagnostic.handlers.underline
+local unused_fade_namespace = vim.api.nvim_create_namespace("unused-code-fade")
 
-      original_underline.show(namespace, bufnr, normal_diagnostics, opts)
+vim.diagnostic.handlers.underline = {
+  show = function(namespace, bufnr, diagnostics, opts)
+    -- Render Neovim's normal underlines for every diagnostic except unused code.
+    local normal_diagnostics = vim.tbl_filter(function(diagnostic)
+      return not is_unused(diagnostic)
+    end, diagnostics)
 
-      -- Apply only DiagnosticUnnecessary to unused ranges: this keeps the faded
-      -- foreground color without combining it with an underline highlight.
-      vim.api.nvim_buf_clear_namespace(bufnr, unused_fade_namespace, 0, -1)
+    original_underline.show(namespace, bufnr, normal_diagnostics, opts)
 
-      for _, diagnostic in ipairs(diagnostics) do
-        if is_unused(diagnostic) then
-          vim.hl.range(
-            bufnr,
-            unused_fade_namespace,
-            "DiagnosticUnnecessary",
-            { diagnostic.lnum, diagnostic.col },
-            {
-              diagnostic.end_lnum or diagnostic.lnum,
-              diagnostic.end_col or (diagnostic.col + 1),
-            },
-            { priority = vim.hl.priorities.diagnostics }
-          )
-        end
+    -- Apply only DiagnosticUnnecessary to unused ranges: this keeps the faded
+    -- foreground color without combining it with an underline highlight.
+    vim.api.nvim_buf_clear_namespace(bufnr, unused_fade_namespace, 0, -1)
+
+    for _, diagnostic in ipairs(diagnostics) do
+      if is_unused(diagnostic) then
+        vim.hl.range(
+          bufnr,
+          unused_fade_namespace,
+          "DiagnosticUnnecessary",
+          { diagnostic.lnum, diagnostic.col },
+          {
+            diagnostic.end_lnum or diagnostic.lnum,
+            diagnostic.end_col or (diagnostic.col + 1),
+          },
+          { priority = vim.hl.priorities.diagnostics }
+        )
       end
-    end,
+    end
+  end,
 
-    hide = function(namespace, bufnr)
-      original_underline.hide(namespace, bufnr)
-      vim.api.nvim_buf_clear_namespace(bufnr, unused_fade_namespace, 0, -1)
-    end,
-  }
+  hide = function(namespace, bufnr)
+    original_underline.hide(namespace, bufnr)
+    vim.api.nvim_buf_clear_namespace(bufnr, unused_fade_namespace, 0, -1)
+  end,
+}

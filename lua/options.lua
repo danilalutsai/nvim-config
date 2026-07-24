@@ -140,7 +140,7 @@ do
 
   vim.o.inccommand = 'split'
   vim.o.cursorline = false
-  vim.o.scrolloff = 6
+  vim.o.scrolloff = 10
 
   vim.o.confirm = true
 end

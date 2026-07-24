@@ -9,12 +9,12 @@ local colors = {
   muted = '#2d2c38',
   subtle = '#58556b',
   text = '#cbc7eb',
-  love = '#eb7a98',
-  gold = '#ffc569',
-  rose = '#84ccd1',
-  pine = '#829bff',
-  foam = '#ffa87d',
-  iris = '#bd9df5',
+  love = '#d9849b',
+  gold = '#e0b979',
+  rose = '#d6a09a',
+  pine = '#8896cf',
+  foam = '#95c5c9',
+  iris = '#bca6e3',
   leaf = '#95b1ac',
   highlight_low = '#21202e',
   highlight_med = '#403d52',
@@ -49,7 +49,7 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, '@keyword.operator.typescript', { fg = "#829bff" })
   vim.api.nvim_set_hl(0, '@keyword.operator.javascript', { fg = "#829bff" })
   vim.api.nvim_set_hl(0, '@operator', { fg = "#9290ad" })
-  vim.api.nvim_set_hl(0, '@comment', { fg = "#626080" })
+  vim.api.nvim_set_hl(0, '@comment', { fg = "#666666" })
   vim.api.nvim_set_hl(0, '@keyword.operator', { fg = "#9290ad" })
   vim.api.nvim_set_hl(0, '@keyword', { fg = "#829bff", italic = false })
   vim.api.nvim_set_hl(0, '@keyword.return', { fg = "#829bff", italic = false })
