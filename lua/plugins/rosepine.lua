@@ -9,13 +9,13 @@ local colors = {
   muted = '#2d2c38',
   subtle = '#666666',
   text = '#cbc7eb',
-  love = '#c9758c',
-  gold = '#e0b979',
-  rose = '#c9918b',
-  pine = '#7788c9',
-  foam = '#82b3b8',
-  iris = '#ab94d4',
-  leaf = '#95b1ac',
+  love = '#bd7186',
+  gold = '#c9a973',
+  rose = '#bd847d',
+  pine = '#7080c2',
+  foam = '#78ab96',
+  iris = '#9179bd',
+  leaf = '#759e8d',
   highlight_low = '#21202e',
   highlight_med = '#403d52',
   highlight_high = '#524f67',
@@ -30,7 +30,7 @@ require('rose-pine').setup {
   styles = {
     bold = true,
     italic = false,
-    transparency = false,
+    transparency = true,
   },
 }
 
@@ -40,23 +40,25 @@ local function apply_custom_highlights()
   local line_nr = vim.api.nvim_get_hl(0, { name = 'LineNr', link = false })
   local quickfix_line = vim.api.nvim_get_hl(0, { name = 'QuickFixLine', link = false })
 
-  vim.api.nvim_set_hl(0, 'Normal', { fg = colors.text, bg = colors.base })
-  vim.api.nvim_set_hl(0, 'NormalNC', { fg = colors.text, bg = colors.base })
+  -- Transparent: no bg means the terminal shows through (see Ghostty's
+  -- background-opacity). Floats and menus below stay opaque for readability.
+  vim.api.nvim_set_hl(0, 'Normal', { fg = colors.text, bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'NormalNC', { fg = colors.text, bg = 'NONE' })
   vim.api.nvim_set_hl(0, 'NormalFloat', { fg = colors.text, bg = colors.surface })
   vim.api.nvim_set_hl(0, 'FloatBorder', { fg = colors.muted, bg = colors.surface })
   vim.api.nvim_set_hl(0, 'ColorColumn', { bg = colors.surface })
   vim.api.nvim_set_hl(0, 'Operator', { fg = "#9290ad" })
-  vim.api.nvim_set_hl(0, '@keyword.operator.typescript', { fg = "#8697d9" })
-  vim.api.nvim_set_hl(0, '@keyword.operator.javascript', { fg = "#8697d9" })
+  vim.api.nvim_set_hl(0, '@keyword.operator.typescript', { fg = "#7080c2" })
+  vim.api.nvim_set_hl(0, '@keyword.operator.javascript', { fg = "#7080c2" })
   vim.api.nvim_set_hl(0, '@operator', { fg = "#9290ad" })
   vim.api.nvim_set_hl(0, '@comment', { fg = "#666666" })
   vim.api.nvim_set_hl(0, '@keyword.operator', { fg = "#9290ad" })
-  vim.api.nvim_set_hl(0, '@keyword', { fg = "#8697d9", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.return', { fg = "#8697d9", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.conditional', { fg = "#8697d9", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword', { fg = "#7080c2", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.return', { fg = "#7080c2", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.conditional', { fg = "#7080c2", italic = false })
   vim.api.nvim_set_hl(0, '@keyword.conditional.ternary', { fg = "#9290ad", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.import', { fg = "#8697d9", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.repeat', { fg = "#8697d9", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.import', { fg = "#7080c2", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.repeat', { fg = "#7080c2", italic = false })
   vim.api.nvim_set_hl(0, '@punctuation.bracket', { fg = "#9290ad" })
   vim.api.nvim_set_hl(0, "@punctuation.delimiter", { fg = "#9290ad" })
   vim.api.nvim_set_hl(0, "@punctuation.optional", { fg = "#9290ad" })
@@ -68,16 +70,16 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, 'BlinkCmpLabelDescription', { fg = '#9290ad' })
   vim.api.nvim_set_hl(0, 'BlinkCmpSource', { fg = '#9290ad' })
   vim.api.nvim_set_hl(0, 'BlinkCmpScrollBarThumb', { bg = '#9290ad' })
-  vim.api.nvim_set_hl(0, 'SignColumn', { bg = colors.base })
-  vim.api.nvim_set_hl(0, 'EndOfBuffer', { fg = line_nr.fg, bg = colors.base })
-  vim.api.nvim_set_hl(0, 'TelescopeNormal', { fg = colors.text, bg = colors.base })
-  vim.api.nvim_set_hl(0, 'TelescopePromptNormal', { fg = colors.text, bg = colors.base })
-  vim.api.nvim_set_hl(0, 'TelescopeResultsNormal', { fg = colors.text, bg = colors.base })
-  vim.api.nvim_set_hl(0, 'TelescopePreviewNormal', { fg = colors.text, bg = colors.base })
-  vim.api.nvim_set_hl(0, 'TelescopeBorder', { fg = colors.muted, bg = colors.base })
-  vim.api.nvim_set_hl(0, 'TelescopePromptBorder', { fg = colors.muted, bg = colors.base })
-  vim.api.nvim_set_hl(0, 'TelescopeResultsBorder', { fg = colors.muted, bg = colors.base })
-  vim.api.nvim_set_hl(0, 'TelescopePreviewBorder', { fg = colors.muted, bg = colors.base })
+  vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'EndOfBuffer', { fg = line_nr.fg, bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'TelescopeNormal', { fg = colors.text, bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'TelescopePromptNormal', { fg = colors.text, bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'TelescopeResultsNormal', { fg = colors.text, bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'TelescopePreviewNormal', { fg = colors.text, bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'TelescopeBorder', { fg = colors.muted, bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'TelescopePromptBorder', { fg = colors.muted, bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'TelescopeResultsBorder', { fg = colors.muted, bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'TelescopePreviewBorder', { fg = colors.muted, bg = 'NONE' })
   vim.api.nvim_set_hl(0, 'QuickFixLine', vim.tbl_extend('force', quickfix_line, { bg = colors.overlay }))
   vim.api.nvim_set_hl(0, 'MatchParen', { fg = "#e8e34d", bg = "#38354a", bold = true })
   vim.api.nvim_set_hl(0, 'Folded', { fg = colors.text, bg = 'none' })

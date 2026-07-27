@@ -18,6 +18,7 @@ require('conform').setup {
     json = { 'prettierd', 'prettier', stop_after_first = true },
     jsonc = { 'prettierd', 'prettier', stop_after_first = true },
     json5 = { 'prettierd', 'prettier', stop_after_first = true },
+    vue = { 'prettierd', 'prettier', stop_after_first = true },
   },
 }
 

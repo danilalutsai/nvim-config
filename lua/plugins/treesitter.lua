@@ -25,6 +25,7 @@ local parsers = {
   'query',
   'tsx',
   'typescript',
+  'vue',
   'vim',
   'vimdoc',
 }

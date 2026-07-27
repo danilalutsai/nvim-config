@@ -159,8 +159,14 @@ local ts_inlay_hints = {
   includeInlayEnumMemberValueHints = true,
 }
 
+-- Path to the Vue language server package. `ts_ls` loads its bundled
+-- `@vue/typescript-plugin` so it can understand TypeScript inside `.vue`
+-- <script> blocks. vue_ls (hybrid mode) then forwards TS requests to ts_ls.
+local vue_language_server_path = vim.fn.stdpath("data")
+  .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+
 local servers = {
-  -- Handles .js .jsx .ts .tsx — including all JSX tag and prop completion
+  -- Handles .js .jsx .ts .tsx and .vue <script> blocks — including JSX/prop completion
   ts_ls = {
     cmd = { "typescript-language-server", "--stdio" },
 
@@ -171,6 +177,18 @@ local servers = {
       "typescript",
       "typescriptreact",
       "typescript.tsx",
+      "vue",
+    },
+
+    init_options = {
+      plugins = {
+        {
+          name = "@vue/typescript-plugin",
+          location = vue_language_server_path,
+          languages = { "vue" },
+          configNamespace = "typescript",
+        },
+      },
     },
 
     root_markers = {
@@ -201,6 +219,12 @@ local servers = {
     },
   },
 
+  -- Official Vue language server (Volar): diagnostics, TypeScript awareness,
+  -- go-to-definition, rename, and completion inside .vue single-file components.
+  vue_ls = {
+    filetypes = { "vue" },
+  },
+
   -- HTML-style abbreviation expansion, JSX-aware (emits className, not class)
   emmet_language_server = {
     cmd = { "emmet-language-server", "--stdio" },
@@ -212,6 +236,7 @@ local servers = {
       "less",
       "javascriptreact",
       "typescriptreact",
+      "vue",
     },
 
     root_markers = { "package.json", ".git" },
@@ -290,6 +315,7 @@ require("mason-tool-installer").setup({
     "prettierd",
     "stylua",
     "lua-language-server",
+    "vue-language-server",
   },
 })
 

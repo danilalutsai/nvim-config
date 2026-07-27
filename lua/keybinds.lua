@@ -175,4 +175,6 @@ do
     silent = true,
   })
 
+  vim.keymap.set("n", "D", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+
 end
