@@ -1,4 +1,4 @@
-  require('options')
+require('options')
 require('plugins')
 require('keybinds')
 

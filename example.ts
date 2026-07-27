@@ -1,7 +1,6 @@
 // Colorscheme palette sampler — every common TS token kind in one file.
 /** JSDoc block: {@link Repo} keeps generics + docs highlighting visible. */
 
-import { readFile } from "node:fs/promises";
 
 export const MAX_RETRIES = 3;
 const TAG = `retry:${MAX_RETRIES}`;
@@ -83,20 +82,6 @@ export function pick(source: User | User[], index = 0): string {
   return Array.isArray(source) ? source[index]!.name : source.name;
 }
 
-export async function load(path: string): Promise<User[]> {
-  outer: for (let i = 0; i < MAX_RETRIES; i++) {
-    try {
-      const raw = await readFile(path, "utf8");
-      return JSON.parse(raw) as User[];
-    } catch (err) {
-      if (i === MAX_RETRIES - 1) throw err;
-      continue outer;
-    } finally {
-      void i;
-    }
-  }
-  return [];
-}
 
 export async function* stream(users: User[]): AsyncGenerator<string> {
   let n = 0;
