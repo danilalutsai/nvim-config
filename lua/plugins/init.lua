@@ -25,6 +25,7 @@ local plugins = {
   'fugitive',
   'vim-tmux-navigator',
   'markdown-preview',
+  'colorizer',
 }
 
 for _, name in ipairs(plugins) do

@@ -24,20 +24,22 @@ local colors = {
 }
 
 local function set_diffview_colors()
-  local add_fg = "#99cfc4"
-  local add_bg = "#164542"
-  local delete_fg = "#de99ad"
-  local delete_bg = "#471527"
+  local add_fg = "#164542"
+  local add_bg = "#99cfc4"
+  local delete_fg = "#471527"
+  local delete_bg = "#de99ad"
   local change_bg = "#14131c"
 
   -- Added lines. No fg: treesitter/syntax colors show through, only bg is tinted.
   vim.api.nvim_set_hl(0, "DiffAdd", {
     bg = add_bg,
+    fg = add_fg,
   })
 
   -- Deleted lines
   vim.api.nvim_set_hl(0, "DiffDelete", {
     bg = delete_bg,
+    fg = delete_fg,
   })
 
   -- Deleted side of a two-way diff renders through diffview's own group.

@@ -72,6 +72,7 @@ oil.setup({
     ["<S-Tab>"] = "actions.parent",
 
     ["<C-v>"] = "actions.select_vsplit",
+    ["<C-b>"] = "actions.select_split",
     ["<C-s>"] = "actions.select_split",
     ["v"] = false,
     ["V"] = false,

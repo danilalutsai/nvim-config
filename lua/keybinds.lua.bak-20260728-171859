@@ -1,15 +1,7 @@
 do
   -- Visual mode:
   -- Select lines, then Space + Tab creates a manual fold.
-  -- zf only works when 'foldmethod' is "manual" or "marker" — the Tree-sitter
-  -- "expr" method from options.lua rejects it with E350. Switch this window to
-  -- manual first. Tree-sitter folds in this window are dropped in exchange.
-  vim.keymap.set("x", "<leader><Tab>", function()
-    if vim.wo.foldmethod ~= "manual" then
-      vim.wo.foldmethod = "manual"
-    end
-    vim.cmd("normal! zf")
-  end, {
+  vim.keymap.set("x", "<leader><Tab>", "zf", {
     noremap = true,
     silent = true,
     desc = "Fold selected lines",
@@ -135,50 +127,6 @@ do
   vim.keymap.set('n', '<C-w>v', '<cmd>vnew<CR>', { desc = 'Open new vertical window' })
   vim.keymap.set('n', '<C-w>s', '<cmd>new<CR>', { desc = 'Open new horizontal window' })
   vim.keymap.set('n', '<C-w>x', '<cmd>close<CR>', { desc = 'Close current window' })
-  -- Resize submode: <C-w> H/J/K/L resizes once, then h/j/k/l keep resizing
-  -- until any other key. Holding a key auto-repeats, so it feels continuous.
-  -- <C-w> can't be held itself, which is why the submode exists.
-  local resize_cmds = {
-    h = 'vertical resize +2',
-    l = 'vertical resize -2',
-    j = 'resize -2',
-    k = 'resize +2',
-  }
-
-  local CTRL_W = vim.api.nvim_replace_termcodes('<C-w>', true, false, true)
-
-  local function resize_mode(key)
-    while true do
-      -- Swallow a repeated <C-w> so it can't combine with the next key into
-      -- Vim's built-in <C-w>H, which moves the window instead of resizing.
-      if key == CTRL_W then
-        local ok, char = pcall(vim.fn.getcharstr)
-        if not ok then return end
-        key = char
-      end
-
-      local cmd = resize_cmds[key:lower()]
-
-      if not cmd then
-        -- Not a resize key: hand it back to Neovim and leave the submode.
-        vim.api.nvim_feedkeys(key, 'm', false)
-        return
-      end
-
-      vim.cmd(cmd)
-      vim.cmd('redraw')
-
-      local ok, char = pcall(vim.fn.getcharstr)
-      if not ok then return end
-      key = char
-    end
-  end
-
-  for _, key in ipairs({ 'H', 'J', 'K', 'L' }) do
-    vim.keymap.set('n', '<C-w>' .. key, function()
-      resize_mode(key)
-    end, { desc = 'Resize window (repeatable)' })
-  end
   vim.keymap.set('n', 'N', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
   vim.keymap.set('n', 'P', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
   vim.keymap.set('n', '<C-n>', 'n', { desc = 'Next search result' })
