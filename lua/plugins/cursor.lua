@@ -3,22 +3,22 @@ local gh = require 'gh'
 vim.pack.add { gh 'rose-pine/neovim' }
 
 local colors = {
-  base = '#0c0c12',
-  surface = '#1f1d2e',
-  overlay = '#26233a',
-  muted = '#2d2c38',
-  subtle = '#666666',
-  text = '#cbc7eb',
-  love = '#ed809e',
-  gold = '#80c2a6',
-  rose = '#798fed',
-  pine = '#ed809e',
-  foam = '#b594f2',
-  iris = '#e39a86',
-  leaf = '#759e8d',
-  highlight_low = '#21202e',
-  highlight_med = '#403d52',
-  highlight_high = '#524f67',
+  base = "#181818",
+  surface = "#141414",
+  overlay = "#202020",
+  muted = "#262626",
+  subtle = "#626262",
+  text = "#F0F0F0",
+  love = "#E34671",
+  gold = "#F8C762",
+  rose = "#E394DC",
+  pine = "#87C3FF",
+  foam = "#70B489",
+  iris = "#AAA0FA",
+  leaf = "#6A9955",
+  highlight_low = "#202020",
+  highlight_med = "#333333",
+  highlight_high = "#404040",
 }
 
 require('rose-pine').setup {
@@ -47,30 +47,29 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, 'NormalFloat', { fg = colors.text, bg = colors.surface })
   vim.api.nvim_set_hl(0, 'FloatBorder', { fg = colors.muted, bg = colors.surface })
   vim.api.nvim_set_hl(0, 'ColorColumn', { bg = colors.surface })
-  vim.api.nvim_set_hl(0, 'Operator', { fg = "#b2b0d4" })
-  vim.api.nvim_set_hl(0, '@keyword.operator.typescript', { fg = "#ed809e" })
-  vim.api.nvim_set_hl(0, '@keyword.operator.javascript', { fg = "#ed809e" })
-  vim.api.nvim_set_hl(0, '@operator', { fg = "#b2b0d4" })
+  vim.api.nvim_set_hl(0, 'Operator', { fg = "#9290ad" })
+  vim.api.nvim_set_hl(0, '@keyword.operator.typescript', { fg = "#8194e6" })
+  vim.api.nvim_set_hl(0, '@keyword.operator.javascript', { fg = "#8194e6" })
+  vim.api.nvim_set_hl(0, '@operator', { fg = "#9290ad" })
   vim.api.nvim_set_hl(0, '@comment', { fg = "#666666" })
-  vim.api.nvim_set_hl(0, '@keyword.operator', { fg = "#b2b0d4" })
-  vim.api.nvim_set_hl(0, '@constructor', { fg = "#798fed" })
-  vim.api.nvim_set_hl(0, '@keyword', { fg = "#ed809e", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.return', { fg = "#ed809e", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.conditional', { fg = "#ed809e", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.conditional.ternary', { fg = "#b2b0d4", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.import', { fg = "#ed809e", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.repeat', { fg = "#ed809e", italic = false })
-  vim.api.nvim_set_hl(0, '@punctuation.bracket', { fg = "#b2b0d4" })
-  vim.api.nvim_set_hl(0, "@punctuation.delimiter", { fg = "#b2b0d4" })
-  vim.api.nvim_set_hl(0, "@punctuation.optional", { fg = "#b2b0d4" })
-  vim.api.nvim_set_hl(0, '@punctuation.special', { fg = '#b2b0d4' })
-  vim.api.nvim_set_hl(0, 'Pmenu', { fg = "#b2b0d4", bg = colors.surface })
-  vim.api.nvim_set_hl(0, 'BlinkCmpLabel', { fg = '#b2b0d4' })
-  vim.api.nvim_set_hl(0, 'BlinkCmpLabelDeprecated', { fg = '#b2b0d4', strikethrough = true })
-  vim.api.nvim_set_hl(0, 'BlinkCmpLabelDetail', { fg = '#b2b0d4' })
-  vim.api.nvim_set_hl(0, 'BlinkCmpLabelDescription', { fg = '#b2b0d4' })
-  vim.api.nvim_set_hl(0, 'BlinkCmpSource', { fg = '#b2b0d4' })
-  vim.api.nvim_set_hl(0, 'BlinkCmpScrollBarThumb', { bg = '#b2b0d4' })
+  vim.api.nvim_set_hl(0, '@keyword.operator', { fg = "#9290ad" })
+  vim.api.nvim_set_hl(0, '@keyword', { fg = "#8194e6", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.return', { fg = "#8194e6", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.conditional', { fg = "#8194e6", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.conditional.ternary', { fg = "#9290ad", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.import', { fg = "#8194e6", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.repeat', { fg = "#8194e6", italic = false })
+  vim.api.nvim_set_hl(0, '@punctuation.bracket', { fg = "#9290ad" })
+  vim.api.nvim_set_hl(0, "@punctuation.delimiter", { fg = "#9290ad" })
+  vim.api.nvim_set_hl(0, "@punctuation.optional", { fg = "#9290ad" })
+  vim.api.nvim_set_hl(0, '@punctuation.special', { fg = '#9290ad' })
+  vim.api.nvim_set_hl(0, 'Pmenu', { fg = "#9290ad", bg = colors.surface })
+  vim.api.nvim_set_hl(0, 'BlinkCmpLabel', { fg = '#9290ad' })
+  vim.api.nvim_set_hl(0, 'BlinkCmpLabelDeprecated', { fg = '#9290ad', strikethrough = true })
+  vim.api.nvim_set_hl(0, 'BlinkCmpLabelDetail', { fg = '#9290ad' })
+  vim.api.nvim_set_hl(0, 'BlinkCmpLabelDescription', { fg = '#9290ad' })
+  vim.api.nvim_set_hl(0, 'BlinkCmpSource', { fg = '#9290ad' })
+  vim.api.nvim_set_hl(0, 'BlinkCmpScrollBarThumb', { bg = '#9290ad' })
   vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'NONE' })
   vim.api.nvim_set_hl(0, 'EndOfBuffer', { fg = line_nr.fg, bg = 'NONE' })
   vim.api.nvim_set_hl(0, 'TelescopeNormal', { fg = colors.text, bg = 'NONE' })
