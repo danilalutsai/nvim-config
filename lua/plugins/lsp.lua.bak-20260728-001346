@@ -261,32 +261,6 @@ local servers = {
     filetypes = { "css", "scss", "less" },
   },
 
-  -- Tailwind class completion, hover previews, and colour swatches.
-  -- Tailwind v4 has no tailwind.config.js — the server locates a project
-  -- through the CSS entry point containing `@import "tailwindcss"`, so
-  -- package.json/.git are what actually match for v4 projects.
-  tailwindcss = {
-    cmd = { "tailwindcss-language-server", "--stdio" },
-
-    filetypes = {
-      "html",
-      "css",
-      "vue",
-      "javascript",
-      "javascriptreact",
-      "typescript",
-      "typescriptreact",
-    },
-
-    root_markers = {
-      "tailwind.config.js",
-      "tailwind.config.ts",
-      "postcss.config.js",
-      "package.json",
-      ".git",
-    },
-  },
-
   lua_ls = {
     on_init = function(client)
       client.server_capabilities.documentFormattingProvider = false
@@ -338,7 +312,6 @@ require("mason-tool-installer").setup({
     "emmet-language-server",
     "html-lsp",
     "css-lsp",
-    "tailwindcss-language-server",
     "prettierd",
     "stylua",
     "lua-language-server",
