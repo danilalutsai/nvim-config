@@ -14,7 +14,7 @@ local colors = {
   rose = '#e39a86',
   pine = '#798fed',
   foam = '#80c2a6',
-  iris = '#ae95de',
+  iris = '#a98ede',
   leaf = '#759e8d',
   highlight_low = '#21202e',
   highlight_med = '#403d52',
@@ -95,6 +95,9 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, 'Visual', { bg = '#4d475e' })
   vim.api.nvim_set_hl(0, "LineNr", { fg = "#58556b" })
   vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#58556b", bold = true })
+  -- Oil: directory names inherit Directory's accent by default. Plain text
+  -- instead, so the mini.icons colors are the only color in the listing.
+  vim.api.nvim_set_hl(0, 'OilDir', { link = 'Normal' })
 end
 
 local function remove_bold_except_matchparen()

@@ -7,6 +7,9 @@ vim.pack.add {
 
 local oil = require "oil"
 
+-- Resolved lazily on first render: mini.icons must finish setup first.
+local icon_provider
+
 local function tmux_navigate(command)
   return function()
     vim.cmd(command)
@@ -44,6 +47,20 @@ oil.setup({
 
   view_options = {
     show_hidden = true,
+    -- Color the file name with its icon's highlight group. Pulled from oil's
+    -- own icon provider (mini.icons here) so name and icon never disagree.
+    highlight_filename = function(entry, is_hidden, _is_link_target, is_link_orphan)
+      -- Dotfiles stay dimmed, orphan links keep their error color.
+      if is_hidden or is_link_orphan then
+        return nil
+      end
+      icon_provider = icon_provider or require("oil.util").get_icon_provider()
+      if not icon_provider then
+        return nil
+      end
+      local _, hl = icon_provider(entry.type, entry.name)
+      return hl
+    end,
   },
 
   win_options = {
