@@ -8,14 +8,14 @@ local colors = {
   overlay = "#202020",
   muted = "#262626",
   subtle = "#626262",
-  text = "#F0F0F0",
-  love = "#E34671",
-  gold = "#F8C762",
-  rose = "#E394DC",
-  pine = "#87C3FF",
-  foam = "#70B489",
-  iris = "#AAA0FA",
-  leaf = "#6A9955",
+  text = "#f0f0f0",
+  love = "#e34671",
+  gold = "#f8c762",
+  rose = "#e394dc",
+  pine = "#87c3ff",
+  foam = "#70b489",
+  iris = "#aaa0fa",
+  leaf = "#6a9955",
   highlight_low = "#202020",
   highlight_med = "#333333",
   highlight_high = "#404040",
@@ -70,6 +70,15 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, 'BlinkCmpLabelDescription', { fg = '#9290ad' })
   vim.api.nvim_set_hl(0, 'BlinkCmpSource', { fg = '#9290ad' })
   vim.api.nvim_set_hl(0, 'BlinkCmpScrollBarThumb', { bg = '#9290ad' })
+  -- Completion floats: border cells carry the same bg as the interior, so the
+  -- fill runs edge to edge with no gap between border and content.
+  vim.api.nvim_set_hl(0, 'BlinkCmpMenu', { fg = '#9290ad', bg = colors.surface })
+  vim.api.nvim_set_hl(0, 'BlinkCmpMenuBorder', { fg = colors.muted, bg = colors.surface })
+  vim.api.nvim_set_hl(0, 'BlinkCmpDoc', { fg = colors.text, bg = colors.surface })
+  vim.api.nvim_set_hl(0, 'BlinkCmpDocBorder', { fg = colors.muted, bg = colors.surface })
+  vim.api.nvim_set_hl(0, 'BlinkCmpDocSeparator', { fg = colors.muted, bg = colors.surface })
+  vim.api.nvim_set_hl(0, 'BlinkCmpSignatureHelp', { fg = colors.text, bg = colors.surface })
+  vim.api.nvim_set_hl(0, 'BlinkCmpSignatureHelpBorder', { fg = colors.muted, bg = colors.surface })
   vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'NONE' })
   vim.api.nvim_set_hl(0, 'EndOfBuffer', { fg = line_nr.fg, bg = 'NONE' })
   vim.api.nvim_set_hl(0, 'TelescopeNormal', { fg = colors.text, bg = 'NONE' })

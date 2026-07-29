@@ -19,6 +19,9 @@ require('conform').setup {
     jsonc = { 'prettierd', 'prettier', stop_after_first = true },
     json5 = { 'prettierd', 'prettier', stop_after_first = true },
     vue = { 'prettierd', 'prettier', stop_after_first = true },
+    -- ruff_organize_imports sorts, ruff_format rewrites. Both ship inside the
+    -- same ruff binary mason installs for the LSP.
+    python = { 'ruff_organize_imports', 'ruff_format' },
   },
 }
 

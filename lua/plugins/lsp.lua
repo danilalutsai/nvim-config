@@ -287,6 +287,43 @@ local servers = {
     },
   },
 
+  -- Types, completion, hover, go-to-definition for Python.
+  basedpyright = {
+    settings = {
+      basedpyright = {
+        -- ruff owns imports; letting both organize them causes fights.
+        disableOrganizeImports = true,
+        analysis = {
+          typeCheckingMode = "standard",
+          diagnosticMode = "openFilesOnly",
+          inlayHints = {
+            variableTypes = true,
+            callArgumentNames = true,
+            functionReturnTypes = true,
+            genericTypes = false,
+          },
+        },
+      },
+    },
+
+    root_markers = {
+      "pyproject.toml",
+      "setup.py",
+      "setup.cfg",
+      "requirements.txt",
+      "Pipfile",
+      ".git",
+    },
+  },
+
+  -- Linting and quick fixes. basedpyright already answers hover, so silence
+  -- ruff's version to avoid two popups for the same symbol.
+  ruff = {
+    on_init = function(client)
+      client.server_capabilities.hoverProvider = false
+    end,
+  },
+
   lua_ls = {
     on_init = function(client)
       client.server_capabilities.documentFormattingProvider = false
@@ -343,6 +380,8 @@ require("mason-tool-installer").setup({
     "stylua",
     "lua-language-server",
     "vue-language-server",
+    "basedpyright",
+    "ruff",
   },
 })
 

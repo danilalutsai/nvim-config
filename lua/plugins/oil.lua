@@ -10,6 +10,22 @@ local oil = require "oil"
 -- Resolved lazily on first render: mini.icons must finish setup first.
 local icon_provider
 
+-- Directories with no icon color of their own get this instead of plain Normal.
+-- Files keep whatever mini.icons gives them.
+local DEFAULT_DIR_HL = "OilDefaultDir"
+
+local function set_default_dir_hl()
+  vim.api.nvim_set_hl(0, DEFAULT_DIR_HL, { fg = "#798fed" })
+end
+
+set_default_dir_hl()
+
+-- A colorscheme load wipes custom groups, so re-register on every switch.
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("OilDefaultDirHl", { clear = true }),
+  callback = set_default_dir_hl,
+})
+
 local function tmux_navigate(command)
   return function()
     vim.cmd(command)
@@ -38,17 +54,73 @@ local function open_oil_preview()
   end)
 end
 
+-- Icon column that mirrors oil's built-in one, except entries whose icon is the
+-- generic fallback drop their highlight and render in plain Normal.
+local oil_columns = require "oil.columns"
+local oil_constants = require "oil.constants"
+
+local FIELD_NAME = oil_constants.FIELD_NAME
+local FIELD_TYPE = oil_constants.FIELD_TYPE
+local FIELD_META = oil_constants.FIELD_META
+
+oil_columns.register("icon_uncolored_default", {
+  render = function(entry, conf)
+    icon_provider = icon_provider or require("oil.util").get_icon_provider()
+    if not icon_provider then
+      return nil
+    end
+
+    local field_type = entry[FIELD_TYPE]
+    local name = entry[FIELD_NAME]
+    local meta = entry[FIELD_META]
+
+    -- Links render as whatever they point at, same as the built-in column.
+    if field_type == "link" and meta then
+      if meta.link then
+        name = meta.link
+      end
+      if meta.link_stat then
+        field_type = meta.link_stat.type
+      end
+    end
+    if meta and meta.display_name then
+      name = meta.display_name
+    end
+
+    local icon, hl, is_default = icon_provider(field_type, name, conf)
+
+    if not conf or conf.add_padding ~= false then
+      icon = icon .. " "
+    end
+
+    if is_default then
+      -- Generic directory icon: our own blue. Generic file icon: no color.
+      if field_type == "directory" then
+        return { icon, DEFAULT_DIR_HL }
+      end
+      return icon
+    end
+
+    return { icon, hl }
+  end,
+
+  parse = function(line, _conf)
+    return line:match("^(%S+)%s+(.*)$")
+  end,
+})
+
 oil.setup({
   default_file_explorer = true,
 
   columns = {
-    "icon",
+    "icon_uncolored_default",
   },
 
   view_options = {
     show_hidden = true,
-    -- Color the file name with its icon's highlight group. Pulled from oil's
-    -- own icon provider (mini.icons here) so name and icon never disagree.
+    -- Color the file name with its icon's highlight group, but only when the
+    -- icon actually has a color of its own. Files that fall back to
+    -- mini.icons' default icon stay uncolored (plain OilFile / Normal).
     highlight_filename = function(entry, is_hidden, _is_link_target, is_link_orphan)
       -- Dotfiles stay dimmed, orphan links keep their error color.
       if is_hidden or is_link_orphan then
@@ -58,7 +130,12 @@ oil.setup({
       if not icon_provider then
         return nil
       end
-      local _, hl = icon_provider(entry.type, entry.name)
+      -- mini.icons returns a third value telling us the icon was a generic
+      -- fallback. Those directories take our blue; those files stay uncolored.
+      local _, hl, is_default = icon_provider(entry.type, entry.name)
+      if is_default then
+        return entry.type == "directory" and DEFAULT_DIR_HL or nil
+      end
       return hl
     end,
   },
@@ -107,8 +184,16 @@ oil.setup({
   },
 })
 
--- Open Oil normally
-vim.keymap.set("n", "<leader>cd", "<cmd>Oil<CR>", {
+-- Open Oil with the preview split already up. oil.open takes the preview opts
+-- itself and runs the callback once the buffer has loaded, so there's no need
+-- to poll for the cursor entry.
+vim.keymap.set("n", "<leader>cd", function()
+  oil.open(nil, { preview = { vertical = true } }, function(err)
+    if not err then
+      resize_preview_split()
+    end
+  end)
+end, {
   desc = "Open Oil with preview",
 })
 
@@ -116,39 +201,11 @@ vim.keymap.set("n", "-", "<cmd>Oil<CR>", {
   desc = "Open parent directory",
 })
 
--- Automatically open Oil preview reliably
+-- Keep the preview split at 70% while moving around inside an Oil buffer.
 vim.api.nvim_create_autocmd("User", {
   group = vim.api.nvim_create_augroup("OilAutoPreview", { clear = true }),
   pattern = "OilEnter",
-  callback = function(args)
-    local oil = require("oil")
-    local oil_buf = args.data and args.data.buf or vim.api.nvim_get_current_buf()
-    local tries = 0
-    local max_tries = 10
-
-    local function open_preview_when_ready()
-      tries = tries + 1
-
-      -- Stop if you left the Oil buffer
-      if not vim.api.nvim_buf_is_valid(oil_buf) or vim.api.nvim_get_current_buf() ~= oil_buf then
-        return
-      end
-
-      -- Preview only works when Oil has a real file selected
-      local entry = oil.get_cursor_entry()
-
-      if entry and entry.type == "file" then
-        open_oil_preview()
-        return
-      end
-
-      -- Oil may initially select ../ or a folder.
-      -- Retry shortly while the directory finishes loading.
-      if tries < max_tries then
-        vim.defer_fn(open_preview_when_ready, 80)
-      end
-    end
-
-    vim.defer_fn(open_preview_when_ready, 80)
+  callback = function()
+    vim.schedule(resize_preview_split)
   end,
 })

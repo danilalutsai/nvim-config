@@ -36,9 +36,26 @@ require('blink.cmp').setup {
     },
   },
   completion = {
-    documentation = { auto_show = false, auto_show_delay_ms = 500 },
+    -- Docs for the selected item open in their own window beside the menu.
+    documentation = {
+      auto_show = true,
+      auto_show_delay_ms = 200,
+      window = {
+        max_width = 80,
+        max_height = 20,
+        border = 'rounded',
+        -- Prefer the right side, fall back to the left when there's no room.
+        direction_priority = {
+          menu_north = { 'e', 'w', 'n', 's' },
+          menu_south = { 'e', 'w', 's', 'n' },
+        },
+      },
+    },
     menu = {
+      border = 'rounded',
       draw = {
+        -- No padding columns: content starts right at the border.
+        padding = 0,
         columns = {
           { 'kind_icon' },
           { 'label', 'label_description', gap = 1 },
