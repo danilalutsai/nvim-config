@@ -1,10 +1,8 @@
-local gh = require 'gh'
-
 local telescope_plugins = {
-  gh 'nvim-telescope/telescope.nvim',
+  'https://github.com/nvim-telescope/telescope.nvim',
 }
 if vim.fn.executable 'make' == 1 then
-  table.insert(telescope_plugins, gh 'nvim-telescope/telescope-fzf-native.nvim')
+  table.insert(telescope_plugins, 'https://github.com/nvim-telescope/telescope-fzf-native.nvim')
 end
 
 vim.pack.add(telescope_plugins)

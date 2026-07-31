@@ -1,4 +1,2 @@
-local gh = require 'gh'
-
-vim.pack.add { gh 'mason-org/mason.nvim' }
+vim.pack.add { 'https://github.com/mason-org/mason.nvim' }
 require('mason').setup {}

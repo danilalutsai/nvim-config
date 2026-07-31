@@ -1,7 +1,5 @@
-local gh = require "gh"
-
 vim.pack.add {
-  gh "NeogitOrg/neogit",
+  "https://github.com/NeogitOrg/neogit",
 }
 
 require("neogit").setup({

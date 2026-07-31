@@ -1,5 +1,3 @@
-local gh = require "gh"
-
 vim.g.surround_no_mappings = 1
 vim.g.surround_40 = "(\r)"
 vim.g.surround_60 = "<\r>"
@@ -7,7 +5,7 @@ vim.g.surround_91 = "[\r]"
 vim.g.surround_123 = "{\r}"
 
 vim.pack.add {
-  gh "tpope/vim-surround",
+  "https://github.com/tpope/vim-surround",
 }
 
 

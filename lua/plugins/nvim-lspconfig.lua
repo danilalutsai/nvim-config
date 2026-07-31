@@ -1,3 +1,1 @@
-local gh = require 'gh'
-
-vim.pack.add { gh 'neovim/nvim-lspconfig' }
+vim.pack.add { 'https://github.com/neovim/nvim-lspconfig' }

@@ -1,3 +1,1 @@
-local gh = require 'gh'
-
-vim.pack.add { gh 'WhoIsSethDaniel/mason-tool-installer.nvim' }
+vim.pack.add { 'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim' }

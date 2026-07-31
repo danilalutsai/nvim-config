@@ -1,7 +1,5 @@
-local gh = require "gh"
-
 vim.pack.add {
-  gh "tpope/vim-fugitive",
+  "https://github.com/tpope/vim-fugitive",
 }
 
 -- Open Fugitive Git status

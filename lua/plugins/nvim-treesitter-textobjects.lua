@@ -1,7 +1,5 @@
-local gh = require "gh"
-
 vim.pack.add {
-  gh "nvim-treesitter/nvim-treesitter-textobjects",
+  "https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
 }
 
 local move = require "nvim-treesitter-textobjects.move"

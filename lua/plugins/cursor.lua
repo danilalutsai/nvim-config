@@ -1,6 +1,4 @@
-local gh = require 'gh'
-
-vim.pack.add { gh 'rose-pine/neovim' }
+vim.pack.add { 'https://github.com/rose-pine/neovim' }
 
 local colors = {
   base = "#181818",

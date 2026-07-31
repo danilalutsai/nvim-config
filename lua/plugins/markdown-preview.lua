@@ -1,7 +1,5 @@
-local gh = require "gh"
-
 vim.pack.add {
-  gh "iamcco/markdown-preview.nvim",
+  "https://github.com/iamcco/markdown-preview.nvim",
 }
 
 vim.g.mkdp_filetypes = { "markdown" }

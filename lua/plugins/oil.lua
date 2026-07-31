@@ -1,8 +1,6 @@
-local gh = require "gh"
-
 vim.pack.add {
-  gh "stevearc/oil.nvim",
-  gh "nvim-mini/mini.icons",
+  "https://github.com/stevearc/oil.nvim",
+  "https://github.com/nvim-mini/mini.icons",
 }
 
 local oil = require "oil"
@@ -41,7 +39,7 @@ local function resize_preview_split()
 
   local oil_win = vim.api.nvim_get_current_win()
   local total_width = vim.api.nvim_win_get_width(oil_win) + vim.api.nvim_win_get_width(preview_win)
-  local preview_width = math.max(1, math.floor(total_width * 0.7))
+  local preview_width = math.max(1, math.floor(total_width * 0.78))
 
   vim.api.nvim_win_set_width(preview_win, preview_width)
 end
@@ -112,6 +110,10 @@ oil_columns.register("icon_uncolored_default", {
 oil.setup({
   default_file_explorer = true,
 
+  -- Hidden oil buffers would otherwise be wiped after 2s, taking any pending
+  -- dd with them. Keeps a cut alive while navigating to the target directory.
+  cleanup_delay_ms = false,
+
   columns = {
     "icon_uncolored_default",
   },
@@ -172,9 +174,14 @@ oil.setup({
     ["V"] = false,
 
     ["<C-p>"] = open_oil_preview,
-    ["y"] = "actions.copy_to_system_clipboard",
-    ["p"] = "actions.paste_from_system_clipboard",
-    ["x"] = { "actions.paste_from_system_clipboard", opts = { delete_original = true } },
+
+    -- y/p/x stay unmapped so plain Vim editing drives file moves: dd a line,
+    -- navigate, p it, then :w. Oil keeps the entry's hidden id through the
+    -- register, so that round trip is a move and not a delete plus create.
+    -- The system-clipboard actions move to g-prefixed keys.
+    ["gy"] = "actions.copy_to_system_clipboard",
+    ["gp"] = "actions.paste_from_system_clipboard",
+    ["gP"] = { "actions.paste_from_system_clipboard", opts = { delete_original = true } },
     ["<BS>"] = tmux_navigate("TmuxNavigateLeft"),
     ["<C-h>"] = tmux_navigate("TmuxNavigateLeft"),
     ["<C-j>"] = tmux_navigate("TmuxNavigateDown"),

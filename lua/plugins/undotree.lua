@@ -1,7 +1,5 @@
-local gh = require "gh"
-
 vim.pack.add {
-  gh "mbbill/undotree",
+  "https://github.com/mbbill/undotree",
 }
 
 -- UndoTree layout settings

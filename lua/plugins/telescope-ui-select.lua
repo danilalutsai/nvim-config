@@ -1,3 +1,1 @@
-local gh = require 'gh'
-
-vim.pack.add { gh 'nvim-telescope/telescope-ui-select.nvim' }
+vim.pack.add { 'https://github.com/nvim-telescope/telescope-ui-select.nvim' }

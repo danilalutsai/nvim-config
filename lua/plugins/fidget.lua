@@ -1,4 +1,2 @@
-local gh = require 'gh'
-
-vim.pack.add { gh 'j-hui/fidget.nvim' }
+vim.pack.add { 'https://github.com/j-hui/fidget.nvim' }
 require('fidget').setup {}

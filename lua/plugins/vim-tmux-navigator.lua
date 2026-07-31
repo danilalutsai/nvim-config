@@ -1,7 +1,5 @@
-local gh = require "gh"
-
 vim.pack.add {
-  gh "christoomey/vim-tmux-navigator",
+  "https://github.com/christoomey/vim-tmux-navigator",
 }
 
 vim.keymap.set("n", "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>")

@@ -1,9 +1,13 @@
-local gh = require 'gh'
-
-vim.pack.add { { src = gh('saghen/blink.cmp'), version = vim.version.range '1.*' } }
+vim.pack.add { { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '1.*' } }
 require('blink.cmp').setup {
   keymap = {
     preset = 'default',
+    -- macOS owns <C-space> (Input Sources > select previous), so the menu gets
+    -- triggered from <C-n> instead. blink runs the list in order and skips a
+    -- command that declines: closed menu -> show, open menu -> select_next,
+    -- blink inactive -> Vim's own keyword completion.
+    ['<C-n>'] = { 'show', 'select_next', 'fallback_to_mappings' },
+    ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
   },
   appearance = {
     nerd_font_variant = 'mono',

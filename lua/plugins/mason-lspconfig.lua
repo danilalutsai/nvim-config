@@ -1,3 +1,1 @@
-local gh = require 'gh'
-
-vim.pack.add { gh 'mason-org/mason-lspconfig.nvim' }
+vim.pack.add { 'https://github.com/mason-org/mason-lspconfig.nvim' }

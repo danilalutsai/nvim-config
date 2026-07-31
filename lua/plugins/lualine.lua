@@ -1,6 +1,4 @@
-local gh = require 'gh'
-
-vim.pack.add { gh 'nvim-lualine/lualine.nvim' }
+vim.pack.add { 'https://github.com/nvim-lualine/lualine.nvim' }
 
 local colors = {
   base = '#191724',
