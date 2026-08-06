@@ -12,16 +12,22 @@ local icon_provider
 -- Files keep whatever mini.icons gives them.
 local DEFAULT_DIR_HL = "OilDefaultDir"
 
-local function set_default_dir_hl()
+-- Cursor line background, scoped to oil windows through winhighlight below.
+-- Same value as CursorLine in plugins/rosepine.lua, but a separate group so the
+-- listing can be restyled without touching code buffers, and vice versa.
+local CURSOR_LINE_HL = "OilCursorLine"
+
+local function set_oil_highlights()
   vim.api.nvim_set_hl(0, DEFAULT_DIR_HL, { fg = "#798fed" })
+  vim.api.nvim_set_hl(0, CURSOR_LINE_HL, { bg = "#21202e" })
 end
 
-set_default_dir_hl()
+set_oil_highlights()
 
 -- A colorscheme load wipes custom groups, so re-register on every switch.
 vim.api.nvim_create_autocmd("ColorScheme", {
   group = vim.api.nvim_create_augroup("OilDefaultDirHl", { clear = true }),
-  callback = set_default_dir_hl,
+  callback = set_oil_highlights,
 })
 
 local function tmux_navigate(command)
@@ -148,16 +154,22 @@ oil.setup({
     signcolumn = "no",
     statuscolumn = "  ",
     list = false,
+    cursorline = true,
+    winhighlight = "CursorLine:" .. CURSOR_LINE_HL,
   },
 
   preview_win = {
     update_on_cursor_moved = true,
     preview_method = "fast_scratch",
     win_options = {
-      number = false,
+      -- Absolute numbers only: the cursor stays in the listing, so the global
+      -- relativenumber would just count from whatever line the preview opened
+      -- on. An empty statuscolumn falls back to Neovim's built-in number
+      -- column; the "  " the listing uses would blank the numbers out.
+      number = true,
       relativenumber = false,
       signcolumn = "no",
-      statuscolumn = "  ",
+      statuscolumn = "",
     },
   },
 

@@ -7,13 +7,13 @@ local colors = {
   muted = '#2d2c38',
   subtle = '#666666',
   text = '#bcb8db',
-  love = '#cc8dad',
-  gold = '#82b09c',
-  rose = '#7e8fd6',
-  pine = '#cfb993',
-  foam = '#a992d4',
-  iris = '#d4a896',
-  leaf = '#82b09c',
+  love = '#cf9bc8',
+  gold = '#8fbaa7',
+  rose = '#8b9ad6',
+  pine = '#dbc6a2',
+  foam = '#bd9ee8',
+  iris = '#c9a58d',
+  leaf = '#8fbaa7',
   highlight_low = '#21202e',
   highlight_med = '#403d52',
   highlight_high = '#524f67',
@@ -44,32 +44,34 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, 'FloatBorder', { fg = colors.muted, bg = colors.surface })
   vim.api.nvim_set_hl(0, 'ColorColumn', { bg = colors.surface })
   vim.api.nvim_set_hl(0, 'Operator', { fg = "#cbc7eb" })
-  vim.api.nvim_set_hl(0, '@keyword.operator.typescript', { fg = "#cc8dad" })
-  vim.api.nvim_set_hl(0, '@keyword.operator.javascript', { fg = "#cc8dad" })
+  vim.api.nvim_set_hl(0, '@keyword.operator.typescript', { fg = "#cf9bc8" })
+  vim.api.nvim_set_hl(0, '@keyword.operator.javascript', { fg = "#cf9bc8" })
   vim.api.nvim_set_hl(0, '@operator', { fg = "#cbc7eb" })
-  vim.api.nvim_set_hl(0, '@comment', { fg = "#7b788f" })
+  vim.api.nvim_set_hl(0, '@comment', { fg = "#666578" })
   vim.api.nvim_set_hl(0, '@keyword.operator', { fg = "#b2b0d4" })
-  vim.api.nvim_set_hl(0, '@constructor', { fg = "#7e8fd6" })
-  vim.api.nvim_set_hl(0, '@keyword', { fg = "#cc8dad", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.return', { fg = "#cc8dad", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.conditional', { fg = "#cfb993", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.exception', { fg = "#cfb993", italic = false })
+  vim.api.nvim_set_hl(0, '@constructor', { fg = "#8b9ad6" })
+  vim.api.nvim_set_hl(0, '@keyword', { fg = "#cf9bc8", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.return', { fg = "#cf9bc8", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.conditional', { fg = "#bd9ee8", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.exception', { fg = "#bd9ee8", italic = false })
   vim.api.nvim_set_hl(0, '@keyword.conditional.ternary', { fg = "#b2b0d4", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.import', { fg = "#cc8dad", italic = false })
-  vim.api.nvim_set_hl(0, '@keyword.repeat', { fg = "#cfb993", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.import', { fg = "#cf9bc8", italic = false })
+  vim.api.nvim_set_hl(0, '@keyword.repeat', { fg = "#bd9ee8", italic = false })
+  vim.api.nvim_set_hl(0, '@lsp.type.class', { fg = "#bd9ee8", italic = false })
   vim.api.nvim_set_hl(0, '@punctuation.bracket', { fg = "#b2b0d4" })
-  vim.api.nvim_set_hl(0, '@lsp.typemod.variable.defaultLibrary', { fg = "#cfb993" })
+  vim.api.nvim_set_hl(0, '@lsp.typemod.variable.defaultLibrary', { fg = "#cf9bc8" })
+  vim.api.nvim_set_hl(0, '@lsp.typemod.class.defaultLibrary', { fg = "#bd9ee8" })
   vim.api.nvim_set_hl(0, "@punctuation.delimiter", { fg = "#b2b0d4" })
   vim.api.nvim_set_hl(0, "@punctuation.optional", { fg = "#b2b0d4" })
   vim.api.nvim_set_hl(0, '@punctuation.special', { fg = '#b2b0d4' })
-  vim.api.nvim_set_hl(0, '@tag.delimiter', { fg = '#7b788f' })
-  vim.api.nvim_set_hl(0, '@type', { fg = '#cfb993' })
-  vim.api.nvim_set_hl(0, '@type.builtin', { fg = '#cfb993' })
-  vim.api.nvim_set_hl(0, '@constant.builtin', { fg = '#91bbe3' })
-  vim.api.nvim_set_hl(0, 'Boolean', { fg = '#91bbe3' })
-  vim.api.nvim_set_hl(0, 'pythonBoolean', { fg = '#91bbe3' })
-  vim.api.nvim_set_hl(0, 'Number', { fg = '#91bbe3' })
-  vim.api.nvim_set_hl(0, 'Statement', { fg = '#cc8dad' })
+  vim.api.nvim_set_hl(0, '@tag.delimiter', { fg = '#85819c' })
+  vim.api.nvim_set_hl(0, '@type', { fg = '#dbc6a2' })
+  vim.api.nvim_set_hl(0, '@type.builtin', { fg = '#dbc6a2' })
+  vim.api.nvim_set_hl(0, '@constant.builtin', { fg = '#8ab0d4' })
+  vim.api.nvim_set_hl(0, 'Boolean', { fg = '#8ab0d4' })
+  vim.api.nvim_set_hl(0, 'pythonBoolean', { fg = '#8ab0d4' })
+  vim.api.nvim_set_hl(0, 'Number', { fg = '#8ab0d4' })
+  vim.api.nvim_set_hl(0, 'Statement', { fg = '#cf9bc8' })
   vim.api.nvim_set_hl(0, 'Pmenu', { fg = "#b2b0d4", bg = colors.surface })
   vim.api.nvim_set_hl(0, 'BlinkCmpLabel', { fg = '#b2b0d4' })
   vim.api.nvim_set_hl(0, 'BlinkCmpLabelDeprecated', { fg = '#b2b0d4', strikethrough = true })
@@ -94,8 +96,10 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, 'TelescopePromptBorder', { fg = colors.muted, bg = 'NONE' })
   vim.api.nvim_set_hl(0, 'TelescopeResultsBorder', { fg = colors.muted, bg = 'NONE' })
   vim.api.nvim_set_hl(0, 'TelescopePreviewBorder', { fg = colors.muted, bg = 'NONE' })
-  vim.api.nvim_set_hl(0, 'TelescopeSelection', { fg = colors.text, bg = colors.highlight_med })
-  vim.api.nvim_set_hl(0, 'TelescopeSelectionCaret', { fg = colors.gold, bg = colors.highlight_med })
+  -- Selected row matches OilCursorLine in plugins/oil.lua, so the highlighted
+  -- line reads the same in the picker and in the file listing.
+  vim.api.nvim_set_hl(0, 'TelescopeSelection', { fg = colors.text, bg = '#21202e' })
+  vim.api.nvim_set_hl(0, 'TelescopeSelectionCaret', { fg = colors.gold, bg = '#21202e' })
   vim.api.nvim_set_hl(0, 'TelescopeMultiSelection', { fg = colors.text, bg = colors.highlight_low })
   vim.api.nvim_set_hl(0, 'TelescopePreviewLine', { bg = colors.highlight_low })
   vim.api.nvim_set_hl(0, 'QuickFixLine', vim.tbl_extend('force', quickfix_line, { bg = colors.overlay }))
@@ -106,7 +110,7 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, 'LspReferenceRead', { bg = '#201d29' })
   vim.api.nvim_set_hl(0, 'LspReferenceWrite', { bg = '#201d29' })
   vim.api.nvim_set_hl(0, 'Visual', { bg = '#4d475e' })
-  vim.api.nvim_set_hl(0, "LineNr", { fg = "#7b788f" })
+  vim.api.nvim_set_hl(0, "LineNr", { fg = "#59566e" })
   vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#58556b", bold = true })
   vim.api.nvim_set_hl(0, 'OilDir', { link = 'Normal' })
 end

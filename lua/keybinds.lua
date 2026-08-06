@@ -184,12 +184,19 @@ do
   vim.keymap.set('n', '<C-n>', 'n', { desc = 'Next search result' })
   vim.keymap.set('n', '<C-p>', 'N', { desc = 'Previous search result' })
   vim.keymap.set('n', 'zz', 'zt', { desc = 'Place current line at top' })
-  -- netrw: navigate with h/l (like Oil)
+  -- netrw: Tab/S-Tab to descend and ascend, a/A to create, matching Oil.
+  -- All remap = true because they stand on netrw's own <CR>, -, % and d maps.
   vim.api.nvim_create_autocmd('FileType', {
     pattern = 'netrw',
     callback = function(event)
-      vim.keymap.set('n', 'l', '<CR>', { buffer = event.buf, remap = true, desc = 'Open file or folder' })
-      vim.keymap.set('n', 'h', '-', { buffer = event.buf, remap = true, desc = 'Go up folder' })
+      -- cursorline is off globally; netrw gets it so the current row is visible.
+      vim.opt_local.cursorline = true
+
+      local opts = { buffer = event.buf, remap = true }
+      vim.keymap.set('n', '<Tab>', '<CR>', vim.tbl_extend('force', opts, { desc = 'Open file or folder' }))
+      vim.keymap.set('n', '<S-Tab>', '-', vim.tbl_extend('force', opts, { desc = 'Go up folder' }))
+      vim.keymap.set('n', 'a', '%', vim.tbl_extend('force', opts, { desc = 'Add file' }))
+      vim.keymap.set('n', 'A', 'd', vim.tbl_extend('force', opts, { desc = 'Add directory' }))
     end,
   })
 
