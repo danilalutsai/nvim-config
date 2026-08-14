@@ -1,25 +1,5 @@
 
 vim.pack.add { 'https://github.com/sindrets/diffview.nvim' }
---
---
-local colors = {
-  base = '#0c0c12',
-  surface = '#1f1d2e',
-  overlay = '#26233a',
-  muted = '#2d2c38',
-  subtle = '#666666',
-  text = '#cbc7eb',
-  love = '#bd7186',
-  gold = '#c9a973',
-  rose = '#bd847d',
-  pine = '#7080c2',
-  foam = '#78ab96',
-  iris = '#9179bd',
-  leaf = '#759e8d',
-  highlight_low = '#21202e',
-  highlight_med = '#403d52',
-  highlight_high = '#524f67',
-}
 
 local function set_diffview_colors()
   local add_fg = "#164542"

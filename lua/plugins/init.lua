@@ -1,8 +1,6 @@
 local plugins = {
   'gitsigns',
-  'rosepine',
-  -- Loads after rosepine so its `colorscheme` call is the one that sticks.
-  'rosepine',
+  'catppuccin-simple',
   'lualine',
   'mini',
   'surround',
