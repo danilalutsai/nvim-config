@@ -51,7 +51,7 @@ local palette = {
   sky = '#89dceb',
   sapphire = '#74c7ec',
   blue = '#89b4fa',
-  lavender = '#b4befe',
+  lavender = '#cdd6f4',
 }
 
 require('catppuccin').setup {

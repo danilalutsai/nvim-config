@@ -2,9 +2,13 @@ vim.pack.add { 'https://github.com/nvim-lualine/lualine.nvim' }
 
 local colors = {
   base = '#191724',
-  status = '#1f1d2e',
+  -- Background of every non-mode section. Ghostty's `background` is #14141f, so
+  -- rose-pine's own #1f1d2e sat only a few points above it and the bar had no
+  -- visible edge -- this is catppuccin's surface0, which reads as a distinct
+  -- block against that ground.
+  status = '#313244',
   muted = '#6e6a86',
-  text = '#908caa',
+  text = '#cdd6f4',
   love = '#eb6f92',
   gold = '#f6c177',
   rose = '#ebbcba',

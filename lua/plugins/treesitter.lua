@@ -11,6 +11,13 @@ require('nvim-treesitter').setup {
 local parsers = {
   'bash',
   'c',
+  -- Parses the *inside* of a comment (TODO:, FIXME:, NOTE:, the (user) in
+  -- TODO(name):, issue numbers, URLs) so `@comment.todo` and friends can be
+  -- highlighted. nvim-treesitter's injections.scm already injects this parser
+  -- into comments for every language below, but the injection silently does
+  -- nothing while the parser itself is missing, which is why the tags only ever
+  -- showed up in filetypes falling back to legacy syntax highlighting.
+  'comment',
   'css',
   'diff',
   'html',
@@ -20,6 +27,7 @@ local parsers = {
   'luadoc',
   'markdown',
   'markdown_inline',
+  'python',
   'query',
   'tsx',
   'typescript',
