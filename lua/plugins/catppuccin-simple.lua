@@ -66,15 +66,13 @@ require('catppuccin').setup {
       VisualNOS = { bg = colors.surface1, style = {} },
       -- Catppuccin puts the gutter on surface1 (#45475a), which is a background
       -- shade being used as a foreground -- readable against Mocha's own base,
-      -- but not against the darker ground Ghostty actually paints. overlay0 is
-      -- the dimmest shade in the palette still meant to be read as text: legible
-      -- there, but a step below `Comment` on overlay1 so the gutter stays behind
-      -- the code rather than competing with it.
+      -- but not against the darker ground Ghostty actually paints. overlay1 is
+      -- the first shade in the palette meant to be read as text.
       --
       -- `relativenumber` is on, so this is nearly the whole gutter; the current
       -- line keeps catppuccin's bright CursorLineNr and gains bold, which is
       -- what separates it now that the rest is no longer dim by comparison.
-      LineNr = { fg = colors.overlay0 },
+      LineNr = { fg = colors.overlay1 },
       CursorLineNr = { fg = colors.text, style = { 'bold' } },
 
       Comment = { fg = colors.overlay1 },
