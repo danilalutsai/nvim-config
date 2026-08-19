@@ -16,6 +16,7 @@ local plugins = {
   'conform',
   'luasnip',
   'blink-cmp',
+  -- 'autopairs',
   'neogit',
   'diffview',
   'oil',
