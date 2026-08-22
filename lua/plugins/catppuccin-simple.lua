@@ -1,5 +1,6 @@
 vim.pack.add { { src = 'https://github.com/catppuccin/nvim', name = 'catppuccin' } }
 
+
 local palette = {
   base = '#1e1e2e',
   mantle = '#181825',
@@ -79,6 +80,7 @@ require('catppuccin').setup {
       ['@property.css'] = { fg = colors.text },
       ['@property.scss'] = { fg = colors.text },
       ['@variable.builtin'] = { fg = colors.teal },
+
       -- ['@keyword.repeat'] = { fg = colors.yellow },
       -- ['@keyword.exception'] = { fg = colors.yellow },
       -- ['@keyword.conditional'] = { fg = colors.yellow },
