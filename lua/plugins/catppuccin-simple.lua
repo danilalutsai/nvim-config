@@ -18,15 +18,15 @@ local palette = {
 
   rosewater = '#f5e0dc',
   flamingo = '#f38ba8',
-  pink = '#f2cdcd',
+  pink = '#cdd6f4',
   mauve = '#cba6f7',
   red = '#f38ba8',
-  maroon = '#eba0ac',
+  maroon = '#cdd6f4',
   peach = '#fab387',
   yellow = '#f9e2af',
   green = '#a6e3a1',
   teal = '#94e2d5',
-  sky = '#89dceb',
+  sky = '#cdd6f4',
   sapphire = '#74c7ec',
   blue = '#89b4fa',
   lavender = '#cdd6f4',
@@ -78,8 +78,7 @@ require('catppuccin').setup {
       ['@type.builtin'] = { fg = colors.yellow },
       ['@property.css'] = { fg = colors.text },
       ['@property.scss'] = { fg = colors.text },
-      ['@variable.builtin'] = { fg = colors.teal },
-      ['rustIdentifier'] = { fg = colors.maroon},
+      ['@variable.builtin'] = { fg = colors.red },
 
       -- ['@keyword.repeat'] = { fg = colors.yellow },
       -- ['@keyword.exception'] = { fg = colors.yellow },
@@ -119,10 +118,25 @@ require('catppuccin').setup {
       TelescopePreviewBorder = { fg = colors.surface1, bg = transparent },
       TelescopeTitle = { fg = colors.surface2, bg = transparent },
 
-      TelescopeSelection = { fg = colors.text, bg = colors.surface0, style = {} },
-      TelescopeSelectionCaret = { fg = colors.green, bg = colors.surface0, style = {} },
+      -- The row under the cursor, in the results list and mirrored in the
+      -- preview. surface1 rather than the surface0 these started on: the
+      -- windows are transparent onto Ghostty's #0c0c12, and surface0 is only a
+      -- few points off the surrounding rows, so the cursor row was hard to
+      -- pick out while scrolling. surface2 is the next step up and overshoots --
+      -- the row then reads as a bright band. Same value as OilCursorLine in
+      -- plugins/oil.lua and QuickFixLine below, so the current row reads the
+      -- same in all three lists.
+      TelescopeSelection = { fg = colors.text, bg = colors.surface1, style = {} },
+      TelescopeSelectionCaret = { fg = colors.green, bg = colors.surface1, style = {} },
+      TelescopePreviewLine = { bg = colors.surface1 },
+      -- Marked rows stay a step below the cursor row: they need to be visible
+      -- at a glance, but not compete with where the cursor actually is.
       TelescopeMultiSelection = { fg = colors.text, bg = colors.surface0, style = {} },
-      TelescopePreviewLine = { bg = colors.surface0 },
+
+      -- Quickfix's current entry. Catppuccin ships this as surface1 + bold; the
+      -- bold re-renders the whole line in the bold face for no gain, and the
+      -- background is spelled out here so it stays tied to the two groups above.
+      QuickFixLine = { bg = colors.surface1, style = {} },
     }
   end,
 }

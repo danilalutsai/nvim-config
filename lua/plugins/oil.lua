@@ -15,9 +15,13 @@ local DEFAULT_FILE_HL = "OilDefaultFile"
 
 -- Cursor line background, scoped to oil windows through winhighlight below.
 -- Same value as TelescopeSelection in plugins/catppuccin-simple.lua (catppuccin's
--- surface0), so the highlighted row looks the same whichever of the two you are
+-- surface1), so the highlighted row looks the same whichever of the two you are
 -- picking a file in -- but a separate group, so the listing can be restyled
 -- without touching code buffers, and vice versa.
+--
+-- Scoped on purpose: `cursorline` is off globally (lua/options.lua), so this
+-- must not become a plain CursorLine override or every code buffer picks up a
+-- highlighted line.
 local CURSOR_LINE_HL = "OilCursorLine"
 
 -- mini.icons groups we don't want in the listing, mapped to our own replacement.
@@ -32,7 +36,7 @@ local HL_OVERRIDES = {
 local function set_oil_highlights()
   vim.api.nvim_set_hl(0, DEFAULT_DIR_HL, { fg = "#798fed" })
   vim.api.nvim_set_hl(0, DEFAULT_FILE_HL, { fg = "#ca9ee6" })
-  vim.api.nvim_set_hl(0, CURSOR_LINE_HL, { bg = "#313244" })
+  vim.api.nvim_set_hl(0, CURSOR_LINE_HL, { bg = "#45475a" })
   vim.api.nvim_set_hl(0, HL_OVERRIDES.MiniIconsAzure, { fg = "#cba6f7" })
 end
 
