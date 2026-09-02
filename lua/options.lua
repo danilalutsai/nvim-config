@@ -1,7 +1,11 @@
 do
   vim.loader.enable()
 
-  vim.g.netrw_bufsettings = "noma nomod nu nobl nowrap ro"
+  -- No g:netrw_bufsettings override. netrw's own default is
+  -- "noma nomod nonu nobl nowrap ro nornu"; this used to swap that nonu for
+  -- nu and drop the nornu, which left the listing with a number column that
+  -- the global relativenumber below turned into hybrid numbering -- relative
+  -- counts down the file names, absolute on the cursor row.
 
   vim.g.mapleader = " "
   vim.g.maplocalleader = " "

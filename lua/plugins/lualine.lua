@@ -85,10 +85,10 @@ local function current_filename()
   end
 
   if vim.bo.modified then
-    return ' ' .. path .. ' [+]'
+    return path .. ' [+]'
   end
 
-  return ' ' .. path
+  return path
 end
 
 local git_cache = { value = '', time = 0, cwd = nil }

@@ -79,6 +79,8 @@ require('catppuccin').setup {
       ['@property.css'] = { fg = colors.text },
       ['@property.scss'] = { fg = colors.text },
       ['@variable.builtin'] = { fg = colors.red },
+      ['@lsp.typemod.variable.defaultLibrary'] = { fg = colors.text },
+      ['@lsp.typemod.enumMember'] = { fg = colors.text },
 
       -- ['@keyword.repeat'] = { fg = colors.yellow },
       -- ['@keyword.exception'] = { fg = colors.yellow },
