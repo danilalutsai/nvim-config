@@ -49,6 +49,7 @@ require('catppuccin').setup {
       ok = { 'undercurl' },
     },
   },
+
   custom_highlights = function(colors)
     local float = { bg = colors.base }
     local border = { fg = colors.surface1, bg = colors.base }
