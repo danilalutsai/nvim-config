@@ -15,7 +15,22 @@ do
   vim.o.number = true
   vim.o.relativenumber = true
   vim.o.numberwidth = 4
-  vim.o.statuscolumn = ' %{v:virtnum == 0 ? (v:relnum == 0 ? v:lnum : " ") : ""}%=%{v:virtnum == 0 && v:relnum != 0 ? v:relnum : ""} '
+  -- Hybrid numbering: absolute on the cursor row, relative everywhere else, and
+  -- nothing on the continuation rows of a wrapped line (v:virtnum > 0 there).
+  --
+  -- Every branch is guarded by &number / &relativenumber, the padding included.
+  -- A 'statuscolumn' replaces the built-in number column outright and is drawn
+  -- whether or not those options are on, so without the guards it kept painting
+  -- numbers in the buffers that switch them off -- :Man and :help both do, in
+  -- their runtime ftplugins, and got a hybrid column anyway.
+  vim.o.statuscolumn = table.concat {
+    '%{&number || &relativenumber ? " " : ""}',
+    '%{v:virtnum == 0 && &number && v:relnum == 0 ? v:lnum : ""}',
+    '%{v:virtnum == 0 && &relativenumber && v:relnum != 0 ? " " : ""}',
+    '%=',
+    '%{v:virtnum == 0 && &relativenumber && v:relnum != 0 ? v:relnum : ""}',
+    '%{&number || &relativenumber ? " " : ""}',
+  }
 
   local function clear_special_buffer_columns()
     local filetype = vim.bo.filetype:lower()
