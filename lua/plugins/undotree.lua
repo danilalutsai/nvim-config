@@ -2,6 +2,7 @@ vim.pack.add {
   "https://github.com/mbbill/undotree",
 }
 
+
 -- UndoTree layout settings
 vim.g.undotree_WindowLayout = 1
 vim.g.undotree_SetFocusWhenToggle = 1
