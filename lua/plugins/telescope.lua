@@ -1,6 +1,7 @@
 local telescope_plugins = {
   'https://github.com/nvim-telescope/telescope.nvim',
 }
+
 if vim.fn.executable 'make' == 1 then
   table.insert(telescope_plugins, 'https://github.com/nvim-telescope/telescope-fzf-native.nvim')
 end
