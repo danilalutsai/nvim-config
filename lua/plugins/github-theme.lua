@@ -19,21 +19,19 @@ local palette = {
   rosewater = '#f5e0dc',
   flamingo = '#f38ba8',
   pink = '#cdd6f4',
-  mauve = '#cba6f7',
-  red = '#f38ba8',
+  mauve = '#b392f0',
+  red = '#f97583',
   maroon = '#cdd6f4',
-  peach = '#fab387',
-  yellow = '#f9e2af',
-  green = '#88e39e',
+  peach = '#ffab70',
+  yellow = '#79b8ff',
+  green = '#85e89d',
   teal = '#94e2d5',
   sky = '#cdd6f4',
-  sapphire = '#74c7ec',
+  sapphire = '#79b8ff',
   blue = '#89b4fa',
   lavender = '#cdd6f4',
 }
 
--- GitHub Dark (legacy) — core
---
 -- - background #24292e
 -- - foreground #d1d5da
 -- - selection #3392FF44
@@ -53,12 +51,6 @@ local palette = {
 -- - attributes #b392f0
 -- - regex #85e89d
 -- - invalid / error #f97583
---
--- Diff / markup
---
--- - inserted #85e89d on #144620
--- - deleted #fdaeb7 on #86181d
--- - changed #ffab70
 
 require('catppuccin').setup {
   flavour = 'mocha',
