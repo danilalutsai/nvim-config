@@ -2,6 +2,7 @@ require('options')
 require('plugins')
 require('keybinds')
 
+-- comment
 
 vim.api.nvim_create_autocmd("OptionSet", {
   group = vim.api.nvim_create_augroup("DisableWrapInDiffWindows", { clear = true }),
