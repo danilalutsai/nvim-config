@@ -1,37 +1,36 @@
 vim.pack.add { { src = 'https://github.com/catppuccin/nvim', name = 'catppuccin' } }
 
-
-local palette = {
-  base = '#1e1e2e',
-  mantle = '#181825',
-  crust = '#11111b',
-
-  surface0 = '#313244',
-  surface1 = '#45475a',
-  surface2 = '#585b70',
-  overlay0 = '#6c7086',
-  overlay1 = '#7f849c',
-  overlay2 = '#9399b2',
-
-  subtext0 = '#cdd6f4',
-  subtext1 = '#cdd6f4',
-  text = '#cdd6f4',
-
-  rosewater = '#f5e0dc',
-  flamingo = '#f38ba8',
-  pink = '#cdd6f4',
-  mauve = '#cba6f7',
-  red = '#f38ba8',
-  maroon = '#cdd6f4',
-  peach = '#fab387',
-  yellow = '#f9e2af',
-  green = '#88e39e',
-  teal = '#94e2d5',
-  sky = '#cdd6f4',
-  sapphire = '#74c7ec',
-  blue = '#89b4fa',
-  lavender = '#cdd6f4',
-}
+-- local palette = {
+--   base = '#1e1e2e',
+--   mantle = '#181825',
+--   crust = '#11111b',
+--
+--   surface0 = '#313244',
+--   surface1 = '#45475a',
+--   surface2 = '#585b70',
+--   overlay0 = '#6c7086',
+--   overlay1 = '#7f849c',
+--   overlay2 = '#9399b2',
+--
+--   subtext0 = '#cdd6f4',
+--   subtext1 = '#cdd6f4',
+--   text = '#cdd6f4',
+--
+--   rosewater = '#f5e0dc',
+--   flamingo = '#f38ba8',
+--   pink = '#cdd6f4',
+--   mauve = '#cba6f7',
+--   red = '#f38ba8',
+--   maroon = '#cdd6f4',
+--   peach = '#fab387',
+--   yellow = '#f9e2af',
+--   green = '#88e39e',
+--   teal = '#94e2d5',
+--   sky = '#cdd6f4',
+--   sapphire = '#74c7ec',
+--   blue = '#89b4fa',
+--   lavender = '#cdd6f4',
+-- }
 
 -- GitHub Dark (legacy) — core
 --
