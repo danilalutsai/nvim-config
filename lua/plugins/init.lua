@@ -27,6 +27,7 @@ local plugins = {
   'vim-tmux-navigator',
   'markdown-preview',
   'colorizer',
+  'match-tag-always',
 }
 
 for _, name in ipairs(plugins) do

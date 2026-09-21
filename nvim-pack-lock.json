@@ -5,6 +5,10 @@
       "src": "https://github.com/L3MON4D3/LuaSnip",
       "version": "2.0.0 - 3.0.0"
     },
+    "MatchTagAlways": {
+      "rev": "352eb479a4ad1608e0880b79ab2357aac2cf4bed",
+      "src": "https://github.com/Valloric/MatchTagAlways"
+    },
     "blink.cmp": {
       "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
       "src": "https://github.com/saghen/blink.cmp",
