@@ -120,28 +120,6 @@ local function current_branch()
   return ''
 end
 
-local function current_lsp()
-  local clients = vim.lsp.get_clients { bufnr = 0 }
-  if #clients == 0 then
-    return ''
-  end
-
-  local names = {}
-  for _, client in ipairs(clients) do
-    -- Attached to every buffer and never the answer to "what is checking this
-    -- file", so it only adds noise next to the real server.
-    if client.name ~= 'copilot' then
-      table.insert(names, client.name)
-    end
-  end
-
-  if #names == 0 then
-    return ''
-  end
-
-  return ' ' .. table.concat(names, ',')
-end
-
 require('lualine').setup {
   options = {
     globalstatus = true,
@@ -158,7 +136,6 @@ require('lualine').setup {
     lualine_x = {
       block(current_branch),
       block 'diff',
-      block(current_lsp, { color = { fg = colors.foam, bg = colors.status } }),
       block(current_filetype),
     },
     lualine_y = {},

@@ -4,7 +4,7 @@ vim.g.mta_use_matchparen_group = 0
 vim.g.mta_set_default_matchtag_color = 0
 vim.g.python3_host_prog = vim.fn.expand('~/.local/share/nvim-matchtag-venv/bin/python')
 
-vim.api.nvim_set_hl(0, 'MatchTag', { bg = 'NONE', sp = '#f9e2af', undercurl = true })
+vim.api.nvim_set_hl(0, 'MatchTag', { bg = '#474748' })
 
 vim.pack.add {
   'https://github.com/Valloric/MatchTagAlways',
