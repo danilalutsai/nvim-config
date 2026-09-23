@@ -27,7 +27,7 @@ local palette = {
   yellow = '#f9e2af',
   green = '#a6e3a1',
   teal = '#94e2d5',
-  sky = '#89dceb',
+  sky = '#94e2d5',
   sapphire = '#74c7ec',
   blue = '#89b4fa',
   lavender = '#cdd6f4',
@@ -90,6 +90,9 @@ require('catppuccin').setup {
       ['@string.special.url'] = { fg = colors.blue, style = {} },
       ['@markup.link.url'] = { fg = colors.blue, style = {} },
       ['@markup.underline'] = { style = {} },
+      -- `sp` controls the undercurl/underline colour independently from text.
+      -- Keep error diagnostics visually unified with their red foreground.
+      DiagnosticUnderlineError = { undercurl = true, sp = colors.red },
       Pmenu = { fg = colors.text, bg = colors.base },
       PmenuSel = { bg = colors.surface0, style = {} },
       PmenuMatchSel = { style = {} },

@@ -51,7 +51,9 @@ do
   })
 
   vim.o.textwidth = 0
-  vim.o.colorcolumn = '81'
+  -- No fixed-width guide: it otherwise appears as the vertical band in code
+  -- windows, which is distracting with the transparent background.
+  vim.o.colorcolumn = ''
   vim.opt.formatoptions:remove({ 't', 'c' })
 
   vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
@@ -86,7 +88,18 @@ do
   vim.o.foldcolumn = "0"
   vim.o.foldminlines = 1
   vim.o.foldtext = 'v:lua.fold_text()'
-  vim.opt.fillchars:append({ fold = ' ' })
+  -- Keep split windows edge-to-edge: their resize boundary remains, but none
+  -- of the vertical/horizontal separator glyphs are drawn.
+  vim.opt.fillchars:append({
+    fold = ' ',
+    vert = ' ',
+    horiz = ' ',
+    horizup = ' ',
+    horizdown = ' ',
+    vertleft = ' ',
+    vertright = ' ',
+    verthoriz = ' ',
+  })
 
   function _G.fold_text()
     local line = vim.fn.getline(vim.v.foldstart):gsub('^%s+', '')

@@ -19,16 +19,16 @@ local palette = {
   rosewater = '#f5e0dc',
   flamingo = '#f38ba8',
   pink = '#cdd6f4',
-  mauve = '#d1abff',
+  mauve = '#c8a4f5',
   red = '#f38ba8',
   maroon = '#cdd6f4',
   peach = '#ffb080',
-  yellow = '#edd6a4',
+  yellow = '#e0c996',
   green = '#84d999',
   teal = '#94e2d5',
   sky = '#94e2d5',
   sapphire = '#74c7ec',
-  blue = '#82b2ff',
+  blue = '#8cb4f5',
   lavender = '#cdd6f4',
 }
 
@@ -108,7 +108,6 @@ require('catppuccin').setup {
       ['@property.css'] = { fg = colors.text },
       ['@property.scss'] = { fg = colors.text },
       ['@variable.builtin'] = { fg = colors.red },
-      ['@lsp.typemod.variable.defaultLibrary'] = { fg = colors.text },
       ['@lsp.typemod.enumMember'] = { fg = colors.text },
 
       -- ['@keyword.repeat'] = { fg = colors.yellow },
