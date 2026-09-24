@@ -90,9 +90,12 @@ require('catppuccin').setup {
       ['@string.special.url'] = { fg = colors.blue, style = {} },
       ['@markup.link.url'] = { fg = colors.blue, style = {} },
       ['@markup.underline'] = { style = {} },
-      -- `sp` controls the undercurl/underline colour independently from text.
-      -- Keep error diagnostics visually unified with their red foreground.
+      -- Keep the code foreground intact; `sp` is the underline color.
       DiagnosticUnderlineError = { undercurl = true, sp = colors.red },
+      DiagnosticUnderlineWarn = { undercurl = true, sp = colors.yellow },
+      DiagnosticUnderlineInfo = { undercurl = true, sp = colors.teal },
+      DiagnosticUnderlineHint = { undercurl = true, sp = colors.teal },
+      DiagnosticUnderlineOk = { undercurl = true, sp = colors.green },
       Pmenu = { fg = colors.text, bg = colors.base },
       PmenuSel = { bg = colors.surface0, style = {} },
       PmenuMatchSel = { style = {} },

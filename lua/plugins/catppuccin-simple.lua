@@ -88,6 +88,8 @@ require('catppuccin').setup {
     return {
       Visual = { bg = colors.surface1, style = {} },
       VisualNOS = { bg = colors.surface1, style = {} },
+      WinSeparator = { fg = colors.surface1 },
+      VertSplit = { fg = colors.surface1 },
       LineNr = { fg = colors.overlay1 },
       CursorLineNr = { fg = colors.text, style = { 'bold' } },
       Comment = { fg = colors.overlay1 },

@@ -2,13 +2,8 @@ vim.pack.add { 'https://github.com/nvim-lualine/lualine.nvim' }
 
 local colors = {
   base = '#191724',
-  -- Background of every non-mode section. Ghostty's `background` is #14141f, so
-  -- rose-pine's own #1f1d2e sat only a few points above it and the bar had no
-  -- visible edge. catppuccin's surface0 (#313244) gave it one but still read as
-  -- a faint band; surface1 is the next step up and makes the bar a distinct
-  -- block against that ground. Same step the tmux window tabs took in
-  -- ~/.config/tmux/tmux.conf, so the two bars sit at matching weights.
-  status = '#45475a',
+  -- Background of every non-mode section.
+  status = '#181825',
   muted = '#6e6a86',
   text = '#cdd6f4',
   love = '#eb6f92',

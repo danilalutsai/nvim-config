@@ -88,17 +88,17 @@ do
   vim.o.foldcolumn = "0"
   vim.o.foldminlines = 1
   vim.o.foldtext = 'v:lua.fold_text()'
-  -- Keep split windows edge-to-edge: their resize boundary remains, but none
-  -- of the vertical/horizontal separator glyphs are drawn.
+  -- Draw subtle boundaries between split windows. Fugitive relies heavily on
+  -- splits for its status, index, and commit-message panes.
   vim.opt.fillchars:append({
     fold = ' ',
-    vert = ' ',
-    horiz = ' ',
-    horizup = ' ',
-    horizdown = ' ',
-    vertleft = ' ',
-    vertright = ' ',
-    verthoriz = ' ',
+    vert = '│',
+    horiz = '─',
+    horizup = '┴',
+    horizdown = '┬',
+    vertleft = '┤',
+    vertright = '├',
+    verthoriz = '┼',
   })
 
   function _G.fold_text()
