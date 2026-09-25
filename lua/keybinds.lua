@@ -46,11 +46,15 @@ do
     desc = "Jump backward",
   })
 
-  -- Ctrl-w, then c: close current buffer but keep Neovim open
-  vim.keymap.set("n", "<C-w>c", "<cmd>bdelete<CR>", {
+  -- Ctrl-w, then c: close the current split; the last window stays open.
+  vim.keymap.set("n", "<C-w>c", function()
+    if vim.fn.winnr('$') > 1 or vim.fn.tabpagenr('$') > 1 then
+      vim.cmd.close()
+    end
+  end, {
     noremap = true,
     silent = true,
-    desc = "Delete current buffer",
+    desc = "Close current window",
   })
 
   -- clear search highlights when pressing <esc>
