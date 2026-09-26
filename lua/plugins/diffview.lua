@@ -2,11 +2,11 @@
 vim.pack.add { 'https://github.com/sindrets/diffview.nvim' }
 
 local function set_diffview_colors()
-  local add_fg = "#164542"
-  local add_bg = "#99cfc4"
-  local delete_fg = "#471527"
-  local delete_bg = "#de99ad"
-  local change_bg = "#14131c"
+  local add_fg = "#20332a"
+  local add_bg = "#a6e3a1"
+  local delete_fg = "#3a2630"
+  local delete_bg = "#f38ba8"
+  local change_bg = "#292b38"
 
   -- Added lines. No fg: treesitter/syntax colors show through, only bg is tinted.
   vim.api.nvim_set_hl(0, "DiffAdd", {

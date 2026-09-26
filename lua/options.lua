@@ -15,6 +15,7 @@ do
   vim.o.number = true
   vim.o.relativenumber = true
   vim.o.numberwidth = 4
+  vim.o.wrap = false
   -- Hybrid numbering: absolute on the cursor row, relative everywhere else, and
   -- nothing on the continuation rows of a wrapped line (v:virtnum > 0 there).
   --

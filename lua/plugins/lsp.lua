@@ -82,7 +82,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
           vim.wo.number = false
           vim.wo.relativenumber = false
-          vim.wo.wrap = true
+          vim.wo.wrap = false
           vim.wo.cursorline = false
 
           -- Close only the documentation split

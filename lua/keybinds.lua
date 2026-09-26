@@ -46,10 +46,14 @@ do
     desc = "Jump backward",
   })
 
-  -- Ctrl-w, then c: close the current split; the last window stays open.
+  -- Ctrl-w, then c: close the window, or leave a blank buffer in the last tab.
   vim.keymap.set("n", "<C-w>c", function()
-    if vim.fn.winnr('$') > 1 or vim.fn.tabpagenr('$') > 1 then
+    if vim.fn.winnr('$') > 1 then
       vim.cmd.close()
+    elseif vim.fn.tabpagenr('$') > 1 then
+      vim.cmd.tabclose()
+    else
+      vim.cmd.enew()
     end
   end, {
     noremap = true,
@@ -135,10 +139,45 @@ do
     desc = 'To toggled line start',
   })
 
+  -- Start with zl/zh, then hold l/h to keep scrolling horizontally.
+  local function horizontal_scroll_mode(key)
+    local count = vim.v.count1
+
+    while true do
+      if key ~= 'l' and key ~= 'h' then
+        if key ~= '\027' then
+          vim.api.nvim_feedkeys(key, 'm', false)
+        end
+        return
+      end
+
+      vim.cmd('normal! ' .. count .. 'z' .. key)
+      vim.cmd('redraw')
+      count = 1
+
+      local ok, next_key = pcall(vim.fn.getcharstr)
+      if not ok then return end
+      key = next_key
+    end
+  end
+
+  vim.keymap.set('n', 'zl', function()
+    horizontal_scroll_mode('l')
+  end, { desc = 'Scroll right (hold l to repeat)' })
+  vim.keymap.set('n', 'zh', function()
+    horizontal_scroll_mode('h')
+  end, { desc = 'Scroll left (hold h to repeat)' })
+
   -- Window commands
   vim.keymap.set('n', '<C-w>v', '<cmd>vnew<CR>', { desc = 'Open new vertical window' })
   vim.keymap.set('n', '<C-w>s', '<cmd>new<CR>', { desc = 'Open new horizontal window' })
-  vim.keymap.set('n', '<C-w>x', '<cmd>close<CR>', { desc = 'Close current window' })
+  vim.keymap.set('n', '<C-w>x', function()
+    if vim.fn.tabpagenr('$') > 1 then
+      vim.cmd.tabclose()
+    else
+      vim.cmd.quitall()
+    end
+  end, { desc = 'Close current tab' })
   -- Resize submode: <C-w> H/J/K/L resizes once, then h/j/k/l keep resizing
   -- until any other key. Holding a key auto-repeats, so it feels continuous.
   -- <C-w> can't be held itself, which is why the submode exists.
