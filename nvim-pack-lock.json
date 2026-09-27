@@ -9,6 +9,10 @@
       "rev": "352eb479a4ad1608e0880b79ab2357aac2cf4bed",
       "src": "https://github.com/Valloric/MatchTagAlways"
     },
+    "base16-vim": {
+      "rev": "3be3cd82cd31acfcab9a41bad853d9c68d30478d",
+      "src": "https://github.com/chriskempson/base16-vim"
+    },
     "blink.cmp": {
       "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
       "src": "https://github.com/saghen/blink.cmp",
@@ -21,6 +25,10 @@
     "conform.nvim": {
       "rev": "619363c30309d29ffa631e67c8183f2a72caa373",
       "src": "https://github.com/stevearc/conform.nvim"
+    },
+    "cyberdream.nvim": {
+      "rev": "b3f4ef5e9b8ee370c913a48b63e130b730ee8782",
+      "src": "https://github.com/scottmckendry/cyberdream.nvim"
     },
     "diffview.nvim": {
       "rev": "4516612fe98ff56ae0415a259ff6361a89419b0a",
@@ -42,9 +50,17 @@
       "rev": "eb60cc7b94c46005237fd34170d76f3a089a90aa",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
+    "lackluster.nvim": {
+      "rev": "70dd682e564784893b984deb51dd5ddd263c8cc7",
+      "src": "https://github.com/slugbyte/lackluster.nvim"
+    },
     "lualine.nvim": {
       "rev": "221ce6b2d999187044529f49da6554a92f740a96",
       "src": "https://github.com/nvim-lualine/lualine.nvim"
+    },
+    "lush.nvim": {
+      "rev": "9c60ec2279d62487d942ce095e49006af28eed6e",
+      "src": "https://github.com/rktjmp/lush.nvim"
     },
     "markdown-preview.nvim": {
       "rev": "a923f5fc5ba36a3b17e289dc35dc17f66d0548ee",
@@ -103,9 +119,17 @@
       "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
       "src": "https://github.com/stevearc/oil.nvim"
     },
+    "photon.vim": {
+      "rev": "32b42c8a12bf9588259b76f3df6807960e0d7386",
+      "src": "https://github.com/axvr/photon.vim"
+    },
     "plenary.nvim": {
       "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
       "src": "https://github.com/nvim-lua/plenary.nvim"
+    },
+    "silentium.nvim": {
+      "rev": "c2c691773492b9a4a339b89628abd85c22e9b070",
+      "src": "https://github.com/silentium-theme/silentium.nvim"
     },
     "telescope-fzf-native.nvim": {
       "rev": "b25b749b9db64d375d782094e2b9dce53ad53a40",
@@ -127,6 +151,18 @@
       "rev": "6fa6b57cda8459e1e4b2ca34df702f55242f4e4d",
       "src": "https://github.com/mbbill/undotree"
     },
+    "vague.nvim": {
+      "rev": "f9060fdaf7b20f68575d6f8214da6f1cf0c72825",
+      "src": "https://github.com/vague-theme/vague.nvim"
+    },
+    "vim-colors-meh": {
+      "rev": "e8620eb2d869b7021bfdeaa6cdd7e4fcc7f14d3f",
+      "src": "https://github.com/davidosomething/vim-colors-meh"
+    },
+    "vim-colors-off": {
+      "rev": "2879dc5d358a4856873ca708399b34a436a0f3ec",
+      "src": "https://github.com/pbrisbin/vim-colors-off"
+    },
     "vim-fugitive": {
       "rev": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0",
       "src": "https://github.com/tpope/vim-fugitive"
@@ -138,6 +174,14 @@
     "vim-tmux-navigator": {
       "rev": "e41c431a0c7b7388ae7ba341f01a0d217eb3a432",
       "src": "https://github.com/christoomey/vim-tmux-navigator"
+    },
+    "warlock": {
+      "rev": "12c7772d35fd6956940d716bb71c9f3855a45a12",
+      "src": "https://github.com/hardselius/warlock"
+    },
+    "zenbones.nvim": {
+      "rev": "8304d8df9b823ff11e103afa62f38c39f534abe6",
+      "src": "https://github.com/zenbones-theme/zenbones.nvim"
     }
   }
 }

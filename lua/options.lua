@@ -52,9 +52,7 @@ do
   })
 
   vim.o.textwidth = 0
-  -- No fixed-width guide: it otherwise appears as the vertical band in code
-  -- windows, which is distracting with the transparent background.
-  vim.o.colorcolumn = ''
+  vim.o.colorcolumn = '81'
   vim.opt.formatoptions:remove({ 't', 'c' })
 
   vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {

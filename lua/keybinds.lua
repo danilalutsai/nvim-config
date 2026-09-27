@@ -46,16 +46,8 @@ do
     desc = "Jump backward",
   })
 
-  -- Ctrl-w, then c: close the window, or leave a blank buffer in the last tab.
-  vim.keymap.set("n", "<C-w>c", function()
-    if vim.fn.winnr('$') > 1 then
-      vim.cmd.close()
-    elseif vim.fn.tabpagenr('$') > 1 then
-      vim.cmd.tabclose()
-    else
-      vim.cmd.enew()
-    end
-  end, {
+  -- :quit closes the split, its tab when it was the last split, or Neovim.
+  vim.keymap.set("n", "<C-w>c", "<cmd>quit<CR>", {
     noremap = true,
     silent = true,
     desc = "Close current window",
@@ -139,9 +131,10 @@ do
     desc = 'To toggled line start',
   })
 
-  -- Start with zl/zh, then hold l/h to keep scrolling horizontally.
+  -- Start with zl/zh, then repeat l/h to scroll eight columns at a time.
   local function horizontal_scroll_mode(key)
     local count = vim.v.count1
+    local scroll_step = 8
 
     while true do
       if key ~= 'l' and key ~= 'h' then
@@ -151,7 +144,7 @@ do
         return
       end
 
-      vim.cmd('normal! ' .. count .. 'z' .. key)
+      vim.cmd('normal! ' .. (count * scroll_step) .. 'z' .. key)
       vim.cmd('redraw')
       count = 1
 
@@ -163,10 +156,10 @@ do
 
   vim.keymap.set('n', 'zl', function()
     horizontal_scroll_mode('l')
-  end, { desc = 'Scroll right (hold l to repeat)' })
+  end, { desc = 'Scroll right eight columns (repeat l)' })
   vim.keymap.set('n', 'zh', function()
     horizontal_scroll_mode('h')
-  end, { desc = 'Scroll left (hold h to repeat)' })
+  end, { desc = 'Scroll left eight columns (repeat h)' })
 
   -- Window commands
   vim.keymap.set('n', '<C-w>v', '<cmd>vnew<CR>', { desc = 'Open new vertical window' })

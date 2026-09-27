@@ -1,51 +1,21 @@
 vim.pack.add { 'https://github.com/nvim-lualine/lualine.nvim' }
 
-local colors = {
-  base = '#191724',
-  -- Background of every non-mode section.
-  status = '#181825',
-  muted = '#6e6a86',
-  text = '#cdd6f4',
-  love = '#eb6f92',
-  gold = '#f6c177',
-  rose = '#ebbcba',
-  pine = '#31748f',
-  foam = '#9ccfd8',
-  iris = '#c4a7e7',
-}
+local status_bg = '#282828'
+local theme = vim.deepcopy(require('lualine.themes.auto'))
 
-local rose_pine_status = {
-  normal = {
-    a = { fg = colors.base, bg = colors.rose, gui = 'bold' },
-    b = { fg = colors.text, bg = colors.status },
-    c = { fg = colors.text, bg = colors.status },
-  },
-  insert = {
-    a = { fg = colors.base, bg = colors.foam, gui = 'bold' },
-    b = { fg = colors.text, bg = colors.status },
-    c = { fg = colors.text, bg = colors.status },
-  },
-  visual = {
-    a = { fg = colors.base, bg = colors.iris, gui = 'bold' },
-    b = { fg = colors.text, bg = colors.status },
-    c = { fg = colors.text, bg = colors.status },
-  },
-  replace = {
-    a = { fg = colors.base, bg = colors.love, gui = 'bold' },
-    b = { fg = colors.text, bg = colors.status },
-    c = { fg = colors.text, bg = colors.status },
-  },
-  command = {
-    a = { fg = colors.base, bg = colors.gold, gui = 'bold' },
-    b = { fg = colors.text, bg = colors.status },
-    c = { fg = colors.text, bg = colors.status },
-  },
-  inactive = {
-    a = { fg = colors.muted, bg = colors.status },
-    b = { fg = colors.muted, bg = colors.status },
-    c = { fg = colors.muted, bg = colors.status },
-  },
-}
+-- Keep each mode's accent as its text color on one continuous background.
+for _, mode in pairs(theme) do
+  if type(mode) == 'table' then
+    local accent = mode.a and mode.a.bg
+    for _, section in pairs(mode) do
+      if type(section) == 'table' then
+        section.bg = status_bg
+        section.gui = nil
+      end
+    end
+    if mode.a and accent then mode.a.fg = accent end
+  end
+end
 
 local function block(component, opts)
   return vim.tbl_extend('force', {
@@ -118,14 +88,14 @@ end
 require('lualine').setup {
   options = {
     globalstatus = true,
-    theme = rose_pine_status,
+    theme = theme,
     component_separators = '',
     section_separators = '',
   },
   sections = {
     lualine_a = {},
     lualine_b = {
-      block(current_filename, { color = { fg = colors.text, bg = colors.status } }),
+      block(current_filename),
     },
     lualine_c = {},
     lualine_x = {
@@ -135,8 +105,14 @@ require('lualine').setup {
     },
     lualine_y = {},
     lualine_z = {
-      block('progress', { color = { fg = colors.text, bg = colors.status } }),
-      block('location', { padding = { left = 0, right = 1 }, color = { fg = colors.text, bg = colors.status } }),
+      block('progress'),
+      block('location', { padding = { left = 0, right = 1 } }),
     },
   },
 }
+
+-- Cover any unused statusline cells outside Lualine's rendered sections.
+for _, group in ipairs({ 'StatusLine', 'StatusLineNC' }) do
+  local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+  vim.api.nvim_set_hl(0, group, vim.tbl_extend('force', hl, { bg = status_bg, bold = false, italic = false }))
+end

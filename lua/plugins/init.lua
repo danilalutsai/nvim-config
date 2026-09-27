@@ -1,6 +1,6 @@
 local plugins = {
   'gitsigns',
-  'catppuccin',
+  'photon',
   'lualine',
   'mini',
   'surround',
