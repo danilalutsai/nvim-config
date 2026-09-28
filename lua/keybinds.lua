@@ -46,8 +46,27 @@ do
     desc = "Jump backward",
   })
 
-  -- :quit closes the split, its tab when it was the last split, or Neovim.
-  vim.keymap.set("n", "<C-w>c", "<cmd>quit<CR>", {
+  -- In the final window, close its buffer and return to another open buffer.
+  -- Show the welcome screen only when no other listed buffer remains.
+  vim.keymap.set("n", "<C-w>c", function()
+    if vim.fn.tabpagenr('$') == 1 and vim.fn.winnr('$') == 1 then
+      local current = vim.api.nvim_get_current_buf()
+      local has_other_buffer = false
+      for _, buffer in ipairs(vim.fn.getbufinfo({ buflisted = 1 })) do
+        if buffer.bufnr ~= current then
+          has_other_buffer = true
+          break
+        end
+      end
+
+      vim.cmd.bdelete()
+      if not has_other_buffer then
+        vim.cmd.intro()
+      end
+    else
+      vim.cmd.quit()
+    end
+  end, {
     noremap = true,
     silent = true,
     desc = "Close current window",
@@ -168,7 +187,7 @@ do
     if vim.fn.tabpagenr('$') > 1 then
       vim.cmd.tabclose()
     else
-      vim.cmd.quitall()
+      vim.cmd.enew()
     end
   end, { desc = 'Close current tab' })
   -- Resize submode: <C-w> H/J/K/L resizes once, then h/j/k/l keep resizing
