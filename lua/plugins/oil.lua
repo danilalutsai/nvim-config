@@ -8,36 +8,35 @@ local oil = require "oil"
 -- Resolved lazily on first render: mini.icons must finish setup first.
 local icon_provider
 
--- Entries with no icon color of their own get one of these instead of plain
--- Normal. Anything mini.icons colors itself keeps that color.
+-- Keep the listing in Photon's neutral palette; use purple only for the
+-- parent-directory icon.
+local colors = {
+  foreground = "#c6c6c6",
+  selection = "#3a3a3a",
+  comment = "#626262",
+  muted = "#767676",
+  purple = "#cba6f7",
+}
+
 local DEFAULT_DIR_HL = "OilDefaultDir"
 local DEFAULT_FILE_HL = "OilDefaultFile"
+local DIR_ICON_HL = "OilDirIcon"
+local FILE_ICON_HL = "OilFileIcon"
+local PARENT_ICON_HL = "OilParentIcon"
 
 -- Cursor line background, scoped to oil windows through winhighlight below.
--- Same value as TelescopeSelection in plugins/catppuccin-simple.lua (catppuccin's
--- surface1), so the highlighted row looks the same whichever of the two you are
--- picking a file in -- but a separate group, so the listing can be restyled
--- without touching code buffers, and vice versa.
---
 -- Scoped on purpose: `cursorline` is off globally (lua/options.lua), so this
 -- must not become a plain CursorLine override or every code buffer picks up a
 -- highlighted line.
 local CURSOR_LINE_HL = "OilCursorLine"
 
--- mini.icons groups we don't want in the listing, mapped to our own replacement.
--- Only the oil columns below consult this table, so icons rendered anywhere else
--- (statusline, pickers) keep mini.icons' original colors.
-local HL_OVERRIDES = {
-  -- Azure is what mini.icons gives typescript and friends: too close to the
-  -- directory blue in the listing.
-  MiniIconsAzure = "OilAzure",
-}
-
 local function set_oil_highlights()
-  vim.api.nvim_set_hl(0, DEFAULT_DIR_HL, { fg = "#798fed" })
-  vim.api.nvim_set_hl(0, DEFAULT_FILE_HL, { fg = "#ca9ee6" })
-  vim.api.nvim_set_hl(0, CURSOR_LINE_HL, { bg = "#45475a" })
-  vim.api.nvim_set_hl(0, HL_OVERRIDES.MiniIconsAzure, { fg = "#cba6f7" })
+  vim.api.nvim_set_hl(0, DEFAULT_DIR_HL, { fg = colors.muted })
+  vim.api.nvim_set_hl(0, DEFAULT_FILE_HL, { fg = colors.foreground })
+  vim.api.nvim_set_hl(0, DIR_ICON_HL, { fg = colors.muted })
+  vim.api.nvim_set_hl(0, FILE_ICON_HL, { fg = colors.comment })
+  vim.api.nvim_set_hl(0, PARENT_ICON_HL, { fg = colors.purple })
+  vim.api.nvim_set_hl(0, CURSOR_LINE_HL, { bg = colors.selection })
 end
 
 set_oil_highlights()
@@ -76,8 +75,7 @@ local function open_oil_preview()
   end)
 end
 
--- Icon column that mirrors oil's built-in one, except entries whose icon is the
--- generic fallback drop their highlight and render in plain Normal.
+-- Keep mini.icons' glyphs, but use Photon's neutral colors in Oil.
 local oil_columns = require "oil.columns"
 local oil_constants = require "oil.constants"
 
@@ -109,21 +107,16 @@ oil_columns.register("icon_uncolored_default", {
       name = meta.display_name
     end
 
-    local icon, hl, is_default = icon_provider(field_type, name, conf)
+    local icon = icon_provider(field_type, name, conf)
 
     if not conf or conf.add_padding ~= false then
       icon = icon .. " "
     end
 
-    if is_default then
-      -- Generic directory icon: our own blue. Generic file icon: our own purple.
-      if field_type == "directory" then
-        return { icon, DEFAULT_DIR_HL }
-      end
-      return { icon, DEFAULT_FILE_HL }
+    if name == ".." then
+      return { icon, PARENT_ICON_HL }
     end
-
-    return { icon, HL_OVERRIDES[hl] or hl }
+    return { icon, field_type == "directory" and DIR_ICON_HL or FILE_ICON_HL }
   end,
 
   parse = function(line, _conf)
@@ -144,25 +137,13 @@ oil.setup({
 
   view_options = {
     show_hidden = true,
-    -- Color the file name with its icon's highlight group, but only when the
-    -- icon actually has a color of its own. Files that fall back to
-    -- mini.icons' default icon take DEFAULT_FILE_HL instead.
+    -- Give names neutral colors independently of mini.icons' glyph colors.
     highlight_filename = function(entry, is_hidden, _is_link_target, is_link_orphan)
       -- Dotfiles stay dimmed, orphan links keep their error color.
       if is_hidden or is_link_orphan then
         return nil
       end
-      icon_provider = icon_provider or require("oil.util").get_icon_provider()
-      if not icon_provider then
-        return nil
-      end
-      -- mini.icons returns a third value telling us the icon was a generic
-      -- fallback. Those directories take our blue; those files take our purple.
-      local _, hl, is_default = icon_provider(entry.type, entry.name)
-      if is_default then
-        return entry.type == "directory" and DEFAULT_DIR_HL or DEFAULT_FILE_HL
-      end
-      return HL_OVERRIDES[hl] or hl
+      return entry.type == "directory" and DEFAULT_DIR_HL or DEFAULT_FILE_HL
     end,
   },
 

@@ -1,6 +1,7 @@
 vim.pack.add { 'https://github.com/nvim-lualine/lualine.nvim' }
 
 local status_bg = '#282828'
+local status_text = '#c6c6c6'
 local theme = vim.deepcopy(require('lualine.themes.auto'))
 
 -- Keep each mode's accent as its text color on one continuous background.
@@ -27,6 +28,11 @@ end
 
 local function current_filetype()
   return vim.bo.filetype == '' and '' or vim.bo.filetype
+end
+
+local function current_location()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  return string.format('%d:%d', cursor[1], cursor[2] + 1)
 end
 
 local function current_filename()
@@ -105,8 +111,8 @@ require('lualine').setup {
     },
     lualine_y = {},
     lualine_z = {
-      block('progress'),
-      block('location', { padding = { left = 0, right = 1 } }),
+      block(current_location, { color = { fg = status_text, bg = status_bg } }),
+      block('progress', { color = { fg = status_text, bg = status_bg } }),
     },
   },
 }
