@@ -30,6 +30,7 @@ local plugins = {
   'match-tag-always',
 }
 
+
 for _, name in ipairs(plugins) do
 	local ok, err = pcall(require, "plugins." .. name)
 	if not ok then

@@ -78,7 +78,9 @@ do
   -- indent/outdent in visual mode
   vim.keymap.set('v', '<tab>', '>gv')
   vim.keymap.set('v', '<s-tab>', '<gv')
-  vim.keymap.set('n', '<tab>', '>>')
+  vim.keymap.set('n', '<tab>', function()
+    return vim.bo.modifiable and '>>' or '<Ignore>'
+  end, { expr = true, desc = 'Indent line when buffer is editable' })
   vim.keymap.set('n', '<s-tab>', '<<')
 
   -- Move current line or selected text
