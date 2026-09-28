@@ -39,7 +39,6 @@ require('blink.cmp').setup {
       TypeParameter = '󰬛',
     },
   },
-
   completion = {
     -- Docs for the selected item open in their own window beside the menu.
     documentation = {
@@ -56,7 +55,6 @@ require('blink.cmp').setup {
         },
       },
     },
-
     menu = {
       border = 'rounded',
       draw = {
@@ -70,7 +68,6 @@ require('blink.cmp').setup {
       },
     },
   },
-
   sources = {
     default = { 'lsp', 'path', 'snippets' },
   },

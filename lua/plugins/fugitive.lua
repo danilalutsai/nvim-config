@@ -7,6 +7,20 @@ vim.keymap.set("n", "<leader>gs", "<cmd>Git<CR>", {
   desc = "Fugitive Git status",
 })
 
+-- Fugitive's status buffer is not modifiable, so the global Tab indent map
+-- raises E21 there. Use Fugitive's = action to toggle the file's inline diff.
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "fugitive",
+  callback = function(event)
+    vim.keymap.set("n", "<Tab>", "=", {
+      buffer = event.buf,
+      remap = true,
+      silent = true,
+      desc = "Toggle file changes below",
+    })
+  end,
+})
+
 -- Open a side-by-side diff for the current file
 vim.keymap.set("n", "<leader>gf", "<cmd>Gvdiffsplit<CR>", {
   desc = "Fugitive vertical diff",
