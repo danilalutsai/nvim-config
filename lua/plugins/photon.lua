@@ -4,7 +4,7 @@ vim.o.termguicolors = true
 -- Photon defaults. Edit these values to recolor the matching groups below.
 local colors = {
   background = '#262626',
-  foreground = '#a39e9d',
+  foreground = '#b3adab',
   bracket = '#767676',
   deep_background = '#1c1c1c',
   surface = '#303030',
@@ -46,7 +46,7 @@ local function remove_underlines()
 
     if changed then
       hl.default = nil
-      vim.api.nvim_set_hl(0, group, hl)
+      vim.api.nvim_set_hl(0, group, vim.tbl_extend('force', {}, hl))
     end
   end
 end
@@ -63,6 +63,7 @@ local function apply_colors()
     FloatTitle = { fg = c.purple, bg = 'NONE' },
     NonText = { fg = c.subtle },
     Comment = { fg = c.comment },
+    ['@string.special.url.comment'] = { link = 'Comment' },
     Conceal = { fg = c.comment },
     Constant = { fg = c.purple },
     Identifier = { fg = c.foreground },
