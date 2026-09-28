@@ -3,3 +3,17 @@ WRN 2026-09-26T11:53:58.861 ?.80487    server_start:197: Failed to start server:
 WRN 2026-09-26T11:54:20.857 ?.80511    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/3bPtWe/nvim.80511.0
 WRN 2026-09-26T11:54:35.627 ?.80531    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/bUfG47/nvim.80531.0
 WRN 2026-09-26T11:54:48.700 ?.80547    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/zZmf58/nvim.80547.0
+WRN 2026-09-27T16:22:41.341 ui.53438   tui_handle_term_mode:226: TUI: terminal mode 69 unavailable, state 0
+WRN 2026-09-27T16:22:41.342 ui.53438   tui_handle_term_mode:226: TUI: terminal mode 2026 unavailable, state 0
+WRN 2026-09-27T16:22:41.342 ui.53438   tui_handle_term_mode:226: TUI: terminal mode 2027 unavailable, state 0
+WRN 2026-09-27T16:22:41.342 ui.53438   tui_handle_term_mode:226: TUI: terminal mode 2031 unavailable, state 0
+WRN 2026-09-27T16:22:41.342 ui.53438   tui_handle_term_mode:226: TUI: terminal mode 2048 unavailable, state 0
+WRN 2026-09-27T16:22:41.347 ?.53440    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/PNs8OR/nvim.53440.0
+WRN 2026-09-27T16:23:03.797 ui.53438   tui_stop:658: TUI: timed out waiting for DA1 response
+WRN 2026-09-27T18:34:34.450 ui.59351   tui_handle_term_mode:226: TUI: terminal mode 69 unavailable, state 0
+WRN 2026-09-27T18:34:34.451 ui.59351   tui_handle_term_mode:226: TUI: terminal mode 2026 unavailable, state 0
+WRN 2026-09-27T18:34:34.451 ui.59351   tui_handle_term_mode:226: TUI: terminal mode 2027 unavailable, state 0
+WRN 2026-09-27T18:34:34.451 ui.59351   tui_handle_term_mode:226: TUI: terminal mode 2031 unavailable, state 0
+WRN 2026-09-27T18:34:34.451 ui.59351   tui_handle_term_mode:226: TUI: terminal mode 2048 unavailable, state 0
+WRN 2026-09-27T18:34:34.459 ?.59352    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/191qAE/nvim.59352.0
+WRN 2026-09-27T18:34:39.253 ui.59351   tui_stop:658: TUI: timed out waiting for DA1 response
