@@ -52,7 +52,6 @@ do
   })
 
   vim.o.textwidth = 0
-  vim.o.colorcolumn = '81'
   vim.opt.formatoptions:remove({ 't', 'c' })
 
   vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
