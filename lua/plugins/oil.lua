@@ -47,12 +47,6 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   callback = set_oil_highlights,
 })
 
-local function tmux_navigate(command)
-  return function()
-    vim.cmd(command)
-  end
-end
-
 local function resize_preview_split()
   local preview_win = require("oil.util").get_preview_win()
 
@@ -127,6 +121,9 @@ oil_columns.register("icon_uncolored_default", {
 oil.setup({
   default_file_explorer = true,
 
+  -- Review the full list of pending filesystem changes on every save.
+  skip_confirm_for_simple_edits = false,
+
   -- Hidden oil buffers would otherwise be wiped after 2s, taking any pending
   -- dd with them. Keeps a cut alive while navigating to the target directory.
   cleanup_delay_ms = false,
@@ -175,6 +172,9 @@ oil.setup({
   keymaps = {
     ["<CR>"] = "actions.select",
 
+    -- Stage a deletion; Oil applies it only after :w and confirmation.
+    ["D"] = { '"_dd', mode = "n", desc = "Stage file deletion" },
+
     ["<Tab>"] = "actions.select",
     ["<S-Tab>"] = "actions.parent",
 
@@ -193,11 +193,9 @@ oil.setup({
     ["gy"] = "actions.copy_to_system_clipboard",
     ["gp"] = "actions.paste_from_system_clipboard",
     ["gP"] = { "actions.paste_from_system_clipboard", opts = { delete_original = true } },
-    ["<BS>"] = tmux_navigate("TmuxNavigateLeft"),
-    ["<C-h>"] = tmux_navigate("TmuxNavigateLeft"),
-    ["<C-j>"] = tmux_navigate("TmuxNavigateDown"),
-    ["<C-k>"] = tmux_navigate("TmuxNavigateUp"),
-    ["<C-l>"] = tmux_navigate("TmuxNavigateRight"),
+    -- Oil maps these by default; let the global vim/HerdR navigation handle them.
+    ["<C-h>"] = false,
+    ["<C-l>"] = false,
     ["q"] = "actions.close",
   },
 })

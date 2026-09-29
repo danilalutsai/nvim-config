@@ -77,7 +77,7 @@ local function apply_colors()
     ['@punctuation.bracket'] = { fg = c.bracket },
     ['@tag.delimiter'] = { fg = c.bracket },
     ['@type.builtin'] = { fg = c.bracket },
-    rustStringBracket = { fg = c.bracket },
+    rustBracket = { fg = c.bracket },
     Error = { fg = c.error },
     Warning = { fg = c.warning },
     ModeMsg = { fg = c.muted },
@@ -153,4 +153,23 @@ vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     vim.schedule(remove_underlines)
   end,
+})
+
+-- Vim's Rust syntax owns some delimiters (for example derive(...) and strings),
+-- so a window-local match keeps every Rust bracket at the same foreground.
+local function update_rust_brackets()
+  local match_id = vim.w.milka_rust_brackets
+  if match_id then
+    pcall(vim.fn.matchdelete, match_id)
+    vim.w.milka_rust_brackets = nil
+  end
+
+  if vim.bo.filetype == 'rust' then
+    vim.w.milka_rust_brackets = vim.fn.matchadd('rustBracket', '[\\[\\]{}()]', 20)
+  end
+end
+
+vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter', 'FileType' }, {
+  group = vim.api.nvim_create_augroup('MilkaRustBrackets', { clear = true }),
+  callback = update_rust_brackets,
 })

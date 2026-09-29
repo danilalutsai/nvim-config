@@ -195,12 +195,25 @@ do
   -- Resize submode: <C-w> H/J/K/L resizes once, then h/j/k/l keep resizing
   -- until any other key. Holding a key auto-repeats, so it feels continuous.
   -- <C-w> can't be held itself, which is why the submode exists.
-  local resize_cmds = {
-    h = 'vertical resize +2',
-    l = 'vertical resize -2',
-    j = 'resize -2',
-    k = 'resize +2',
+  local resize_dirs = {
+    h = { toward = 'h', other = 'l', command = 'vertical resize' },
+    l = { toward = 'l', other = 'h', command = 'vertical resize' },
+    j = { toward = 'j', other = 'k', command = 'resize' },
+    k = { toward = 'k', other = 'j', command = 'resize' },
   }
+
+  local function resize_toward(key)
+    local direction = resize_dirs[key:lower()]
+    if not direction then return false end
+
+    local current = vim.fn.winnr()
+    if vim.fn.winnr(direction.toward) ~= current then
+      vim.cmd(direction.command .. ' +2')
+    elseif vim.fn.winnr(direction.other) ~= current then
+      vim.cmd(direction.command .. ' -2')
+    end
+    return true
+  end
 
   local CTRL_W = vim.api.nvim_replace_termcodes('<C-w>', true, false, true)
 
@@ -214,15 +227,12 @@ do
         key = char
       end
 
-      local cmd = resize_cmds[key:lower()]
-
-      if not cmd then
+      if not resize_toward(key) then
         -- Not a resize key: hand it back to Neovim and leave the submode.
         vim.api.nvim_feedkeys(key, 'm', false)
         return
       end
 
-      vim.cmd(cmd)
       vim.cmd('redraw')
 
       local ok, char = pcall(vim.fn.getcharstr)
