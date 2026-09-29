@@ -77,6 +77,7 @@ local function apply_colors()
     ['@punctuation.bracket'] = { fg = c.bracket },
     ['@tag.delimiter'] = { fg = c.bracket },
     ['@type.builtin'] = { fg = c.bracket },
+    rustStringBracket = { fg = c.bracket },
     Error = { fg = c.error },
     Warning = { fg = c.warning },
     ModeMsg = { fg = c.muted },
