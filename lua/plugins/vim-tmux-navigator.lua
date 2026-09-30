@@ -1,4 +1,4 @@
--- HerdR's navigator provides these mappings when running in HerdR and falls
+    -- HerdR's navigator provides these mappings when running in HerdR and falls
 -- back to this plugin when Neovim is running inside tmux.
 vim.g.tmux_navigator_no_mappings = 1
 
