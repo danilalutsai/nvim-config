@@ -4,7 +4,7 @@ vim.o.termguicolors = true
 -- Photon defaults. Edit these values to recolor the matching groups below.
 local colors = {
   background = '#262626',
-  foreground = '#b3adab',
+  foreground = '#b0aba9',
   bracket = '#767676',
   deep_background = '#1c1c1c',
   surface = '#303030',
