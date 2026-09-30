@@ -4,7 +4,7 @@ vim.o.termguicolors = true
 -- Photon defaults. Edit these values to recolor the matching groups below.
 local colors = {
   background = '#262626',
-  foreground = '#b0aba9',
+  foreground = '#a19b99',
   bracket = '#767676',
   deep_background = '#1c1c1c',
   surface = '#303030',
@@ -77,6 +77,8 @@ local function apply_colors()
     ['@punctuation.bracket'] = { fg = c.bracket },
     ['@tag.delimiter'] = { fg = c.bracket },
     ['@type.builtin'] = { fg = c.bracket },
+    ['@keyword.return'] = { fg = c.red },
+    ['@variable.milka_red'] = { fg = c.red },
     rustBracket = { fg = c.bracket },
     Error = { fg = c.error },
     Warning = { fg = c.warning },
@@ -173,4 +175,3 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter', 'FileType' }, {
   group = vim.api.nvim_create_augroup('MilkaRustBrackets', { clear = true }),
   callback = update_rust_brackets,
 })
-
