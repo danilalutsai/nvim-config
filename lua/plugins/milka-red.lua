@@ -75,7 +75,7 @@ local function apply_colors()
     Type = { fg = c.foreground },
     Special = { fg = c.muted },
     Delimiter = { fg = c.bracket },
-    ['@punctuation.delimiter'] = { fg = c.foreground },
+    ['@punctuation.delimiter'] = { fg = c.foreg },
     ['@punctuation.bracket'] = { fg = c.bracket },
     ['@tag.delimiter'] = { fg = c.bracket },
     ['@type.builtin'] = { fg = c.bracket },
@@ -86,8 +86,8 @@ local function apply_colors()
     ['@variable.milka_console'] = { fg = c.white },
       Number = { fg = c.purple },
       Float = { fg = c.purple },
-    ['@number'] = { fg = c.purple },         -- numeric literals
-    ['@number.float'] = { fg = c.purple },
+    ['@number'] = { fg = c.red },         -- numeric literals
+    ['@number.float'] = { fg = c.red },
     rustBracket = { fg = c.bracket },
     -- Error ranges must preserve the code's syntax colors.
     Error = {},
@@ -113,7 +113,7 @@ local function apply_colors()
     CursorLineNr = { fg = c.purple, bg = c.surface },
     Cursor = { fg = c.foreground, bg = c.purple },
     CursorLine = { bg = c.surface },
-    ColorColumn = { bg = c.deep_background },
+    ColorColumn = { bg = '#37353b' },
     SignColumn = { fg = c.muted },
     Visual = { bg = c.selection },
     VisualNOS = { bg = c.subtle },

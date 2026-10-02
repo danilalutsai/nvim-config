@@ -83,7 +83,7 @@ local function current_branch()
 
     if result ~= '' then
       git_cache.value = 'git:(' .. result .. ')'
-      return git_cache.value
+      return git_cache.value 'hello';
     end
   end
 

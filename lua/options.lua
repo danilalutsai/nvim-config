@@ -15,7 +15,11 @@ do
   vim.o.number = true
   vim.o.relativenumber = true
   vim.o.numberwidth = 4
-  vim.o.wrap = false
+  -- Wrap long lines visually at the window edge, keeping words together.
+  vim.o.wrap = true
+  vim.o.linebreak = true
+  -- Conventional code-width guide; wrapping does not insert newlines.
+  vim.o.colorcolumn = "80"
   -- Hybrid numbering: absolute on the cursor row, relative everywhere else, and
   -- nothing on the continuation rows of a wrapped line (v:virtnum > 0 there).
   --
