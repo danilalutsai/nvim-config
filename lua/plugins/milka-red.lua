@@ -3,8 +3,9 @@ vim.o.termguicolors = true
 
 -- Photon defaults. Edit these values to recolor the matching groups below.
 local colors = {
+  white = '#E0E2EA',
   background = '#262626',
-  foreground = '#a19b99',
+  foreground = '#a8a19e',
   bracket = '#767676',
   deep_background = '#1c1c1c',
   surface = '#303030',
@@ -74,12 +75,30 @@ local function apply_colors()
     Type = { fg = c.foreground },
     Special = { fg = c.muted },
     Delimiter = { fg = c.bracket },
+    ['@punctuation.delimiter'] = { fg = c.foreground },
     ['@punctuation.bracket'] = { fg = c.bracket },
     ['@tag.delimiter'] = { fg = c.bracket },
     ['@type.builtin'] = { fg = c.bracket },
-    ['@keyword.return'] = { fg = c.red },
+    ['@type.milka_error'] = { fg = c.red },
+    ['@constant.builtin'] = { fg = c.red }, -- undefined, null
+    ['@boolean'] = { fg = c.red },          -- true, false
+    ['@keyword.return'] = { fg = c.red }, -- return, yield
+    ['@variable.milka_console'] = { fg = c.white },
+      Number = { fg = c.purple },
+      Float = { fg = c.purple },
+    ['@number'] = { fg = c.purple },         -- numeric literals
+    ['@number.float'] = { fg = c.purple },
     rustBracket = { fg = c.bracket },
-    Error = { fg = c.error },
+    -- Error ranges must preserve the code's syntax colors.
+    Error = {},
+    ErrorMsg = { fg = c.red },
+    ['@error'] = {},
+    DiagnosticError = { fg = c.red },
+    DiagnosticSignError = { fg = c.red },
+    DiagnosticVirtualTextError = { fg = c.red },
+    DiagnosticVirtualLinesError = { fg = c.red },
+    DiagnosticFloatingError = { fg = c.red },
+    DiagnosticUnderlineError = {},
     Warning = { fg = c.warning },
     ModeMsg = { fg = c.muted },
     Todo = { fg = c.red, bold = true },
