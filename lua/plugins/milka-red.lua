@@ -60,7 +60,7 @@ local function apply_colors()
     Normal = { fg = c.foreground, bg = 'NONE' },
     NormalNC = { fg = c.foreground, bg = 'NONE' },
     NormalFloat = { fg = c.foreground, bg = c.background },
-    FloatBorder = { fg = c.comment, bg = c.background },
+    FloatBorder = { fg = c.muted, bg = c.background },
     FloatTitle = { fg = c.foreground, bg = c.background },
     FloatFooter = { fg = c.muted, bg = c.background },
     NonText = { fg = c.subtle },
@@ -79,15 +79,16 @@ local function apply_colors()
     ['@punctuation.bracket'] = { fg = c.bracket },
     ['@tag.delimiter'] = { fg = c.bracket },
     ['@type.builtin'] = { fg = c.bracket },
-    ['@type.milka_error'] = { fg = c.red },
-    ['@constant.builtin'] = { fg = c.red }, -- undefined, null
-    ['@boolean'] = { fg = c.red },          -- true, false
-    ['@keyword.return'] = { fg = c.red }, -- return, yield
+    ['@type.milka_error'] = { fg = c.purple },
+    ['@constant.builtin'] = { fg = c.purple }, -- undefined, null
+    ['@boolean'] = { fg = c.purple },          -- true, false
+    ['@keyword.return'] = { fg = c.purple }, -- return, yield
     ['@variable.milka_console'] = { fg = c.white },
       Number = { fg = c.purple },
       Float = { fg = c.purple },
-    ['@number'] = { fg = c.red },         -- numeric literals
-    ['@number.float'] = { fg = c.red },
+    ['@number'] = { fg = c.purple },         -- numeric literals
+    ['@number.float'] = { fg = c.purple },
+    ['@string'] = { fg = c.foreground },
     rustBracket = { fg = c.bracket },
     -- Error ranges must preserve the code's syntax colors.
     Error = {},
@@ -144,7 +145,7 @@ local function apply_colors()
     DiffChange = { bg = c.surface },
     DiffDelete = { fg = c.error, bg = c.surface },
     DiffText = { fg = c.warning, bg = c.surface },
-    helpHyperTextJump = { fg = c.purple },
+    helpHyperTextJump = { fg = c.green },
   }
 
   for group, spec in pairs(highlights) do

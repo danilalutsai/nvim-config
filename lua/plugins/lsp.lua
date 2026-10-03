@@ -15,7 +15,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 
     -- Normal hover popup
-    map("K", vim.lsp.buf.hover, "Hover documentation")
+    map("K", function()
+      vim.lsp.buf.hover({ border = "rounded" })
+    end, "Hover documentation")
 
     -- Open hover documentation in a normal split window
     map("gK", function()
