@@ -1,6 +1,6 @@
 local plugins = {
   'gitsigns',
-  'milka-red',
+  'milka-simple',
   'lualine',
   'mini',
   'surround',

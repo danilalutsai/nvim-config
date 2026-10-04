@@ -5,7 +5,7 @@ vim.o.termguicolors = true
 local colors = {
   white = '#E0E2EA',
   background = '#262626',
-  foreground = '#9c9c9c',
+  foreground = '#a39f9d',
   bracket = '#767676',
   deep_background = '#1c1c1c',
   surface = '#303030',
@@ -80,15 +80,17 @@ local function apply_colors()
     ['@punctuation.bracket'] = { fg = c.bracket },
     ['@tag.delimiter'] = { fg = c.bracket },
     ['@type.builtin'] = { fg = c.bracket },
-    ['@type.milka_error'] = { fg = c.red },
-    ['@constant.builtin'] = { fg = c.red }, -- undefined, null
-    ['@boolean'] = { fg = c.red },          -- true, false
-    ['@keyword.return'] = { fg = c.red }, -- return, yield
+    ['@type.milka_error'] = { fg = c.purple },
+    ['@constant.builtin'] = { fg = c.purple }, -- undefined, null
+    ['@boolean'] = { fg = c.white },          -- true, false
+    ['@keyword.return'] = { fg = c.purple }, -- return, yield
+    ['@constructor.javascript'] = { fg = c.purple },
+    ['@constructor.typescript'] = { fg = c.purple },
     ['@variable.milka_console'] = { fg = c.white },
-      Number = { fg = c.red },
-      Float = { fg = c.red },
-    ['@number'] = { fg = c.red },         -- numeric literals
-    ['@number.float'] = { fg = c.red },
+      Number = { fg = c.purple },
+      Float = { fg = c.purple },
+    ['@number'] = { fg = c.purple },         -- numeric literals
+    ['@number.float'] = { fg = c.purple },
     ['@string'] = { fg = c.purple },
     rustBracket = { fg = c.bracket },
     -- Error ranges must preserve the code's syntax colors.
