@@ -8,10 +8,10 @@ local oil = require "oil"
 -- Resolved lazily on first render: mini.icons must finish setup first.
 local icon_provider
 
--- Keep the listing in Photon's neutral palette; use purple only for the
--- parent-directory icon.
+-- Keep the listing neutral; use purple for the parent icon and confirmation border.
 local colors = {
   foreground = "#c6c6c6",
+  surface = "#303030",
   selection = "#3a3a3a",
   comment = "#626262",
   muted = "#767676",
@@ -29,6 +29,8 @@ local PARENT_ICON_HL = "OilParentIcon"
 -- must not become a plain CursorLine override or every code buffer picks up a
 -- highlighted line.
 local CURSOR_LINE_HL = "OilCursorLine"
+local CONFIRM_NORMAL_HL = "OilConfirmNormal"
+local CONFIRM_BORDER_HL = "OilConfirmBorder"
 
 local function set_oil_highlights()
   vim.api.nvim_set_hl(0, DEFAULT_DIR_HL, { fg = colors.muted })
@@ -37,6 +39,8 @@ local function set_oil_highlights()
   vim.api.nvim_set_hl(0, FILE_ICON_HL, { fg = colors.comment })
   vim.api.nvim_set_hl(0, PARENT_ICON_HL, { fg = colors.purple })
   vim.api.nvim_set_hl(0, CURSOR_LINE_HL, { bg = colors.selection })
+  vim.api.nvim_set_hl(0, CONFIRM_NORMAL_HL, { fg = colors.foreground, bg = colors.surface })
+  vim.api.nvim_set_hl(0, CONFIRM_BORDER_HL, { fg = colors.purple, bg = colors.surface })
 end
 
 set_oil_highlights()
@@ -47,6 +51,8 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   callback = set_oil_highlights,
 })
 
+local FILE_LIST_WIDTH = 36
+
 local function resize_preview_split()
   local preview_win = require("oil.util").get_preview_win()
 
@@ -54,11 +60,22 @@ local function resize_preview_split()
     return
   end
 
-  local oil_win = vim.api.nvim_get_current_win()
-  local total_width = vim.api.nvim_win_get_width(oil_win) + vim.api.nvim_win_get_width(preview_win)
-  local preview_width = math.max(1, math.floor(total_width * 0.78))
+  local oil_win = vim.w[preview_win].oil_source_win or vim.api.nvim_get_current_win()
+  if not vim.api.nvim_win_is_valid(oil_win)
+    or vim.bo[vim.api.nvim_win_get_buf(oil_win)].filetype ~= "oil"
+    or vim.api.nvim_win_get_config(oil_win).relative ~= ""
+    or vim.api.nvim_win_get_config(preview_win).relative ~= ""
+    or vim.api.nvim_win_get_position(oil_win)[2] == vim.api.nvim_win_get_position(preview_win)[2]
+  then
+    return
+  end
 
-  vim.api.nvim_win_set_width(preview_win, preview_width)
+  local total_width = vim.api.nvim_win_get_width(oil_win) + vim.api.nvim_win_get_width(preview_win)
+  -- Leave room for the preview when the terminal is unusually narrow.
+  local list_width = math.max(1, math.min(FILE_LIST_WIDTH, total_width - 20))
+  if vim.api.nvim_win_get_width(oil_win) ~= list_width then
+    vim.api.nvim_win_set_width(oil_win, list_width)
+  end
 end
 
 local function open_oil_preview()
@@ -123,6 +140,16 @@ oil.setup({
 
   -- Review the full list of pending filesystem changes on every save.
   skip_confirm_for_simple_edits = false,
+
+  confirmation = {
+    border = "rounded",
+    win_options = {
+      winblend = 0,
+      winhighlight = "Normal:" .. CONFIRM_NORMAL_HL
+        .. ",NormalFloat:" .. CONFIRM_NORMAL_HL
+        .. ",FloatBorder:" .. CONFIRM_BORDER_HL,
+    },
+  },
 
   -- Hidden oil buffers would otherwise be wiped after 2s, taking any pending
   -- dd with them. Keeps a cut alive while navigating to the target directory.
@@ -217,10 +244,17 @@ vim.keymap.set("n", "-", "<cmd>Oil<CR>", {
   desc = "Open parent directory",
 })
 
--- Keep the preview split at 70% while moving around inside an Oil buffer.
+-- Keep the file list width stable when navigating or resizing the terminal.
 vim.api.nvim_create_autocmd("User", {
   group = vim.api.nvim_create_augroup("OilAutoPreview", { clear = true }),
   pattern = "OilEnter",
+  callback = function()
+    vim.schedule(resize_preview_split)
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "WinResized", "VimResized" }, {
+  group = "OilAutoPreview",
   callback = function()
     vim.schedule(resize_preview_split)
   end,
