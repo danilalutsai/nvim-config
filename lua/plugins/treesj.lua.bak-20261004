@@ -1,0 +1,27 @@
+vim.pack.add {
+  'https://github.com/Wansmer/treesj',
+}
+
+vim.cmd.packadd('treesj')
+
+local treesj = require('treesj')
+
+treesj.setup {
+  -- Default Space m/j/s mappings overlap with Markdown and search shortcuts.
+  use_default_keymaps = false,
+}
+
+vim.keymap.set('n', '<leader>tm', treesj.toggle, { desc = 'Toggle split/join code block' })
+vim.keymap.set('n', '<leader>ts', treesj.split, { desc = 'Split code block' })
+vim.keymap.set('n', '<leader>tj', treesj.join, { desc = 'Join code block' })
+vim.keymap.set('n', '<leader>tM', function()
+  treesj.toggle({ split = { recursive = true } })
+end, { desc = 'Toggle split/join code block recursively' })
+
+-- Leave Visual mode before editing; TreeSJ targets the block at the cursor.
+vim.keymap.set('x', '<leader>tm', '<Esc><Cmd>TSJToggle<CR>', { desc = 'Toggle split/join code block' })
+vim.keymap.set('x', '<leader>ts', '<Esc><Cmd>TSJSplit<CR>', { desc = 'Split code block' })
+vim.keymap.set('x', '<leader>tj', '<Esc><Cmd>TSJJoin<CR>', { desc = 'Join code block' })
+vim.keymap.set('x', '<leader>tM', "<Esc><Cmd>lua require('treesj').toggle({ split = { recursive = true } })<CR>", {
+  desc = 'Toggle split/join code block recursively',
+})
