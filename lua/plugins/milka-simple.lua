@@ -3,7 +3,7 @@ vim.o.termguicolors = true
 
 -- Photon defaults. Edit these values to recolor the matching groups below.
 local colors = {
-  white = '#E0E2EA',
+  white = '#cecfd6',
   background = '#262626',
   foreground = '#a39f9d',
   bracket = '#767676',
@@ -76,13 +76,13 @@ local function apply_colors()
     Type = { fg = c.foreground },
     Special = { fg = c.muted },
     Delimiter = { fg = c.bracket },
-    ['@punctuation.delimiter'] = { fg = c.foreg },
+    ['@punctuation.delimiter'] = { fg = c.foreground },
     ['@punctuation.bracket'] = { fg = c.bracket },
     ['@tag.delimiter'] = { fg = c.bracket },
     ['@type.builtin'] = { fg = c.bracket },
     ['@type.milka_error'] = { fg = c.purple },
     ['@constant.builtin'] = { fg = c.purple }, -- undefined, null
-    ['@boolean'] = { fg = c.white },          -- true, false
+    ['@boolean'] = { fg = c.purple },          -- true, false
     ['@keyword.return'] = { fg = c.purple }, -- return, yield
     ['@constructor.javascript'] = { fg = c.purple },
     ['@constructor.typescript'] = { fg = c.purple },
@@ -92,6 +92,7 @@ local function apply_colors()
     ['@number'] = { fg = c.purple },         -- numeric literals
     ['@number.float'] = { fg = c.purple },
     ['@string'] = { fg = c.purple },
+    ['@booleaboolean'] = { fg = c.purple },
     rustBracket = { fg = c.bracket },
     -- Error ranges must preserve the code's syntax colors.
     Error = {},
