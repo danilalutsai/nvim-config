@@ -21,6 +21,7 @@ local plugins = {
   'diffview',
   'oil',
   'treesitter',
+  'treesj',
   'nvim-treesitter-textobjects',
   'undotree',
   'fugitive',
