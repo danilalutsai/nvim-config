@@ -84,6 +84,7 @@ local function apply_colors()
     ['@constant.builtin'] = { fg = c.purple }, -- undefined, null
     ['@boolean'] = { fg = c.purple },          -- true, false
     ['@keyword.return'] = { fg = c.purple }, -- return, yield
+    ['@keyword.conditional'] = { fg = c.foreground }, -- return, yield
     ['@constructor.javascript'] = { fg = c.purple },
     ['@constructor.typescript'] = { fg = c.purple },
     ['@variable.milka_console'] = { fg = c.white },
