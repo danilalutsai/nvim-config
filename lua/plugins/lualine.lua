@@ -1,20 +1,19 @@
 vim.pack.add { 'https://github.com/nvim-lualine/lualine.nvim' }
 
 local status_bg = '#282828'
-local status_text = '#c6c6c6'
+local status_text = '#a39f9d'
 local theme = vim.deepcopy(require('lualine.themes.auto'))
 
--- Keep each mode's accent as its text color on one continuous background.
+-- Use regular text on one continuous background in every mode.
 for _, mode in pairs(theme) do
   if type(mode) == 'table' then
-    local accent = mode.a and mode.a.bg
     for _, section in pairs(mode) do
       if type(section) == 'table' then
         section.bg = status_bg
-        section.gui = nil
+        section.fg = status_text
+        section.gui = 'none'
       end
     end
-    if mode.a and accent then mode.a.fg = accent end
   end
 end
 
@@ -23,6 +22,7 @@ local function block(component, opts)
     component,
     separator = '',
     padding = { left = 0, right = 1 },
+    color = { fg = status_text, bg = status_bg, gui = 'none' },
   }, opts or {})
 end
 
@@ -106,13 +106,13 @@ require('lualine').setup {
     lualine_c = {},
     lualine_x = {
       block(current_branch),
-      block 'diff',
+      block('diff', { colored = false }),
       block(current_filetype),
     },
     lualine_y = {},
     lualine_z = {
-      block(current_location, { color = { fg = status_text, bg = status_bg } }),
-      block('progress', { color = { fg = status_text, bg = status_bg } }),
+      block(current_location),
+      block 'progress',
     },
   },
 }
@@ -120,5 +120,5 @@ require('lualine').setup {
 -- Cover any unused statusline cells outside Lualine's rendered sections.
 for _, group in ipairs({ 'StatusLine', 'StatusLineNC' }) do
   local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
-  vim.api.nvim_set_hl(0, group, vim.tbl_extend('force', hl, { bg = status_bg, bold = false, italic = false }))
+  vim.api.nvim_set_hl(0, group, vim.tbl_extend('force', hl, { fg = status_text, bg = status_bg, bold = false, italic = false }))
 end
