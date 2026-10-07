@@ -192,59 +192,44 @@ do
       vim.cmd.enew()
     end
   end, { desc = 'Close current tab' })
-  -- Resize submode: <C-w> H/J/K/L resizes once, then h/j/k/l keep resizing
-  -- until any other key. Holding a key auto-repeats, so it feels continuous.
-  -- <C-w> can't be held itself, which is why the submode exists.
-  local resize_dirs = {
-    h = { toward = 'h', other = 'l', command = 'vertical resize' },
-    l = { toward = 'l', other = 'h', command = 'vertical resize' },
-    j = { toward = 'j', other = 'k', command = 'resize' },
-    k = { toward = 'k', other = 'j', command = 'resize' },
+  -- Start with <C-w>, then hold a standard resize key to repeat.
+  -- Terminals don't report key releases; leave after one second without input.
+  local resize_commands = {
+    ['>'] = 'vertical resize +1',
+    ['<'] = 'vertical resize -1',
+    ['+'] = 'resize +1',
+    ['-'] = 'resize -1',
+    ['='] = 'wincmd =',
   }
 
-  local function resize_toward(key)
-    local direction = resize_dirs[key:lower()]
-    if not direction then return false end
-
-    local current = vim.fn.winnr()
-    if vim.fn.winnr(direction.toward) ~= current then
-      vim.cmd(direction.command .. ' +2')
-    elseif vim.fn.winnr(direction.other) ~= current then
-      vim.cmd(direction.command .. ' -2')
-    end
-    return true
-  end
-
-  local CTRL_W = vim.api.nvim_replace_termcodes('<C-w>', true, false, true)
-
-  local function resize_mode(key)
-    while true do
-      -- Swallow a repeated <C-w> so it can't combine with the next key into
-      -- Vim's built-in <C-w>H, which moves the window instead of resizing.
-      if key == CTRL_W then
-        local ok, char = pcall(vim.fn.getcharstr)
-        if not ok then return end
-        key = char
+  local function repeat_resize(key, count)
+    while resize_commands[key] do
+      for _ = 1, count do
+        vim.cmd(resize_commands[key])
       end
-
-      if not resize_toward(key) then
-        -- Not a resize key: hand it back to Neovim and leave the submode.
-        vim.api.nvim_feedkeys(key, 'm', false)
-        return
-      end
-
       vim.cmd('redraw')
+      count = 1
 
-      local ok, char = pcall(vim.fn.getcharstr)
-      if not ok then return end
-      key = char
+      local next_key
+      local ok, received = pcall(vim.wait, 1000, function()
+        local input = vim.fn.getcharstr(0)
+        if input ~= '' then
+          next_key = input
+          return true
+        end
+        return false
+      end, 20)
+      if not ok or not received then return end
+      key = next_key
     end
+    -- Preserve normal input when another key ends resize mode.
+    vim.api.nvim_feedkeys(key, 'm', false)
   end
 
-  for _, key in ipairs({ 'H', 'J', 'K', 'L' }) do
+  for key in pairs(resize_commands) do
     vim.keymap.set('n', '<C-w>' .. key, function()
-      resize_mode(key)
-    end, { desc = 'Resize window (repeatable)' })
+      repeat_resize(key, vim.v.count1)
+    end, { desc = 'Resize window (hold to repeat)' })
   end
   vim.keymap.set('n', 'N', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
   vim.keymap.set('n', 'P', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })

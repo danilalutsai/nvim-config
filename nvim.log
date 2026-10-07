@@ -7,3 +7,4 @@ WRN 2026-10-04T19:07:10.774 ?.24673    server_start:197: Failed to start server:
 WRN 2026-10-05T14:14:27.319 ?.52569    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/vs2Jzu/nvim.52569.0
 WRN 2026-10-05T14:14:28.455 ui.52568   tui_stop:658: TUI: timed out waiting for DA1 response
 WRN 2026-10-05T18:50:19.806 ?.64536    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/9FcwHh/nvim.64536.0
+WRN 2026-10-06T14:39:32.981 ?.83974    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/ebyej3/nvim.83974.0
