@@ -199,4 +199,3 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter', 'FileType' }, {
   group = vim.api.nvim_create_augroup('MilkaRustBrackets', { clear = true }),
   callback = update_rust_brackets,
 })
-

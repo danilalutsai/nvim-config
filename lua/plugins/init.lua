@@ -37,3 +37,4 @@ for _, name in ipairs(plugins) do
 		vim.notify(("Failed to load plugin %s: %s"):format(name, err), vim.log.levels.ERROR)
 	end
 end
+
