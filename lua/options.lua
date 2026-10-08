@@ -176,5 +176,8 @@ do
   vim.o.cursorline = false
   vim.o.scrolloff = 12
 
+  -- Ask before saving or discarding changes when quitting or closing a buffer.
+  vim.o.autowrite = false
+  vim.o.autowriteall = false
   vim.o.confirm = true
 end
