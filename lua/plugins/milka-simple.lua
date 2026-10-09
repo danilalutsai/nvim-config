@@ -3,7 +3,7 @@ vim.o.termguicolors = true
 
 -- Photon defaults. Edit these values to recolor the matching groups below.
 local colors = {
-  white = '#cecfd6',
+  white = '#babbc2',
   background = '#262626',
   foreground = '#a39f9d',
   bracket = '#767676',
@@ -84,7 +84,8 @@ local function apply_colors()
     ['@constant.builtin'] = { fg = c.purple }, -- undefined, null
     ['@boolean'] = { fg = c.purple },          -- true, false
     ['@keyword.return'] = { fg = c.purple }, -- return, yield
-    ['@keyword.conditional'] = { fg = c.foreground }, -- return, yield
+    ['@keyword.conditional'] = { fg = c.purple }, -- return, yield
+    ['@keyword.milka_end.lua'] = { fg = c.muted }, -- all Lua block endings
     ['@constructor.javascript'] = { fg = c.purple },
     ['@constructor.typescript'] = { fg = c.purple },
     ['@variable.milka_console'] = { fg = c.white },
