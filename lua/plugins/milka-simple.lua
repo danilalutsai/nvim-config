@@ -78,7 +78,7 @@ local function apply_colors()
     Delimiter = { fg = c.bracket },
     ['@punctuation.delimiter'] = { fg = c.foreground },
     ['@punctuation.bracket'] = { fg = c.bracket },
-    ['@tag.delimiter'] = { fg = c.bracket },
+    ['@tag.delimiter'] = { fg = c.foreground },
     ['@type.builtin'] = { fg = c.bracket },
     ['@type.milka_error'] = { fg = c.purple },
     ['@constant.builtin'] = { fg = c.purple }, -- undefined, null
@@ -199,4 +199,3 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter', 'FileType' }, {
   group = vim.api.nvim_create_augroup('MilkaRustBrackets', { clear = true }),
   callback = update_rust_brackets,
 })
-
