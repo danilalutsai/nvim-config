@@ -1,6 +1,6 @@
 local plugins = {
   'gitsigns',
-  'milka-simple',
+  'photon', -- Switch back to 'milka-simple' to restore the previous theme.
   'lualine',
   'mini',
   'surround',

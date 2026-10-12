@@ -3,16 +3,16 @@ vim.o.termguicolors = true
 
 -- Photon defaults. Edit these values to recolor the matching groups below.
 local colors = {
-  white = '#babbc2',
+  white = '#d4d4d4',
   background = '#262626',
-  foreground = '#a39f9d',
-  bracket = '#767676',
+  foreground = '#ada9a6',
+  bracket = '#8a8a8a',
   deep_background = '#1c1c1c',
   surface = '#303030',
   selection = '#3a3a3a',
   subtle = '#444444',
   comment = '#626262',
-  muted = '#767676',
+  muted = '#858585', -- darker than c.bracket
   string = '#9c9c9c',
   purple = '#cba6f7', -- Photon default: #af87d7
   red = '#f38ba8',
@@ -65,7 +65,7 @@ local function apply_colors()
     FloatTitle = { fg = c.foreground, bg = c.background },
     FloatFooter = { fg = c.muted, bg = c.background },
     NonText = { fg = c.subtle },
-    Comment = { fg = c.comment },
+    Comment = { fg = c.green },
     ['@string.special.url.comment'] = { link = 'Comment' },
     Conceal = { fg = c.comment },
     Constant = { fg = c.purple },
@@ -73,28 +73,32 @@ local function apply_colors()
     Statement = { fg = c.muted },
     Operator = { fg = c.foreground },
     PreProc = { fg = c.muted },
-    Type = { fg = c.foreground },
+    Type = { fg = c.muted },
     Special = { fg = c.muted },
-    Delimiter = { fg = c.bracket },
+    Delimiter = { fg = c.foreground },
     ['@punctuation.delimiter'] = { fg = c.foreground },
-    ['@punctuation.bracket'] = { fg = c.bracket },
-    ['@tag.delimiter'] = { fg = c.foreground },
-    ['@type.builtin'] = { fg = c.bracket },
-    ['@type.milka_error'] = { fg = c.purple },
+    ['@punctuation.bracket'] = { fg = c.muted},
+    ['@tag.delimiter'] = { fg = c.bracket },
+    ['@spell.vue'] = { fg = c.white },
+    ['@string.vue'] = { fg = c.foreground },
+    ['@string.html'] = { fg = c.foreground },
+    ['@spell.html'] = { fg = c.white },
+    ['@type.builtin'] = { fg = c.muted }, -- string, number, and boolean.
     ['@constant.builtin'] = { fg = c.purple }, -- undefined, null
     ['@boolean'] = { fg = c.purple },          -- true, false
     ['@keyword.return'] = { fg = c.purple }, -- return, yield
-    ['@keyword.conditional'] = { fg = c.purple }, -- return, yield
+    ['@keyword.conditional'] = { fg = c.muted },
     ['@keyword.milka_end.lua'] = { fg = c.muted }, -- all Lua block endings
     ['@constructor.javascript'] = { fg = c.purple },
     ['@constructor.typescript'] = { fg = c.purple },
-    ['@variable.milka_console'] = { fg = c.white },
+    ['@variable'] = { fg = c.white },
+    ['@lsp.type.class'] = { fg = c.foreground },
+    ['@lsp.type.property'] = { fg = c.white },
       Number = { fg = c.purple },
       Float = { fg = c.purple },
     ['@number'] = { fg = c.purple },         -- numeric literals
     ['@number.float'] = { fg = c.purple },
     ['@string'] = { fg = c.purple },
-    ['@booleaboolean'] = { fg = c.purple },
     rustBracket = { fg = c.bracket },
     -- Error ranges must preserve the code's syntax colors.
     Error = {},
@@ -116,7 +120,7 @@ local function apply_colors()
     WinSeparator = { fg = c.surface, bg = 'NONE' },
     VertSplit = { fg = c.surface, bg = 'NONE' },
     Title = { fg = c.foreground, bold = true },
-    LineNr = { fg = c.comment },
+    LineNr = { fg = c.muted },
     CursorLineNr = { fg = c.purple, bg = c.surface },
     Cursor = { fg = c.foreground, bg = c.purple },
     CursorLine = { bg = c.surface },
@@ -200,3 +204,4 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter', 'FileType' }, {
   group = vim.api.nvim_create_augroup('MilkaRustBrackets', { clear = true }),
   callback = update_rust_brackets,
 })
+

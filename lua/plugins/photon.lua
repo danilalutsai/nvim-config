@@ -7,18 +7,22 @@ vim.o.background = 'dark'
 -- Edit these values to customize Photon without changing the upstream theme.
 local colors = {
   background = '#262626',
-  foreground = '#c6c6c6',
+  foreground = '#e3e3e3',
+  types = '#ada9a6',
   deep_background = '#1c1c1c',
   surface = '#303030',
   selection = '#3a3a3a',
+  visual = '#555555',
   subtle = '#444444',
   comment = '#626262',
   muted = '#767676',
-  purple = '#af87d7',
+  yellow = '#fffd7d',
+  cursor = '#ffe96b',
   red = '#d75f5f',
   error = '#af5f87',
   warning = '#d7af5f',
-  green = '#87af87',
+  green = '#70b34d',
+  brown = '#917d41',
   terminal = {
     '#3a3a3a', '#ac2c2c', '#4e9a06', '#c4a000',
     '#1880bc', '#75507b', '#389aad', '#9e9e9e',
@@ -27,67 +31,114 @@ local colors = {
   },
 }
 
+
 local function apply_colors()
   local c = colors
   local highlights = {
+    ['@keyword'] = { fg = c.yellow }, -- return, yield
+    ['@comment'] = { fg = c.brown },
+    ['@variable'] = { fg = c.foreground },
+    ['@function'] = { fg = c.foreground },
+    ['@string'] = { fg = c.green },
+    ['@number'] = { fg = c.yellow },
+    ['@type'] = { fg = c.foreground },
+    ['@type.builtin'] = { fg = c.foreground },
+    ['@punctuation'] = { fg = c.foreground},
+    ['@string.vue'] = { fg = c.foreground},
+    ['@tag.attribute.vue'] = { fg = c.yellow},
+    ['@string.regexp'] = { fg = c.yellow},
+    ['@nospell.comment'] = { fg = c.brown},
+    ['@constant.builtin'] = { fg = c.yellow},
     Normal = { fg = c.foreground, bg = c.background },
     NonText = { fg = c.subtle, bg = c.background },
     Comment = { fg = c.comment, bg = c.background },
     Conceal = { fg = c.comment, bg = c.background },
-    Constant = { fg = c.purple, bg = c.background },
+    Constant = { fg = c.yellow, bg = c.background },
     Identifier = { fg = c.foreground, bg = c.background },
     Statement = { fg = c.muted, bg = c.background },
     Operator = { fg = c.foreground, bg = c.background },
-    PreProc = { fg = c.muted, bg = c.background },
-    Type = { fg = c.foreground, bg = c.background },
+    PreProc = { fg = c.red, bg = c.background },
+    Type = { fg = c.types, bg = c.background },
     Special = { fg = c.muted },
     Error = { fg = c.error },
     Warning = { fg = c.warning },
+    DiagnosticUnnecessary = { fg = c.foreground },
     ModeMsg = { fg = c.muted },
-    Todo = { fg = c.red, bold = true },
-    Underlined = { fg = c.foreground, underline = true },
-    StatusLine = { fg = c.purple, bg = c.selection },
+    Todo = { fg = c.red },
+    Underlined = { fg = c.foreground },
+    StatusLine = { fg = c.yellow, bg = c.selection },
     StatusLineNC = { fg = c.muted, bg = c.surface },
     WildMenu = { fg = c.red, bg = c.surface },
     VertSplit = { fg = c.surface, bg = c.surface },
-    Title = { fg = c.foreground, bold = true },
+    Title = { fg = c.foreground },
     LineNr = { fg = c.comment },
-    CursorLineNr = { fg = c.purple, bg = c.surface },
-    Cursor = { fg = c.foreground, bg = c.purple },
+    CursorLineNr = { fg = c.yellow, bg = c.surface },
+    Cursor = { fg = c.background, bg = c.cursor },
+    lCursor = { fg = c.background, bg = c.cursor },
+    TermCursor = { fg = c.background, bg = c.cursor },
     CursorLine = { bg = c.surface },
     ColorColumn = { bg = c.deep_background },
     SignColumn = { fg = c.muted },
-    Visual = { bg = c.selection },
-    VisualNOS = { bg = c.subtle },
+    Visual = { bg = c.visual },
+    VisualNOS = { bg = c.visual },
     Pmenu = { bg = c.selection },
     PmenuSbar = { bg = c.surface },
-    PmenuSel = { fg = c.purple, bg = c.surface },
+    PmenuSel = { fg = c.yellow, bg = c.surface },
     PmenuThumb = { bg = c.red },
+    BlinkCmpDoc = { fg = c.foreground, bg = c.selection },
+    BlinkCmpDocBorder = { fg = c.foreground, bg = c.selection },
+    BlinkCmpDocSeparator = { fg = c.foreground, bg = c.selection },
+    BlinkCmpSignatureHelp = { fg = c.foreground, bg = c.selection },
+    BlinkCmpSignatureHelpBorder = { fg = c.foreground, bg = c.selection },
     FoldColumn = { fg = c.comment },
     Folded = { fg = c.muted, bg = c.deep_background },
     SpecialKey = { fg = c.muted },
     IncSearch = { fg = c.background, bg = c.red },
-    Search = { fg = c.background, bg = c.purple },
-    Directory = { fg = c.purple },
-    MatchParen = { fg = c.red, bold = true },
-    SpellBad = { fg = c.error, underline = true },
-    SpellCap = { fg = c.green, underline = true },
-    SpellLocal = { fg = c.warning, underline = true },
+    Search = { fg = c.background, bg = c.yellow },
+    Directory = { fg = c.yellow },
+    MatchParen = { fg = c.red },
+    SpellBad = { fg = c.error },
+    SpellCap = { fg = c.green },
+    SpellLocal = { fg = c.warning },
     QuickFixLine = { bg = c.deep_background },
     DiffAdd = { fg = c.green, bg = c.surface },
     DiffChange = { bg = c.surface },
     DiffDelete = { fg = c.error, bg = c.surface },
     DiffText = { fg = c.warning, bg = c.surface },
-    helpHyperTextJump = { fg = c.purple, bg = c.background },
+    helpHyperTextJump = { fg = c.yellow, bg = c.background },
   }
 
   for group, spec in pairs(highlights) do
-    -- Preserve the upstream terminal colors and styles alongside GUI colors.
+    -- Preserve the upstream terminal colors alongside GUI colors.
     local original = vim.api.nvim_get_hl(0, { name = group, link = false })
     spec.ctermfg = original.ctermfg
     spec.ctermbg = original.ctermbg
     spec.cterm = original.cterm
     vim.api.nvim_set_hl(0, group, spec)
+  end
+
+  -- Remove text decorations from upstream and inherited highlights too.
+  local decorations = {
+    'bold', 'italic', 'underline', 'undercurl',
+    'underdouble', 'underdotted', 'underdashed',
+  }
+  for group, spec in pairs(vim.api.nvim_get_hl(0, {})) do
+    if not spec.link then
+      local changed = false
+      for _, decoration in ipairs(decorations) do
+        if spec[decoration] then
+          spec[decoration] = nil
+          changed = true
+        end
+        if spec.cterm and spec.cterm[decoration] then
+          spec.cterm[decoration] = nil
+          changed = true
+        end
+      end
+      if changed then
+        vim.api.nvim_set_hl(0, group, spec)
+      end
+    end
   end
 
   for index, color in ipairs(c.terminal) do

@@ -393,7 +393,7 @@ for name, server in pairs(servers) do
 end
 
 -- Hide inline messages and underlines for unused TypeScript code,
--- while keeping its normal faded foreground color.
+-- while letting the theme control its DiagnosticUnnecessary foreground color.
 
 local unused_ts_codes = {
   ["6133"] = true, -- variable/value declared but never read
@@ -438,8 +438,8 @@ vim.diagnostic.handlers.underline = {
 
     original_underline.show(namespace, bufnr, normal_diagnostics, opts)
 
-    -- Apply only DiagnosticUnnecessary to unused ranges: this keeps the faded
-    -- foreground color without combining it with an underline highlight.
+    -- Apply only DiagnosticUnnecessary to unused ranges, without combining
+    -- the theme's foreground color with an underline highlight.
     vim.api.nvim_buf_clear_namespace(bufnr, unused_fade_namespace, 0, -1)
 
     for _, diagnostic in ipairs(diagnostics) do

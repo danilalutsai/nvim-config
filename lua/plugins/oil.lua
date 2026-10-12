@@ -161,6 +161,15 @@ oil.setup({
 
   view_options = {
     show_hidden = true,
+    -- macOS protects ~/.Trash; keep Oil's automatic preview out of it.
+    is_always_hidden = function(name, bufnr)
+      if name ~= ".Trash" or vim.fn.has("macunix") ~= 1 then
+        return false
+      end
+      local dir = oil.get_current_dir(bufnr)
+      local home_dir = vim.fn.expand("~"):gsub("/+$", "")
+      return dir ~= nil and dir:gsub("/+$", "") == home_dir
+    end,
     -- Give names neutral colors independently of mini.icons' glyph colors.
     highlight_filename = function(entry, is_hidden, _is_link_target, is_link_orphan)
       -- Dotfiles stay dimmed, orphan links keep their error color.

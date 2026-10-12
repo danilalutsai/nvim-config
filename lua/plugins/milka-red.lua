@@ -5,7 +5,7 @@ vim.o.termguicolors = true
 local colors = {
   white = '#E0E2EA',
   background = '#262626',
-  foreground = '#9c9c9c',
+  foreground = '#a8a19e',
   bracket = '#767676',
   deep_background = '#1c1c1c',
   surface = '#303030',
@@ -13,7 +13,6 @@ local colors = {
   subtle = '#444444',
   comment = '#626262',
   muted = '#767676',
-  string = '#9c9c9c',
   purple = '#cba6f7', -- Photon default: #af87d7
   red = '#f38ba8',
   error = '#f38ba8',
@@ -61,7 +60,7 @@ local function apply_colors()
     Normal = { fg = c.foreground, bg = 'NONE' },
     NormalNC = { fg = c.foreground, bg = 'NONE' },
     NormalFloat = { fg = c.foreground, bg = c.background },
-    FloatBorder = { fg = c.muted, bg = c.background },
+    FloatBorder = { fg = c.comment, bg = c.background },
     FloatTitle = { fg = c.foreground, bg = c.background },
     FloatFooter = { fg = c.muted, bg = c.background },
     NonText = { fg = c.subtle },
@@ -85,11 +84,10 @@ local function apply_colors()
     ['@boolean'] = { fg = c.red },          -- true, false
     ['@keyword.return'] = { fg = c.red }, -- return, yield
     ['@variable.milka_console'] = { fg = c.white },
-      Number = { fg = c.red },
-      Float = { fg = c.red },
+      Number = { fg = c.purple },
+      Float = { fg = c.purple },
     ['@number'] = { fg = c.red },         -- numeric literals
     ['@number.float'] = { fg = c.red },
-    ['@string'] = { fg = c.purple },
     rustBracket = { fg = c.bracket },
     -- Error ranges must preserve the code's syntax colors.
     Error = {},
@@ -115,9 +113,9 @@ local function apply_colors()
     CursorLineNr = { fg = c.purple, bg = c.surface },
     Cursor = { fg = c.foreground, bg = c.purple },
     CursorLine = { bg = c.surface },
-    ColorColumn = { bg = '#37353b' },
+    ColorColumn = { bg = '#2e2538' },
     SignColumn = { fg = c.muted },
-    Visual = { fg =  c.deep_background, bg = c.purple, },
+    Visual = { bg = c.selection },
     VisualNOS = { bg = c.subtle },
     Pmenu = { bg = c.selection },
     PmenuSbar = { bg = c.surface },
@@ -146,7 +144,7 @@ local function apply_colors()
     DiffChange = { bg = c.surface },
     DiffDelete = { fg = c.error, bg = c.surface },
     DiffText = { fg = c.warning, bg = c.surface },
-    helpHyperTextJump = { fg = c.green },
+    helpHyperTextJump = { fg = c.purple },
   }
 
   for group, spec in pairs(highlights) do
