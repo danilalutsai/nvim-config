@@ -174,6 +174,30 @@ do
 
   vim.o.inccommand = 'split'
   vim.o.cursorline = false
+  -- Highlight the quickfix/location-list row with Telescope's selection color.
+  vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter', 'WinEnter' }, {
+    group = vim.api.nvim_create_augroup('QuickfixCursorLine', { clear = true }),
+    callback = function()
+      if vim.bo.filetype == 'qf' then
+        if not vim.w.quickfix_cursorline_restore then
+          vim.w.quickfix_cursorline_restore = {
+            cursorline = vim.wo.cursorline,
+            cursorlineopt = vim.wo.cursorlineopt,
+            winhighlight = vim.wo.winhighlight,
+          }
+        end
+        vim.wo.cursorline = true
+        vim.wo.cursorlineopt = 'line'
+        vim.opt_local.winhighlight:append({ CursorLine = 'QuickFixLine' })
+      elseif vim.w.quickfix_cursorline_restore then
+        local previous = vim.w.quickfix_cursorline_restore
+        vim.wo.cursorline = previous.cursorline
+        vim.wo.cursorlineopt = previous.cursorlineopt
+        vim.wo.winhighlight = previous.winhighlight
+        vim.w.quickfix_cursorline_restore = nil
+      end
+    end,
+  })
   vim.o.scrolloff = 12
 
   -- Ask before saving or discarding changes when quitting or closing a buffer.

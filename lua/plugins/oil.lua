@@ -5,24 +5,17 @@ vim.pack.add {
 
 local oil = require "oil"
 
--- Resolved lazily on first render: mini.icons must finish setup first.
-local icon_provider
-
--- Keep the listing neutral; use purple for the parent icon and confirmation border.
+-- Keep filenames neutral; icons use mini.icons colors.
 local colors = {
   foreground = "#c6c6c6",
   surface = "#303030",
   selection = "#3a3a3a",
-  comment = "#626262",
   muted = "#767676",
   purple = "#cba6f7",
 }
 
 local DEFAULT_DIR_HL = "OilDefaultDir"
 local DEFAULT_FILE_HL = "OilDefaultFile"
-local DIR_ICON_HL = "OilDirIcon"
-local FILE_ICON_HL = "OilFileIcon"
-local PARENT_ICON_HL = "OilParentIcon"
 
 -- Cursor line background, scoped to oil windows through winhighlight below.
 -- Scoped on purpose: `cursorline` is off globally (lua/options.lua), so this
@@ -35,9 +28,6 @@ local CONFIRM_BORDER_HL = "OilConfirmBorder"
 local function set_oil_highlights()
   vim.api.nvim_set_hl(0, DEFAULT_DIR_HL, { fg = colors.muted })
   vim.api.nvim_set_hl(0, DEFAULT_FILE_HL, { fg = colors.foreground })
-  vim.api.nvim_set_hl(0, DIR_ICON_HL, { fg = colors.muted })
-  vim.api.nvim_set_hl(0, FILE_ICON_HL, { fg = colors.comment })
-  vim.api.nvim_set_hl(0, PARENT_ICON_HL, { fg = colors.purple })
   vim.api.nvim_set_hl(0, CURSOR_LINE_HL, { bg = colors.selection })
   vim.api.nvim_set_hl(0, CONFIRM_NORMAL_HL, { fg = colors.foreground, bg = colors.surface })
   vim.api.nvim_set_hl(0, CONFIRM_BORDER_HL, { fg = colors.purple, bg = colors.surface })
@@ -86,55 +76,6 @@ local function open_oil_preview()
   end)
 end
 
--- Keep mini.icons' glyphs, but use Photon's neutral colors in Oil.
-local oil_columns = require "oil.columns"
-local oil_constants = require "oil.constants"
-
-local FIELD_NAME = oil_constants.FIELD_NAME
-local FIELD_TYPE = oil_constants.FIELD_TYPE
-local FIELD_META = oil_constants.FIELD_META
-
-oil_columns.register("icon_uncolored_default", {
-  render = function(entry, conf)
-    icon_provider = icon_provider or require("oil.util").get_icon_provider()
-    if not icon_provider then
-      return nil
-    end
-
-    local field_type = entry[FIELD_TYPE]
-    local name = entry[FIELD_NAME]
-    local meta = entry[FIELD_META]
-
-    -- Links render as whatever they point at, same as the built-in column.
-    if field_type == "link" and meta then
-      if meta.link then
-        name = meta.link
-      end
-      if meta.link_stat then
-        field_type = meta.link_stat.type
-      end
-    end
-    if meta and meta.display_name then
-      name = meta.display_name
-    end
-
-    local icon = icon_provider(field_type, name, conf)
-
-    if not conf or conf.add_padding ~= false then
-      icon = icon .. " "
-    end
-
-    if name == ".." then
-      return { icon, PARENT_ICON_HL }
-    end
-    return { icon, field_type == "directory" and DIR_ICON_HL or FILE_ICON_HL }
-  end,
-
-  parse = function(line, _conf)
-    return line:match("^(%S+)%s+(.*)$")
-  end,
-})
-
 oil.setup({
   default_file_explorer = true,
 
@@ -156,7 +97,7 @@ oil.setup({
   cleanup_delay_ms = false,
 
   columns = {
-    "icon_uncolored_default",
+    "icon",
   },
 
   view_options = {

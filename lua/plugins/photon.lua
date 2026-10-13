@@ -7,23 +7,24 @@ vim.o.background = 'dark'
 -- Edit these values to customize Photon without changing the upstream theme.
 local colors = {
   background = '#1a1a1a',
-  foreground = '#e3e3e3',
+  foreground = '#d4d4d4',
+  unused = '#909090',
   types = '#ada9a6',
   deep_background = '#1c1c1c',
   surface = '#303030',
   selection = '#3a3a3a',
-  search = '#35506b',
-  current_search = '#89b4fa',
-  visual = '#555555',
+  search = '#49384f',
+  current_search = '#c4a7e7',
+  visual = '#49384f',
   subtle = '#444444',
   comment = '#626262',
   muted = '#767676',
-  yellow = '#fffd7d',
+  yellow = '#d9c659',
   cursor = '#ffe96b',
   red = '#d75f5f',
   error = '#af5f87',
   warning = '#d7af5f',
-  green = '#7fc75a',
+  green = '#92d45d',
   brown = '#96794b',
   terminal = {
     '#3a3a3a', '#ac2c2c', '#4e9a06', '#c4a000',
@@ -43,6 +44,7 @@ local function apply_colors()
     ['@comment'] = { fg = c.brown },
     ['@variable'] = { fg = c.foreground },
     ['@function'] = { fg = c.foreground },
+    ['@variable.parameter'] = { fg = c.types },
     ['@string'] = { fg = c.green },
     ['@number'] = { fg = c.yellow },
     ['@boolean'] = { fg = c.yellow },
@@ -77,14 +79,15 @@ local function apply_colors()
     Special = { fg = c.muted },
     Error = { fg = c.error },
     Warning = { fg = c.warning },
-    DiagnosticUnnecessary = { fg = c.foreground },
+    DiagnosticUnnecessary = { fg = c.unused },
     ModeMsg = { fg = c.muted },
     Todo = { fg = c.red },
     Underlined = { fg = c.foreground },
     StatusLine = { fg = c.yellow, bg = c.selection },
     StatusLineNC = { fg = c.muted, bg = c.surface },
     WildMenu = { fg = c.red, bg = c.surface },
-    VertSplit = { fg = c.surface, bg = c.surface },
+    WinSeparator = { fg = c.background, bg = c.background },
+    VertSplit = { fg = c.background, bg = c.background },
     Title = { fg = c.foreground },
     LineNr = { fg = c.comment },
     CursorLineNr = { fg = c.yellow, bg = c.surface },
@@ -116,7 +119,7 @@ local function apply_colors()
     SpellBad = { fg = c.error },
     SpellCap = { fg = c.green },
     SpellLocal = { fg = c.warning },
-    QuickFixLine = { bg = c.deep_background },
+    QuickFixLine = { bg = c.visual },
     DiffAdd = { fg = c.green, bg = c.surface },
     DiffChange = { bg = c.surface },
     DiffDelete = { fg = c.error, bg = c.surface },
@@ -133,7 +136,7 @@ local function apply_colors()
     vim.api.nvim_set_hl(0, group, spec)
   end
 
-  -- Remove text decorations from upstream and inherited highlights too.
+  -- Clear inherited decorations before applying the yellow text weight below.
   local decorations = {
     'bold', 'italic', 'underline', 'undercurl',
     'underdouble', 'underdotted', 'underdashed',
@@ -154,6 +157,18 @@ local function apply_colors()
       if changed then
         vim.api.nvim_set_hl(0, group, spec)
       end
+    end
+  end
+
+  -- Neovim exposes bold rather than a separate semibold highlight attribute.
+  -- Restrict the heavier weight to groups explicitly using c.yellow text.
+  for group, spec in pairs(highlights) do
+    if spec.fg == c.yellow then
+      local highlight = vim.api.nvim_get_hl(0, { name = group, link = false })
+      highlight.bold = true
+      highlight.cterm = highlight.cterm or {}
+      highlight.cterm.bold = true
+      vim.api.nvim_set_hl(0, group, highlight)
     end
   end
 
