@@ -6,7 +6,7 @@ vim.o.background = 'dark'
 
 -- Edit these values to customize Photon without changing the upstream theme.
 local colors = {
-  background = '#262626',
+  background = '#1a1a1a',
   foreground = '#e3e3e3',
   types = '#ada9a6',
   deep_background = '#1c1c1c',
@@ -23,7 +23,7 @@ local colors = {
   red = '#d75f5f',
   error = '#af5f87',
   warning = '#d7af5f',
-  green = '#79bf54',
+  green = '#7fc75a',
   brown = '#96794b',
   terminal = {
     '#3a3a3a', '#ac2c2c', '#4e9a06', '#c4a000',
@@ -54,11 +54,16 @@ local function apply_colors()
     ['@punctuation.special'] = { fg = c.foreground},
     ['@string.vue'] = { fg = c.foreground},
     ['@tag.attribute'] = { fg = c.yellow},
+    ['@tag'] = { fg = c.types},
     ['@string.regexp'] = { fg = c.yellow},
     ['@nospell.comment'] = { fg = c.brown},
     ['@constant.builtin'] = { fg = c.yellow},
-    ['@constructor'] = { fg = c.yellow},
+    ['@constructor'] = { fg = c.foreground},
+    ['@constructor.javascript'] = { fg = c.yellow},
+    ['@constructor.typescript'] = { fg = c.yellow},
     ['@lsp.type.class'] = { fg = c.foreground},
+    ['@character.special'] = { fg = c.foreground},
+    ['@label.typescript'] = { fg = c.foreground},
     Normal = { fg = c.foreground, bg = c.background },
     NonText = { fg = c.subtle, bg = c.background },
     Comment = { fg = c.comment, bg = c.background },
