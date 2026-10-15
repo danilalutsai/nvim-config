@@ -13,19 +13,20 @@ local colors = {
   deep_background = '#1c1c1c',
   surface = '#303030',
   selection = '#3a3a3a',
-  search = '#49384f',
-  current_search = '#c4a7e7',
+  search = '#245b78',
+  search_foreground = '#e6f4ff',
+  current_search = '#e8a45a',
   visual = '#49384f',
   subtle = '#444444',
   comment = '#626262',
   muted = '#767676',
-  yellow = '#d9c659',
-  cursor = '#ffe96b',
+  yellow = '#c7bc48',
+  cursor = '#c7bc48',
   red = '#d75f5f',
   error = '#af5f87',
   warning = '#d7af5f',
-  green = '#92d45d',
-  brown = '#96794b',
+  green = '#7cb350',
+  brown = '#a88854',
   terminal = {
     '#3a3a3a', '#ac2c2c', '#4e9a06', '#c4a000',
     '#1880bc', '#75507b', '#389aad', '#9e9e9e',
@@ -34,6 +35,22 @@ local colors = {
   },
 }
 
+
+local function apply_text_weights()
+  if vim.g.colors_name ~= 'photon' then return end
+
+  local yellow = tonumber(colors.yellow:sub(2), 16)
+  for group, spec in pairs(vim.api.nvim_get_hl(0, {})) do
+    -- Linked groups inherit their target's color and weight.
+    if not spec.link then
+      spec.default = nil
+      spec.bold = spec.fg == yellow
+      spec.cterm = spec.cterm or {}
+      spec.cterm.bold = spec.bold
+      vim.api.nvim_set_hl(0, group, spec)
+    end
+  end
+end
 
 local function apply_colors()
   local c = colors
@@ -97,8 +114,8 @@ local function apply_colors()
     CursorLine = { bg = c.surface },
     ColorColumn = { bg = c.deep_background },
     SignColumn = { fg = c.muted },
-    Visual = { bg = c.visual },
-    VisualNOS = { bg = c.visual },
+    Visual = { bg = '#454545' },
+    VisualNOS = { bg = '#454545' },
     Pmenu = { bg = c.selection },
     PmenuSbar = { bg = c.surface },
     PmenuSel = { fg = c.yellow, bg = c.surface },
@@ -113,9 +130,9 @@ local function apply_colors()
     SpecialKey = { fg = c.muted },
     IncSearch = { fg = c.background, bg = c.current_search },
     CurSearch = { fg = c.background, bg = c.current_search },
-    Search = { fg = c.foreground, bg = c.search },
+    Search = { fg = c.search_foreground, bg = c.search },
     Directory = { fg = c.yellow },
-    MatchParen = { fg = c.red },
+    MatchParen = { fg = c.red, bg = c.subtle },
     SpellBad = { fg = c.error },
     SpellCap = { fg = c.green },
     SpellLocal = { fg = c.warning },
@@ -136,7 +153,7 @@ local function apply_colors()
     vim.api.nvim_set_hl(0, group, spec)
   end
 
-  -- Clear inherited decorations before applying the yellow text weight below.
+  -- Clear inherited decorations before applying the requested text weights.
   local decorations = {
     'bold', 'italic', 'underline', 'undercurl',
     'underdouble', 'underdotted', 'underdashed',
@@ -160,17 +177,7 @@ local function apply_colors()
     end
   end
 
-  -- Neovim exposes bold rather than a separate semibold highlight attribute.
-  -- Restrict the heavier weight to groups explicitly using c.yellow text.
-  for group, spec in pairs(highlights) do
-    if spec.fg == c.yellow then
-      local highlight = vim.api.nvim_get_hl(0, { name = group, link = false })
-      highlight.bold = true
-      highlight.cterm = highlight.cterm or {}
-      highlight.cterm.bold = true
-      vim.api.nvim_set_hl(0, group, highlight)
-    end
-  end
+  apply_text_weights()
 
   for index, color in ipairs(c.terminal) do
     vim.g['terminal_color_' .. (index - 1)] = color
@@ -181,7 +188,17 @@ end
 vim.api.nvim_create_autocmd('ColorScheme', {
   group = vim.api.nvim_create_augroup('PhotonPalette', { clear = true }),
   pattern = 'photon',
-  callback = apply_colors,
+  callback = function()
+    apply_colors()
+    vim.schedule(apply_text_weights)
+  end,
+})
+
+vim.api.nvim_create_autocmd('VimEnter', {
+  group = 'PhotonPalette',
+  callback = function()
+    vim.defer_fn(apply_text_weights, 0)
+  end,
 })
 
 vim.cmd.colorscheme 'photon'

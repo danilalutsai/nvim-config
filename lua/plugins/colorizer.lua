@@ -21,7 +21,7 @@ require('colorizer').setup {
       mode = 'virtualtext',
       virtualtext = {
         char = '■',
-        position = 'after',
+        position = 'eol',
       },
     },
   },

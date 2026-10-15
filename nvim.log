@@ -12,3 +12,4 @@ WRN 2026-10-12T17:46:01.854 ?.6592     server_start:197: Failed to start server:
 WRN 2026-10-13T12:07:18.726 ?.46555    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/E00tvN/nvim.46555.0
 WRN 2026-10-13T18:12:30.419 ?.56851    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/u2Y9gM/nvim.56851.0
 WRN 2026-10-13T19:06:15.657 ?.63560    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/c2k1t8/nvim.63560.0
+WRN 2026-10-14T17:18:59.966 ?.31822    server_start:197: Failed to start server: operation not permitted: /var/folders/33/9jjc8h8n6hz601l3mwdt74440000gn/T/nvim.danilalutsai/jex3XF/nvim.31822.0
