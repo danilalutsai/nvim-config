@@ -32,6 +32,7 @@ do
     },
   }
 
+
   vim.api.nvim_create_autocmd('InsertEnter', {
     group = vim.api.nvim_create_augroup('HideDiagnosticsInInsertMode', { clear = true }),
     callback = function(event)
