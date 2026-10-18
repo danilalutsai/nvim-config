@@ -20,12 +20,12 @@ local colors = {
   subtle = '#444444',
   comment = '#626262',
   muted = '#767676',
-  yellow = '#c7bc48',
+  yellow = '#ded362',
   cursor = '#c7bc48',
   red = '#d75f5f',
   error = '#af5f87',
   warning = '#d7af5f',
-  green = '#7cb350',
+  green = '#91c765',
   brown = '#a88854',
   terminal = {
     '#3a3a3a', '#ac2c2c', '#4e9a06', '#c4a000',
@@ -39,12 +39,11 @@ local colors = {
 local function apply_text_weights()
   if vim.g.colors_name ~= 'photon' then return end
 
-  local yellow = tonumber(colors.yellow:sub(2), 16)
   for group, spec in pairs(vim.api.nvim_get_hl(0, {})) do
     -- Linked groups inherit their target's color and weight.
     if not spec.link then
       spec.default = nil
-      spec.bold = spec.fg == yellow
+      spec.bold = false
       spec.cterm = spec.cterm or {}
       spec.cterm.bold = spec.bold
       vim.api.nvim_set_hl(0, group, spec)
