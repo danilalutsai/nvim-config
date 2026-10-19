@@ -131,8 +131,8 @@ do
   end, { desc = 'Rename word in buffer' })
 
   vim.keymap.set('n', '<leader>rn', function()
-    rename_matches('n')
-  end, { desc = 'Rename search matches in buffer' })
+    require('search_replace').start()
+  end, { desc = 'Review and replace search matches' })
 
   vim.keymap.set('x', '<C-r>n', function()
     rename_matches('x')
