@@ -13,9 +13,9 @@ local colors = {
   deep_background = '#1c1c1c',
   surface = '#303030',
   selection = '#3a3a3a',
-  search = '#245b78',
+  search = '#9f72d4',
   search_foreground = '#e6f4ff',
-  current_search = '#e8a45a',
+  current_search = '#e3905d',
   visual = '#49384f',
   subtle = '#444444',
   comment = '#626262',
@@ -25,7 +25,7 @@ local colors = {
   red = '#d75f5f',
   error = '#af5f87',
   warning = '#d7af5f',
-  green = '#91c765',
+  green = '#84c462',
   brown = '#a88854',
   terminal = {
     '#3a3a3a', '#ac2c2c', '#4e9a06', '#c4a000',
@@ -39,11 +39,12 @@ local colors = {
 local function apply_text_weights()
   if vim.g.colors_name ~= 'photon' then return end
 
+  local yellow = tonumber(colors.yellow:sub(2), 16)
   for group, spec in pairs(vim.api.nvim_get_hl(0, {})) do
     -- Linked groups inherit their target's color and weight.
     if not spec.link then
       spec.default = nil
-      spec.bold = false
+      spec.bold = spec.fg == yellow
       spec.cterm = spec.cterm or {}
       spec.cterm.bold = spec.bold
       vim.api.nvim_set_hl(0, group, spec)
@@ -59,12 +60,10 @@ local function apply_colors()
     ['@keyword.conditional'] = { fg = c.yellow }, -- switch, case
     ['@comment'] = { fg = c.brown },
     ['@variable'] = { fg = c.foreground },
-    ['@function'] = { fg = c.foreground },
-    ['@variable.parameter'] = { fg = c.types },
     ['@string'] = { fg = c.green },
-    ['@number'] = { fg = c.yellow },
+    ['@number'] = { fg = c.foreground },
     ['@boolean'] = { fg = c.yellow },
-    ['@number.float'] = { fg = c.yellow },
+    ['@number.float'] = { fg = c.foreground },
     ['@type'] = { fg = c.foreground },
     ['@type.builtin'] = { fg = c.foreground },
     ['@type.css'] = { fg = c.yellow },
