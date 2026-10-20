@@ -35,7 +35,6 @@ local colors = {
   },
 }
 
-
 local function apply_text_weights()
   if vim.g.colors_name ~= 'photon' then return end
 
