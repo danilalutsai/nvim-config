@@ -55,14 +55,15 @@ local function apply_colors()
   local c = colors
   local highlights = {
     ['@keyword'] = { fg = c.yellow }, -- return, yield
+    ['@function'] = { fg = c.types }, -- functions
     ['@keyword.return'] = { fg = c.yellow }, -- return
     ['@keyword.conditional'] = { fg = c.yellow }, -- switch, case
     ['@comment'] = { fg = c.brown },
     ['@variable'] = { fg = c.foreground },
     ['@string'] = { fg = c.green },
-    ['@number'] = { fg = c.yellow },
+    ['@number'] = { fg = c.foreground },
     ['@boolean'] = { fg = c.yellow },
-    ['@number.float'] = { fg = c.yellow },
+    ['@number.float'] = { fg = c.foreground },
     ['@type'] = { fg = c.foreground },
     ['@type.builtin'] = { fg = c.foreground },
     ['@type.css'] = { fg = c.yellow },
@@ -70,7 +71,6 @@ local function apply_colors()
     ['@punctuation.special'] = { fg = c.foreground},
     ['@string.vue'] = { fg = c.foreground},
     ['@tag.attribute'] = { fg = c.yellow},
-    ['@tag'] = { fg = c.types},
     ['@string.regexp'] = { fg = c.yellow},
     ['@nospell.comment'] = { fg = c.brown},
     ['@constant.builtin'] = { fg = c.yellow},
@@ -85,14 +85,14 @@ local function apply_colors()
     Comment = { fg = c.comment, bg = c.background },
     Conceal = { fg = c.comment, bg = c.background },
     Constant = { fg = c.yellow, bg = c.background },
-    Number = { fg = c.yellow },
-    Float = { fg = c.yellow },
+    Number = { fg = c.foreground },
+    Float = { fg = c.foreground },
     Identifier = { fg = c.foreground, bg = c.background },
     Statement = { fg = c.muted, bg = c.background },
     Operator = { fg = c.foreground, bg = c.background },
     PreProc = { fg = c.red, bg = c.background },
     Type = { fg = c.types, bg = c.background },
-    Special = { fg = c.muted },
+    Special = { fg = c.types },
     Error = { fg = c.error },
     Warning = { fg = c.warning },
     DiagnosticUnnecessary = { fg = c.unused },
