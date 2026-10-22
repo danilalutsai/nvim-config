@@ -9,7 +9,7 @@ local colors = {
   background = '#1a1a1a',
   foreground = '#d4d4d4',
   unused = '#909090',
-  types = '#a1a2bc',
+  types = '#abadc7',
   deep_background = '#1c1c1c',
   surface = '#303030',
   selection = '#3a3a3a',
@@ -58,10 +58,11 @@ local function apply_colors()
     -- ['@function'] = { fg = c.types }, -- functions
     ['@keyword.return'] = { fg = c.yellow }, -- return
     ['@keyword.conditional'] = { fg = c.yellow }, -- switch, case
+    ['@keyword.conditional.ternary.typescript'] = { fg = c.foreground }, -- switch, case
     ['@comment'] = { fg = c.brown },
     ['@variable.parameter'] = { fg = c.types },
     ['@string'] = { fg = c.green },
-    ['@number'] = { fg = c.types },
+    ['@number'] = { fg = c.yellow },
     ['@boolean'] = { fg = c.yellow },
     ['@number.float'] = { fg = c.foreground },
     ['@type'] = { fg = c.foreground },
