@@ -55,11 +55,11 @@ local function apply_colors()
   local c = colors
   local highlights = {
     ['@keyword'] = { fg = c.yellow }, -- return, yield
-    ['@function'] = { fg = c.types }, -- functions
+    -- ['@function'] = { fg = c.types }, -- functions
     ['@keyword.return'] = { fg = c.yellow }, -- return
     ['@keyword.conditional'] = { fg = c.yellow }, -- switch, case
     ['@comment'] = { fg = c.brown },
-    ['@variable'] = { fg = c.foreground },
+    ['@variable.parameter'] = { fg = c.types },
     ['@string'] = { fg = c.green },
     ['@number'] = { fg = c.types },
     ['@boolean'] = { fg = c.yellow },
@@ -71,7 +71,7 @@ local function apply_colors()
     ['@punctuation.special'] = { fg = c.foreground},
     ['@string.vue'] = { fg = c.foreground},
     ['@tag.attribute'] = { fg = c.yellow},
-    ['@string.regexp'] = { fg = c.yellow},
+    ['@string.regexp'] = { fg = c.types},
     ['@nospell.comment'] = { fg = c.brown},
     ['@constant.builtin'] = { fg = c.yellow},
     ['@constructor'] = { fg = c.foreground},
