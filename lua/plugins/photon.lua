@@ -71,6 +71,13 @@ local function apply_colors()
     ['@punctuation'] = { fg = c.foreground},
     ['@punctuation.special'] = { fg = c.foreground},
     ['@string.vue'] = { fg = c.foreground},
+    -- Keep standalone HTML templates consistent with the HTML template blocks
+    -- in Vue files. The HTML parser has language-specific captures that do
+    -- not inherit these generic Vue-facing overrides.
+    ['@tag.html'] = { fg = c.types },
+    ['@tag.delimiter.html'] = { fg = c.types },
+    ['@tag.attribute.html'] = { fg = c.yellow },
+    ['@string.html'] = { fg = c.foreground },
     ['@tag.attribute'] = { fg = c.yellow},
     ['@string.regexp'] = { fg = c.types},
     ['@nospell.comment'] = { fg = c.brown},

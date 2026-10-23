@@ -379,6 +379,7 @@ require("mason-tool-installer").setup({
     "css-lsp",
     "tailwindcss-language-server",
     "prettierd",
+    "clang-format",
     "stylua",
     "lua-language-server",
     "vue-language-server",
