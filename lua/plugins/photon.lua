@@ -62,7 +62,7 @@ local function apply_colors()
     ['@comment'] = { fg = c.brown },
     ['@variable.parameter'] = { fg = c.types },
     ['@string'] = { fg = c.green },
-    ['@number'] = { fg = c.yellow },
+    ['@number'] = { fg = c.foreground },
     ['@boolean'] = { fg = c.yellow },
     ['@number.float'] = { fg = c.foreground },
     ['@type'] = { fg = c.foreground },
