@@ -63,7 +63,7 @@ local function apply_colors()
     ['@variable.parameter'] = { fg = c.types },
     ['@string'] = { fg = c.green },
     ['@number'] = { fg = c.foreground },
-    ['@boolean'] = { fg = c.yellow },
+    ['@boolean'] = { fg = c.types },
     ['@number.float'] = { fg = c.foreground },
     ['@type'] = { fg = c.foreground },
     ['@type.builtin'] = { fg = c.foreground },
