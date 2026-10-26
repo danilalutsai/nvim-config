@@ -75,13 +75,65 @@ do
   -- clear search highlights when pressing <esc>
   vim.keymap.set('n', '<esc>', '<cmd>nohlsearch<cr>')
 
-  -- indent/outdent in visual mode
-  vim.keymap.set('v', '<tab>', '>gv')
+  -- indent/outdent: whole line from the indentation, otherwise only the text
+  -- right of the cursor (or selection start)
+  local function indent_unit()
+    return vim.bo.expandtab and string.rep(' ', vim.fn.shiftwidth()) or '\t'
+  end
+
+  -- 0-based byte column of the first non-blank character
+  local function indent_end(line)
+    return #line:match('^%s*')
+  end
+
+  vim.keymap.set('v', '<tab>', function()
+    local from, to = vim.fn.getpos('v'), vim.fn.getpos('.')
+    if vim.fn.mode() ~= 'v' or from[2] ~= to[2] then
+      return '>gv'
+    end
+
+    local lnum = from[2]
+    local first, last = math.min(from[3], to[3]), math.max(from[3], to[3])
+    if first - 1 <= indent_end(vim.fn.getline(lnum)) then
+      return '>gv'
+    end
+
+    vim.schedule(function()
+      local unit = indent_unit()
+      vim.api.nvim_buf_set_text(0, lnum - 1, first - 1, lnum - 1, first - 1, { unit })
+      vim.fn.setpos("'<", { 0, lnum, first + #unit, 0 })
+      vim.fn.setpos("'>", { 0, lnum, last + #unit, 0 })
+      vim.cmd.normal { 'gv', bang = true }
+    end)
+    return '<Esc>'
+  end, { expr = true, desc = 'Indent selection' })
   vim.keymap.set('v', '<s-tab>', '<gv')
+
   vim.keymap.set('n', '<tab>', function()
-    return vim.bo.modifiable and '>>' or '<Ignore>'
-  end, { expr = true, desc = 'Indent line when buffer is editable' })
-  vim.keymap.set('n', '<s-tab>', '<<')
+    if not vim.bo.modifiable then
+      return '<Ignore>'
+    end
+
+    local col = vim.fn.col('.') - 1
+    if col <= indent_end(vim.fn.getline('.')) then
+      return '>>'
+    end
+
+    return 'i' .. indent_unit() .. '<Esc>l'
+  end, { expr = true, desc = 'Indent line, or text right of cursor' })
+
+  vim.keymap.set('n', '<s-tab>', function()
+    local line = vim.fn.getline('.')
+    local col = vim.fn.col('.') - 1
+    if col <= indent_end(line) then
+      return '<<'
+    end
+
+    -- keep one blank so words left of the cursor don't get joined
+    local blanks = #line:sub(1, col):match('%s*$') - 1
+    local count = math.min(blanks, vim.bo.expandtab and vim.fn.shiftwidth() or 1)
+    return count > 0 and count .. 'X' or '<Ignore>'
+  end, { expr = true, desc = 'Outdent line, or text right of cursor' })
 
   -- Move current line or selected text
   vim.keymap.set('n', '<C-S-j>', '<cmd>move .+1<CR>==', { desc = 'Move line down' })
@@ -310,5 +362,11 @@ do
   })
 
   vim.keymap.set("n", "D", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+
+-- clear search highlights and multicursors when pressing <esc>
+vim.keymap.set('n', '<esc>', function()
+  vim.cmd.nohlsearch()
+  vim.api.nvim_buf_clear_namespace(0, vim.api.nvim_create_namespace('nvim.multicursor'), 0, -1)
+end, { desc = 'Clear search highlight and multicursors' })
 
 end

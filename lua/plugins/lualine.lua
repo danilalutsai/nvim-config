@@ -62,6 +62,18 @@ local function current_filename()
   return path
 end
 
+local multicursor_ns = vim.api.nvim_create_namespace 'nvim.multicursor'
+
+local function current_multicursor()
+  local cursors = #vim.api.nvim_buf_get_extmarks(0, multicursor_ns, 0, -1, {})
+
+  if cursors == 0 then
+    return ''
+  end
+
+  return string.format('mc:%d %s', cursors, vim.bo.follow and 'follow' or 'single')
+end
+
 local git_cache = { value = '', time = 0, cwd = nil }
 
 local function current_branch()
@@ -105,6 +117,7 @@ require('lualine').setup {
     },
     lualine_c = {},
     lualine_x = {
+      block(current_multicursor),
       block(current_branch),
       block('diff', { colored = false }),
       block(current_filetype),
@@ -116,6 +129,13 @@ require('lualine').setup {
     },
   },
 }
+
+-- `q=` toggles 'follow' without moving the cursor or firing OptionSet,
+-- so run the builtin and redraw right away.
+vim.keymap.set('n', 'q=', function()
+  vim.cmd.normal { (vim.v.count > 0 and vim.v.count or '') .. 'q=', bang = true }
+  require('lualine').refresh()
+end, { desc = 'Toggle multicursor follow' })
 
 -- Cover any unused statusline cells outside Lualine's rendered sections.
 for _, group in ipairs({ 'StatusLine', 'StatusLineNC' }) do

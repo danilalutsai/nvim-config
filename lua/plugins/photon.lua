@@ -18,6 +18,7 @@ local colors = {
   current_search = '#e3905d',
   visual = '#49384f',
   subtle = '#444444',
+  match_paren = '#6a6a6a',
   comment = '#626262',
   muted = '#767676',
   yellow = '#ded362',
@@ -28,22 +29,21 @@ local colors = {
   green = '#84c462',
   brown = '#a88854',
   terminal = {
-    '#3a3a3a', '#ac2c2c', '#4e9a06', '#c4a000',
-    '#1880bc', '#75507b', '#389aad', '#9e9e9e',
-    '#444444', '#af5f87', '#87af87', '#d7af5f',
-    '#369dd8', '#af87d7', '#34e2e2', '#b2b2b2',
+    '#3a3a3a', '#d75f5f', '#84c462', '#ded362',
+    '#7f9fcf', '#9f72d4', '#74b8b0', '#b2b2b2',
+    '#626262', '#e27d7d', '#a3d685', '#e8de85',
+    '#9cb8e0', '#b892e0', '#95ccc6', '#e6e6e6',
   },
 }
 
 local function apply_text_weights()
   if vim.g.colors_name ~= 'photon' then return end
 
-  local yellow = tonumber(colors.yellow:sub(2), 16)
   for group, spec in pairs(vim.api.nvim_get_hl(0, {})) do
     -- Linked groups inherit their target's color and weight.
     if not spec.link then
       spec.default = nil
-      spec.bold = spec.fg == yellow
+      spec.bold = false
       spec.cterm = spec.cterm or {}
       spec.cterm.bold = spec.bold
       vim.api.nvim_set_hl(0, group, spec)
@@ -139,7 +139,7 @@ local function apply_colors()
     CurSearch = { fg = c.background, bg = c.current_search },
     Search = { fg = c.search_foreground, bg = c.search },
     Directory = { fg = c.yellow },
-    MatchParen = { fg = c.red, bg = c.subtle },
+    MatchParen = { fg = c.red, bg = c.black },
     SpellBad = { fg = c.error },
     SpellCap = { fg = c.green },
     SpellLocal = { fg = c.warning },
