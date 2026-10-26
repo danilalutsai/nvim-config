@@ -39,11 +39,12 @@ local colors = {
 local function apply_text_weights()
   if vim.g.colors_name ~= 'photon' then return end
 
+  local yellow = tonumber(colors.yellow:sub(2), 16)
   for group, spec in pairs(vim.api.nvim_get_hl(0, {})) do
     -- Linked groups inherit their target's color and weight.
     if not spec.link then
       spec.default = nil
-      spec.bold = false
+      spec.bold = spec.fg == yellow
       spec.cterm = spec.cterm or {}
       spec.cterm.bold = spec.bold
       vim.api.nvim_set_hl(0, group, spec)
