@@ -46,6 +46,14 @@ do
     desc = "Jump backward",
   })
 
+  -- Ghostty sends <C-i> apart from <Tab>, but Nvim falls back to the <Tab>
+  -- indent map when <C-i> has no map of its own. Pin it to the jumplist.
+  vim.keymap.set("n", "<C-i>", "<C-i>", {
+    noremap = true,
+    silent = true,
+    desc = "Jump forward",
+  })
+
   -- In the final window, close its buffer and return to another open buffer.
   -- Show the welcome screen only when no other listed buffer remains.
   vim.keymap.set("n", "<C-w>c", function()
