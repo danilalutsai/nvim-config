@@ -64,10 +64,10 @@ local function apply_colors()
     ['@keyword.conditional'] = { fg = c.yellow }, -- switch, case
     ['@keyword.conditional.ternary.typescript'] = { fg = c.foreground }, -- switch, case
     ['@comment'] = { fg = c.brown },
-    ['@variable.parameter'] = { fg = c.types },
+    -- ['@variable.parameter'] = { fg = c.types },
     ['@string'] = { fg = c.green },
     ['@number'] = { fg = c.foreground },
-    ['@boolean'] = { fg = c.types },
+    ['@boolean'] = { fg = c.foreground },
     ['@number.float'] = { fg = c.foreground },
     ['@type'] = { fg = c.foreground },
     ['@type.builtin'] = { fg = c.foreground },
