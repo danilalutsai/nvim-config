@@ -6,7 +6,7 @@ vim.o.background = 'dark'
 
 -- Edit these values to customize Photon without changing the upstream theme.
 local colors = {
-  background = '#1a1a1a',
+  background = '#0f0f0f',
   foreground = '#d4d4d4',
   unused = '#909090',
   types = '#9697a3',
