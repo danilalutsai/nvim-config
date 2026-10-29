@@ -38,22 +38,22 @@ local colors = {
   },
 }
 
-local function apply_text_weights()
-  if vim.g.colors_name ~= 'photon' then return end
+-- local function apply_text_weights()
+--   if vim.g.colors_name ~= 'photon' then return end
 
-  -- Only matching pairs are bold; MatchTagAlways reuses MatchParen for tags.
-  local bold_groups = { MatchParen = true, MatchTag = true }
-  for group, spec in pairs(vim.api.nvim_get_hl(0, {})) do
-    -- Linked groups inherit their target's color and weight.
-    if not spec.link then
-      spec.default = nil
-      spec.bold = bold_groups[group] == true
-      spec.cterm = spec.cterm or {}
-      spec.cterm.bold = spec.bold
-      vim.api.nvim_set_hl(0, group, spec)
-    end
-  end
-end
+--   -- Only matching pairs are bold; MatchTagAlways reuses MatchParen for tags.
+--   local bold_groups = { MatchParen = true, MatchTag = true }
+--   for group, spec in pairs(vim.api.nvim_get_hl(0, {})) do
+--     -- Linked groups inherit their target's color and weight.
+--     if not spec.link then
+--       spec.default = nil
+--       spec.bold = bold_groups[group] == true
+--       spec.cterm = spec.cterm or {}
+--       spec.cterm.bold = spec.bold
+--       vim.api.nvim_set_hl(0, group, spec)
+--     end
+--   end
+-- end
 
 local function apply_colors()
   local c = colors
