@@ -149,54 +149,19 @@ do
   vim.keymap.set('x', '<C-S-j>', ":move '>+1<CR>gv=gv", { desc = 'Move selection down' })
   vim.keymap.set('x', '<C-S-k>', ":move '<-2<CR>gv=gv", { desc = 'Move selection up' })
 
-  local function get_visual_selection()
-    local start_pos = vim.fn.getpos("'<")
-    local end_pos = vim.fn.getpos("'>")
-    local lines = vim.fn.getline(start_pos[2], end_pos[2])
-
-    if #lines == 0 then return '' end
-
-    lines[1] = string.sub(lines[1], start_pos[3])
-    lines[#lines] = string.sub(lines[#lines], 1, end_pos[3])
-
-    return table.concat(lines, '\n')
-  end
-
-  local function rename_matches(mode)
-    local old_name = mode == 'x' and get_visual_selection() or vim.fn.getreg('/')
-
-    if old_name == '' and mode == 'n' then
-      old_name = vim.fn.expand('<cword>')
-    end
-
-    if old_name == '' then return end
-
-    local new_name = vim.fn.input(('Rename "%s" to: '):format(old_name))
-
-    if new_name == '' then return end
-
-    local pattern = vim.fn.escape(old_name, [[\/]])
-
-    if mode == 'x' or vim.fn.getreg('/') ~= old_name then
-      pattern = [[\V]] .. pattern
-    end
-
-    local replacement = vim.fn.escape(new_name, [[\&/]])
-
-    vim.cmd(('keeppatterns %%s/%s/%s/g'):format(pattern, replacement))
-  end
-
-  vim.keymap.set('n', '<C-r>n', function()
-    rename_matches('n')
-  end, { desc = 'Rename word in buffer' })
-
+  -- Replace word under cursor in the whole file; live preview via inccommand
+  -- y = replace, n = skip, a = all remaining, q = quit
   vim.keymap.set('n', '<leader>rn', function()
-    require('search_replace').start()
+    require('plugins.search_replace').start()
   end, { desc = 'Review and replace search matches' })
 
-  vim.keymap.set('x', '<C-r>n', function()
-    rename_matches('x')
-  end, { desc = 'Rename selection in buffer' })
+  vim.keymap.set('x', '<leader>rn', function()
+    local text = table.concat(vim.fn.getregion(vim.fn.getpos('v'), vim.fn.getpos('.'), { type = vim.fn.mode() }), '\n')
+    vim.api.nvim_feedkeys(vim.keycode('<Esc>'), 'nx', false)
+    require('plugins.search_replace').start(text)
+  end, { desc = 'Review and replace selection' })
+
+  vim.keymap.set('n', '<leader>rw', [[:%s/\<<C-r><C-w>\>//gc<Left><Left><Left>]], { desc = 'Replace word in file' })
 
   -- Line navigation
   vim.keymap.set('n', '<S-l>', '$', { desc = 'Go to end of line' })
