@@ -1,5 +1,3 @@
--- Original Photon palette: https://github.com/axvr/photon.vim/blob/master/colors/photon.vim
--- Alex Vear, MIT (2019).
 vim.pack.add { 'https://github.com/axvr/photon.vim' }
 vim.o.termguicolors = true
 vim.o.background = 'dark'
