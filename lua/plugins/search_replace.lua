@@ -1,10 +1,18 @@
--- Review and replace: step through matches, accept them one by one or all at once.
+--   Review and replace: step through matches, accept them 
+--   one by one or all at once.
+
+--   <leader>rn  normal: active search (highlight on) if any, 
+--   else word under cursor
+--   visual: the selected text, literally
 --
---   <leader>rn  normal: active search (highlight on) if any, else word under cursor
---               visual: the selected text, literally
---
--- While reviewing (keys are read directly, no temporary mappings):
---   Ctrl+y accept · Ctrl+a all · Ctrl+n next · Ctrl+p / p back · Esc finish
+--   While reviewing (keys are read directly, no temporary mappings):
+
+--   Ctrl+y accept
+--   Ctrl+a all
+--   Ctrl+n next
+--   Ctrl+p / p back
+--   Esc finish
+
 local M = {}
 local marks_ns = vim.api.nvim_create_namespace('SearchReplaceMarks')
 local focus_ns = vim.api.nvim_create_namespace('SearchReplaceFocus')

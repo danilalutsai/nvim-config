@@ -1,7 +1,7 @@
 vim.pack.add { 'https://github.com/nvim-lualine/lualine.nvim' }
 
 local status_bg = '#282828'
-local status_text = '#a39f9d'
+local status_text = '#d4d4d4'
 local theme = vim.deepcopy(require('lualine.themes.auto'))
 
 -- Use regular text on one continuous background in every mode.
