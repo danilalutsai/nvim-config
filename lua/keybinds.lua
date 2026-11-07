@@ -312,27 +312,27 @@ do
   vim.keymap.set("n", "]f", "]m", { desc = "Next function" })
   vim.keymap.set("n", "[f", "[m", { desc = "Previous function" })
 
-  -- Merge conflicts: choose left/ours or right/theirs
-  vim.keymap.set("n", "grch", "<cmd>diffget //2<CR>", {
-    desc = "Choose left conflict version",
-    silent = true,
-  })
+  -- Merge conflicts (diff mode only; otherwise keep built-in behavior)
+  local function diff_map(lhs, cmd, desc)
+    vim.keymap.set("n", lhs, function()
+      return vim.wo.diff and ("<cmd>" .. cmd .. "<CR>") or lhs
+    end, { expr = true, silent = true, desc = desc })
+  end
 
-  vim.keymap.set("n", "grcl", "<cmd>diffget //3<CR>", {
-    desc = "Choose right conflict version",
-    silent = true,
-  })
+  diff_map("gh", "diffget //2", "Choose left conflict version")
+  diff_map("gl", "diffget //3", "Choose right conflict version")
 
-  -- Merge conflicts: choose the entire file
-  vim.keymap.set("n", "grcH", "<cmd>Gread //2<CR>", {
-    desc = "Choose entire file from ours/left",
-    silent = true,
-  })
+  -- Visual mode: only take the selected lines instead of the whole chunk
+  local function diff_vmap(lhs, cmd, desc)
+    vim.keymap.set("x", lhs, function()
+      return vim.wo.diff and (":" .. cmd .. "<CR>") or lhs
+    end, { expr = true, silent = true, desc = desc })
+  end
 
-  vim.keymap.set("n", "grcL", "<cmd>Gread //3<CR>", {
-    desc = "Choose entire file from theirs/right",
-    silent = true,
-  })
+  diff_vmap("gh", "diffget //2", "Choose selected lines from left")
+  diff_vmap("gl", "diffget //3", "Choose selected lines from right")
+  diff_map("gH", "Gread //2", "Choose entire file from ours/left")
+  diff_map("gL", "Gread //3", "Choose entire file from theirs/right")
 
   vim.keymap.set("n", "D", vim.diagnostic.open_float, { desc = "Show diagnostic" })
 

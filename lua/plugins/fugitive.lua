@@ -22,7 +22,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- Open a side-by-side diff for the current file
-vim.keymap.set("n", "<leader>gf", "<cmd>Gvdiffsplit<CR>", {
+vim.keymap.set("n", "<leader>gf", "<cmd>Gvdiffsplit!<CR>", {
   desc = "Fugitive vertical diff",
 })
 
