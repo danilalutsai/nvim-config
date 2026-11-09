@@ -23,20 +23,5 @@ versions pinned in `nvim-pack-lock.json`.
 - **Navigation:** oil, Telescope, undotree, vim-tmux-navigator
 - **Docs:** markdown-preview
 
-## Handy keys
-
-Leader is Space.
-
-| Key | Action |
-| --- | --- |
-| `<leader>c` | Oil with preview |
-| `<leader>sf` / `<leader>sg` | Find files / live grep |
-| `<leader>rn` | Review and replace matches one by one |
-| `<leader>gg` / `<leader>gs` | Neogit / Fugitive status |
-| `<leader>gd` | Diffview |
-| `<leader>u` | Undotree |
-| `N` / `P` | Next / previous buffer |
-| `<C-n>` / `<C-p>` | Next / previous search result |
-
 Extra color schemes live in `lua/plugins/`. To switch, change the theme entry in
 `lua/plugins/init.lua`.
