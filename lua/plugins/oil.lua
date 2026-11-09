@@ -8,7 +8,7 @@ local oil = require "oil"
 -- Keep filenames neutral; icons use mini.icons colors.
 local colors = {
   foreground = "#c6c6c6",
-  surface = "#303030",
+  surface = "#1c1c1c",
   selection = "#3a3a3a",
   muted = "#767676",
   purple = "#cba6f7",
