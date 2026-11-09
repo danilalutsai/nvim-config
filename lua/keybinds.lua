@@ -261,10 +261,10 @@ do
   vim.keymap.set('n', '<C-n>', 'n', { desc = 'Next search result' })
   vim.keymap.set('n', '<C-p>', 'N', { desc = 'Previous search result' })
   vim.keymap.set('n', 'zz', 'zt', { desc = 'Place current line at top' })
-  -- No <leader>cd here: plugins/oil.lua sets it (oil with the preview split).
+  -- No <leader>c here: plugins/oil.lua sets it (oil with the preview split).
   -- keybinds.lua is required after plugins in init.lua, so a map here would win
   -- over oil's. To go back to netrw on that key, comment 'oil' out of
-  -- plugins/init.lua and put `vim.keymap.set('n', '<leader>cd',
+  -- plugins/init.lua and put `vim.keymap.set('n', '<leader>c',
   -- '<cmd>Explore<CR>')` back here -- the netrw maps below stay wired either way.
 
   -- :Explore replaces the file in the window rather than opening a split, so

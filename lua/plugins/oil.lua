@@ -180,7 +180,7 @@ oil.setup({
 -- Open Oil with the preview split already up. oil.open takes the preview opts
 -- itself and runs the callback once the buffer has loaded, so there's no need
 -- to poll for the cursor entry.
-vim.keymap.set("n", "<leader>cd", function()
+vim.keymap.set("n", "<leader>c", function()
   oil.open(nil, { preview = { vertical = true } }, function(err)
     if not err then
       resize_preview_split()
@@ -209,3 +209,23 @@ vim.api.nvim_create_autocmd({ "WinResized", "VimResized" }, {
     vim.schedule(resize_preview_split)
   end,
 })
+
+-- `nvim .` (or any single directory argument) lands in Oil through
+-- default_file_explorer. Open the preview for that first listing, the same as
+-- <C-p> would; later Oil buffers are left alone. oil.setup above has already
+-- rewritten a directory argument to an oil:// URL by the time this runs.
+local startup_arg = vim.fn.argc() == 1 and vim.fn.argv(0) or ""
+if startup_arg:match("^oil://") or vim.fn.isdirectory(startup_arg) == 1 then
+  vim.api.nvim_create_autocmd("VimEnter", {
+    group = "OilAutoPreview",
+    once = true,
+    callback = function()
+      local bufnr = vim.api.nvim_get_current_buf()
+      if vim.bo[bufnr].filetype ~= "oil" then
+        return
+      end
+      -- Waits for the listing to render, or runs now if it already has.
+      require("oil.util").run_after_load(bufnr, open_oil_preview)
+    end,
+  })
+end
