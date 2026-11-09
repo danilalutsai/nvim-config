@@ -2,34 +2,34 @@
 vim.pack.add { 'https://github.com/sindrets/diffview.nvim' }
 
 local function set_diffview_colors()
-  -- No backgrounds anywhere in diffs: changes are marked by text color only.
-  local add_fg = "#84c462"
-  local delete_fg = "#d75f5f"
+  -- Changes are marked by a dark background behind white text.
+  local add = { fg = "#f8f8f2", bg = "#022800" }
+  local delete = { fg = "#f8f8f2", bg = "#3d0101" }
 
   -- Side-by-side diffs (vimdiff, :Gvdiffsplit, diffview)
-  vim.api.nvim_set_hl(0, "DiffAdd", { fg = add_fg })
-  vim.api.nvim_set_hl(0, "DiffDelete", { fg = delete_fg })
+  vim.api.nvim_set_hl(0, "DiffAdd", add)
+  vim.api.nvim_set_hl(0, "DiffDelete", delete)
   -- Deleted side of a two-way diff renders through diffview's own group.
-  vim.api.nvim_set_hl(0, "DiffviewDiffAddAsDelete", { fg = delete_fg })
+  vim.api.nvim_set_hl(0, "DiffviewDiffAddAsDelete", delete)
   -- Changed lines keep their syntax colors; only the changed text turns green.
   vim.api.nvim_set_hl(0, "DiffChange", {})
-  vim.api.nvim_set_hl(0, "DiffText", { fg = add_fg })
+  vim.api.nvim_set_hl(0, "DiffText", add)
 
   -- Fugitive expanded file diffs use git/diff syntax groups for +/- lines.
-  vim.api.nvim_set_hl(0, "diffAdded", { fg = add_fg })
-  vim.api.nvim_set_hl(0, "diffRemoved", { fg = delete_fg })
-  vim.api.nvim_set_hl(0, "Added", { fg = add_fg })
-  vim.api.nvim_set_hl(0, "Removed", { fg = delete_fg })
+  vim.api.nvim_set_hl(0, "diffAdded", add)
+  vim.api.nvim_set_hl(0, "diffRemoved", delete)
+  vim.api.nvim_set_hl(0, "Added", add)
+  vim.api.nvim_set_hl(0, "Removed", delete)
 
   -- Neogit hunks
-  vim.api.nvim_set_hl(0, "NeogitDiffAdd", { fg = add_fg })
-  vim.api.nvim_set_hl(0, "NeogitDiffAddHighlight", { fg = add_fg })
-  vim.api.nvim_set_hl(0, "NeogitDiffDelete", { fg = delete_fg })
-  vim.api.nvim_set_hl(0, "NeogitDiffDeleteHighlight", { fg = delete_fg })
+  vim.api.nvim_set_hl(0, "NeogitDiffAdd", add)
+  vim.api.nvim_set_hl(0, "NeogitDiffAddHighlight", add)
+  vim.api.nvim_set_hl(0, "NeogitDiffDelete", delete)
+  vim.api.nvim_set_hl(0, "NeogitDiffDeleteHighlight", delete)
 
   -- Gitsigns column markers: colored sign only, no line tint.
-  vim.api.nvim_set_hl(0, "GitSignsAdd", { fg = add_fg })
-  vim.api.nvim_set_hl(0, "GitSignsDelete", { fg = delete_fg })
+  vim.api.nvim_set_hl(0, "GitSignsAdd", { fg = "#84c462" })
+  vim.api.nvim_set_hl(0, "GitSignsDelete", { fg = "#d75f5f" })
 end
 
 set_diffview_colors()
