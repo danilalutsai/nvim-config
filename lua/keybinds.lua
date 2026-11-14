@@ -262,43 +262,6 @@ do
   vim.keymap.set('n', '<C-p>', 'N', { desc = 'Previous search result' })
   vim.keymap.set('n', 'zz', 'zt', { desc = 'Place current line at top' })
   -- No <leader>c here: plugins/oil.lua sets it (oil with the preview split).
-  -- keybinds.lua is required after plugins in init.lua, so a map here would win
-  -- over oil's. To go back to netrw on that key, comment 'oil' out of
-  -- plugins/init.lua and put `vim.keymap.set('n', '<leader>c',
-  -- '<cmd>Explore<CR>')` back here -- the netrw maps below stay wired either way.
-
-  -- :Explore replaces the file in the window rather than opening a split, so
-  -- closing netrw means going back to the buffer that was there. Falls back to
-  -- closing the window when netrw is a split, and does nothing when it is the
-  -- only thing on screen (`nvim .`) -- there is nothing to return to.
-  local function close_netrw()
-    local alt = vim.fn.bufnr '#'
-
-    if alt ~= -1 and vim.api.nvim_buf_is_valid(alt) and vim.bo[alt].filetype ~= 'netrw' then
-      vim.cmd.buffer(alt)
-    elseif #vim.api.nvim_list_wins() > 1 then
-      vim.cmd.close()
-    end
-  end
-
-  -- netrw: Tab/S-Tab to descend and ascend, a/A to create, d/D to delete.
-  -- All remap = true because they stand on netrw's own <CR>, -, %, d and D maps.
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = 'netrw',
-    callback = function(event)
-      -- cursorline is off globally; netrw gets it so the current row is visible.
-      vim.opt_local.cursorline = true
-
-      local opts = { buffer = event.buf, remap = true }
-      vim.keymap.set('n', '<Tab>', '<CR>', vim.tbl_extend('force', opts, { desc = 'Open file or folder' }))
-      vim.keymap.set('n', '<S-Tab>', '-', vim.tbl_extend('force', opts, { desc = 'Go up folder' }))
-      vim.keymap.set('n', 'a', '%', vim.tbl_extend('force', opts, { desc = 'Add file' }))
-      vim.keymap.set('n', 'A', 'd', vim.tbl_extend('force', opts, { desc = 'Add directory' }))
-      -- netrw's own `d` is mkdir, which moved to A above; both d and D delete.
-      vim.keymap.set('n', 'd', 'D', vim.tbl_extend('force', opts, { desc = 'Delete file or folder' }))
-      vim.keymap.set('n', '<C-c>', close_netrw, { buffer = event.buf, desc = 'Close explorer' })
-    end,
-  })
 
   vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
   vim.keymap.set('n', '<leader>d', function()

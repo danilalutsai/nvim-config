@@ -10,6 +10,9 @@ vim.api.nvim_create_autocmd("OptionSet", {
     if vim.wo.diff then
       vim.wo.wrap = false
     end
+    -- :diffthis (fugitive's dv, :Gvdiffsplit) only binds scrolling; bind the
+    -- cursor too so it moves in step across diff windows, like diffview.
+    vim.wo.cursorbind = vim.wo.diff
   end,
 })
 

@@ -2,9 +2,10 @@
 vim.pack.add { 'https://github.com/sindrets/diffview.nvim' }
 
 local function set_diffview_colors()
-  -- Changes are marked by a dark background behind white text.
-  local add = { fg = "#f8f8f2", bg = "#022800" }
-  local delete = { fg = "#f8f8f2", bg = "#3d0101" }
+  -- Changes are marked by photon's regular foreground on a dark green/red
+  -- background. photon.lua sets the same values; keep the two in sync.
+  local add = { fg = "#d4d4d4", bg = "#022800" }
+  local delete = { fg = "#d4d4d4", bg = "#3d0101" }
 
   -- Side-by-side diffs (vimdiff, :Gvdiffsplit, diffview)
   vim.api.nvim_set_hl(0, "DiffAdd", add)

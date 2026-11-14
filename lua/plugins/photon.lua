@@ -17,8 +17,8 @@ local colors = {
   visual =             '#49384f',
   subtle =             '#444444',
   match_paren =        '#6a6a6a',
-  match_paren_bg =     '#3d62a8',
-  match_paren_fg =     '#ffffff',
+  match_paren_bg =     '#0f0f0f',
+  match_paren_fg =     '#eb3d3d',
   comment =            '#626262',
   muted =              '#767676',
   yellow =             '#ded362',
@@ -28,6 +28,12 @@ local colors = {
   warning =            '#d7af5f',
   green =              '#84c462',
   brown =              '#a88854',
+
+  -- Diff lines: regular foreground text on a dark green/red tint. diffview.lua
+  -- sets the same values, so the result no longer depends on which file
+  -- applies its colors last.
+  diff_add =           '#022800',
+  diff_delete =        '#3d0101',
   terminal = {
     '#3a3a3a', '#d75f5f', '#84c462', '#ded362',
     '#7f9fcf', '#9f72d4', '#74b8b0', '#b2b2b2',
@@ -90,8 +96,8 @@ local function apply_colors()
     ['@lsp.type.class'] = { fg = c.foreground},
     ['@character.special'] = { fg = c.foreground},
     ['@label.typescript'] = { fg = c.foreground},
-    -- Markdown stays monochrome: text is white, syntax markers are gray.
-    ['@markup.heading'] = { fg = c.foreground },
+    -- Markdown: headings yellow, text white, syntax markers gray.
+    ['@markup.heading'] = { fg = c.yellow },
     ['@markup.strong'] = { fg = c.foreground },
     ['@markup.italic'] = { fg = c.foreground },
     ['@markup.strikethrough'] = { fg = c.types },
@@ -168,10 +174,14 @@ local function apply_colors()
     SpellCap = { fg = c.green },
     SpellLocal = { fg = c.warning },
     QuickFixLine = { bg = c.visual },
-    DiffAdd = { fg = c.green, bg = c.surface },
-    DiffChange = { bg = c.surface },
-    DiffDelete = { fg = c.error, bg = c.surface },
-    DiffText = { fg = c.warning, bg = c.surface },
+    DiffAdd = { fg = c.foreground, bg = c.diff_add },
+    -- Changed lines keep their syntax colors; only the changed text is tinted.
+    DiffChange = {},
+    DiffDelete = { fg = c.foreground, bg = c.diff_delete },
+    DiffText = { fg = c.foreground, bg = c.diff_add },
+    diffAdded = { fg = c.foreground, bg = c.diff_add },
+    diffRemoved = { fg = c.foreground, bg = c.diff_delete },
+    DiffviewDiffAddAsDelete = { fg = c.foreground, bg = c.diff_delete },
     helpHyperTextJump = { fg = c.yellow, bg = c.background },
     -- Neovim's built-in Info, Hint and Changed groups are cyan and light blue.
     -- Diagnostics, gitsigns, Oil, diffs and mini.icons all link to them.
@@ -185,9 +195,9 @@ local function apply_colors()
     DiagnosticUnderlineInfo = { sp = c.brown },
     DiagnosticUnderlineHint = { sp = c.brown },
     DiagnosticUnderlineOk = { sp = c.green },
-    Added = { fg = c.green },
+    Added = { fg = c.foreground, bg = c.diff_add },
     Changed = { fg = c.yellow },
-    Removed = { fg = c.red },
+    Removed = { fg = c.foreground, bg = c.diff_delete },
     -- File and folder icons in Oil, Telescope and blink.
     MiniIconsAzure = { fg = c.foreground },
     MiniIconsBlue = { fg = c.foreground },

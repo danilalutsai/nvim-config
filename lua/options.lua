@@ -1,11 +1,12 @@
 do
   vim.loader.enable()
 
-  -- No g:netrw_bufsettings override. netrw's own default is
-  -- "noma nomod nonu nobl nowrap ro nornu"; this used to swap that nonu for
-  -- nu and drop the nornu, which left the listing with a number column that
-  -- the global relativenumber below turned into hybrid numbering -- relative
-  -- counts down the file names, absolute on the cursor row.
+  -- oil.nvim is the file explorer. Disable netrw and nightly's built-in
+  -- directory viewer (runtime/plugin/dir.lua) so neither grabs `nvim .` or
+  -- `:e dir/` before oil does.
+  vim.g.loaded_netrw = 1
+  vim.g.loaded_netrwPlugin = 1
+  vim.g.loaded_nvim_dir_plugin = true
 
   vim.g.mapleader = " "
   vim.g.maplocalleader = " "
