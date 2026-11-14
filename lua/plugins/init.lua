@@ -1,6 +1,6 @@
 local plugins = {
   'gitsigns',
-  'catppuccin-simple',
+  'photon', -- Switch back to 'milka-simple' to restore the previous theme.
   'lualine',
   'mini',
   'surround',
@@ -21,12 +21,14 @@ local plugins = {
   'diffview',
   'oil',
   'treesitter',
+  'treesj',
   'nvim-treesitter-textobjects',
   'undotree',
   'fugitive',
   'vim-tmux-navigator',
   'markdown-preview',
   'colorizer',
+  'match-tag-always',
 }
 
 for _, name in ipairs(plugins) do
@@ -35,3 +37,4 @@ for _, name in ipairs(plugins) do
 		vim.notify(("Failed to load plugin %s: %s"):format(name, err), vim.log.levels.ERROR)
 	end
 end
+

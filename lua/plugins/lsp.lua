@@ -15,7 +15,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 
     -- Normal hover popup
-    map("K", vim.lsp.buf.hover, "Hover documentation")
+    map("K", function()
+      vim.lsp.buf.hover({ border = "rounded" })
+    end, "Hover documentation")
 
     -- Open hover documentation in a normal split window
     map("gK", function()
@@ -82,7 +84,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
           vim.wo.number = false
           vim.wo.relativenumber = false
-          vim.wo.wrap = true
+          vim.wo.wrap = false
           vim.wo.cursorline = false
 
           -- Close only the documentation split
@@ -377,6 +379,7 @@ require("mason-tool-installer").setup({
     "css-lsp",
     "tailwindcss-language-server",
     "prettierd",
+    "clang-format",
     "stylua",
     "lua-language-server",
     "vue-language-server",
@@ -391,7 +394,7 @@ for name, server in pairs(servers) do
 end
 
 -- Hide inline messages and underlines for unused TypeScript code,
--- while keeping its normal faded foreground color.
+-- while letting the theme control its DiagnosticUnnecessary foreground color.
 
 local unused_ts_codes = {
   ["6133"] = true, -- variable/value declared but never read
@@ -436,8 +439,8 @@ vim.diagnostic.handlers.underline = {
 
     original_underline.show(namespace, bufnr, normal_diagnostics, opts)
 
-    -- Apply only DiagnosticUnnecessary to unused ranges: this keeps the faded
-    -- foreground color without combining it with an underline highlight.
+    -- Apply only DiagnosticUnnecessary to unused ranges, without combining
+    -- the theme's foreground color with an underline highlight.
     vim.api.nvim_buf_clear_namespace(bufnr, unused_fade_namespace, 0, -1)
 
     for _, diagnostic in ipairs(diagnostics) do

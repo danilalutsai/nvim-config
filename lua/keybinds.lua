@@ -46,21 +46,102 @@ do
     desc = "Jump backward",
   })
 
-  -- Ctrl-w, then c: close current buffer but keep Neovim open
-  vim.keymap.set("n", "<C-w>c", "<cmd>bdelete<CR>", {
+  -- Ghostty sends <C-i> apart from <Tab>, but Nvim falls back to the <Tab>
+  -- indent map when <C-i> has no map of its own. Pin it to the jumplist.
+  vim.keymap.set("n", "<C-i>", "<C-i>", {
     noremap = true,
     silent = true,
-    desc = "Delete current buffer",
+    desc = "Jump forward",
+  })
+
+  -- In the final window, close its buffer and return to another open buffer.
+  -- Show the welcome screen only when no other listed buffer remains.
+  vim.keymap.set("n", "<C-w>c", function()
+    if vim.fn.tabpagenr('$') == 1 and vim.fn.winnr('$') == 1 then
+      local current = vim.api.nvim_get_current_buf()
+      local has_other_buffer = false
+      for _, buffer in ipairs(vim.fn.getbufinfo({ buflisted = 1 })) do
+        if buffer.bufnr ~= current then
+          has_other_buffer = true
+          break
+        end
+      end
+
+      vim.cmd.bdelete()
+      if not has_other_buffer then
+        vim.cmd.intro()
+      end
+    else
+      vim.cmd.quit()
+    end
+  end, {
+    noremap = true,
+    silent = true,
+    desc = "Close current window",
   })
 
   -- clear search highlights when pressing <esc>
   vim.keymap.set('n', '<esc>', '<cmd>nohlsearch<cr>')
 
-  -- indent/outdent in visual mode
-  vim.keymap.set('v', '<tab>', '>gv')
+  -- indent/outdent: whole line from the indentation, otherwise only the text
+  -- right of the cursor (or selection start)
+  local function indent_unit()
+    return vim.bo.expandtab and string.rep(' ', vim.fn.shiftwidth()) or '\t'
+  end
+
+  -- 0-based byte column of the first non-blank character
+  local function indent_end(line)
+    return #line:match('^%s*')
+  end
+
+  vim.keymap.set('v', '<tab>', function()
+    local from, to = vim.fn.getpos('v'), vim.fn.getpos('.')
+    if vim.fn.mode() ~= 'v' or from[2] ~= to[2] then
+      return '>gv'
+    end
+
+    local lnum = from[2]
+    local first, last = math.min(from[3], to[3]), math.max(from[3], to[3])
+    if first - 1 <= indent_end(vim.fn.getline(lnum)) then
+      return '>gv'
+    end
+
+    vim.schedule(function()
+      local unit = indent_unit()
+      vim.api.nvim_buf_set_text(0, lnum - 1, first - 1, lnum - 1, first - 1, { unit })
+      vim.fn.setpos("'<", { 0, lnum, first + #unit, 0 })
+      vim.fn.setpos("'>", { 0, lnum, last + #unit, 0 })
+      vim.cmd.normal { 'gv', bang = true }
+    end)
+    return '<Esc>'
+  end, { expr = true, desc = 'Indent selection' })
   vim.keymap.set('v', '<s-tab>', '<gv')
-  vim.keymap.set('n', '<tab>', '>>')
-  vim.keymap.set('n', '<s-tab>', '<<')
+
+  vim.keymap.set('n', '<tab>', function()
+    if not vim.bo.modifiable then
+      return '<Ignore>'
+    end
+
+    local col = vim.fn.col('.') - 1
+    if col <= indent_end(vim.fn.getline('.')) then
+      return '>>'
+    end
+
+    return 'i' .. indent_unit() .. '<Esc>l'
+  end, { expr = true, desc = 'Indent line, or text right of cursor' })
+
+  vim.keymap.set('n', '<s-tab>', function()
+    local line = vim.fn.getline('.')
+    local col = vim.fn.col('.') - 1
+    if col <= indent_end(line) then
+      return '<<'
+    end
+
+    -- keep one blank so words left of the cursor don't get joined
+    local blanks = #line:sub(1, col):match('%s*$') - 1
+    local count = math.min(blanks, vim.bo.expandtab and vim.fn.shiftwidth() or 1)
+    return count > 0 and count .. 'X' or '<Ignore>'
+  end, { expr = true, desc = 'Outdent line, or text right of cursor' })
 
   -- Move current line or selected text
   vim.keymap.set('n', '<C-S-j>', '<cmd>move .+1<CR>==', { desc = 'Move line down' })
@@ -68,54 +149,19 @@ do
   vim.keymap.set('x', '<C-S-j>', ":move '>+1<CR>gv=gv", { desc = 'Move selection down' })
   vim.keymap.set('x', '<C-S-k>', ":move '<-2<CR>gv=gv", { desc = 'Move selection up' })
 
-  local function get_visual_selection()
-    local start_pos = vim.fn.getpos("'<")
-    local end_pos = vim.fn.getpos("'>")
-    local lines = vim.fn.getline(start_pos[2], end_pos[2])
-
-    if #lines == 0 then return '' end
-
-    lines[1] = string.sub(lines[1], start_pos[3])
-    lines[#lines] = string.sub(lines[#lines], 1, end_pos[3])
-
-    return table.concat(lines, '\n')
-  end
-
-  local function rename_matches(mode)
-    local old_name = mode == 'x' and get_visual_selection() or vim.fn.getreg('/')
-
-    if old_name == '' and mode == 'n' then
-      old_name = vim.fn.expand('<cword>')
-    end
-
-    if old_name == '' then return end
-
-    local new_name = vim.fn.input(('Rename "%s" to: '):format(old_name))
-
-    if new_name == '' then return end
-
-    local pattern = vim.fn.escape(old_name, [[\/]])
-
-    if mode == 'x' or vim.fn.getreg('/') ~= old_name then
-      pattern = [[\V]] .. pattern
-    end
-
-    local replacement = vim.fn.escape(new_name, [[\&/]])
-
-    vim.cmd(('keeppatterns %%s/%s/%s/g'):format(pattern, replacement))
-  end
-
-  vim.keymap.set('n', '<C-r>n', function()
-    rename_matches('n')
-  end, { desc = 'Rename word in buffer' })
-
+  -- Replace word under cursor in the whole file; live preview via inccommand
+  -- y = replace, n = skip, a = all remaining, q = quit
   vim.keymap.set('n', '<leader>rn', function()
-    rename_matches('n')
-  end, { desc = 'Rename search matches in buffer' })
+    require('plugins.search_replace').start()
+  end, { desc = 'Review and replace search matches' })
 
-  vim.keymap.set('x', '<C-r>n', function()
-    rename_matches('x')
-  end, { desc = 'Rename selection in buffer' })
+  vim.keymap.set('x', '<leader>rn', function()
+    local text = table.concat(vim.fn.getregion(vim.fn.getpos('v'), vim.fn.getpos('.'), { type = vim.fn.mode() }), '\n')
+    vim.api.nvim_feedkeys(vim.keycode('<Esc>'), 'nx', false)
+    require('plugins.search_replace').start(text)
+  end, { desc = 'Review and replace selection' })
+
+  vim.keymap.set('n', '<leader>rw', [[:%s/\<<C-r><C-w>\>//gc<Left><Left><Left>]], { desc = 'Replace word in file' })
 
   -- Line navigation
   vim.keymap.set('n', '<S-l>', '$', { desc = 'Go to end of line' })
@@ -131,96 +177,90 @@ do
     desc = 'To toggled line start',
   })
 
-  -- Window commands
-  vim.keymap.set('n', '<C-w>v', '<cmd>vnew<CR>', { desc = 'Open new vertical window' })
-  vim.keymap.set('n', '<C-w>s', '<cmd>new<CR>', { desc = 'Open new horizontal window' })
-  vim.keymap.set('n', '<C-w>x', '<cmd>close<CR>', { desc = 'Close current window' })
-  -- Resize submode: <C-w> H/J/K/L resizes once, then h/j/k/l keep resizing
-  -- until any other key. Holding a key auto-repeats, so it feels continuous.
-  -- <C-w> can't be held itself, which is why the submode exists.
-  local resize_cmds = {
-    h = 'vertical resize +2',
-    l = 'vertical resize -2',
-    j = 'resize -2',
-    k = 'resize +2',
-  }
+  -- Start with zl/zh, then repeat l/h to scroll eight columns at a time.
+  local function horizontal_scroll_mode(key)
+    local count = vim.v.count1
+    local scroll_step = 8
 
-  local CTRL_W = vim.api.nvim_replace_termcodes('<C-w>', true, false, true)
-
-  local function resize_mode(key)
     while true do
-      -- Swallow a repeated <C-w> so it can't combine with the next key into
-      -- Vim's built-in <C-w>H, which moves the window instead of resizing.
-      if key == CTRL_W then
-        local ok, char = pcall(vim.fn.getcharstr)
-        if not ok then return end
-        key = char
-      end
-
-      local cmd = resize_cmds[key:lower()]
-
-      if not cmd then
-        -- Not a resize key: hand it back to Neovim and leave the submode.
-        vim.api.nvim_feedkeys(key, 'm', false)
+      if key ~= 'l' and key ~= 'h' then
+        if key ~= '\027' then
+          vim.api.nvim_feedkeys(key, 'm', false)
+        end
         return
       end
 
-      vim.cmd(cmd)
+      vim.cmd('normal! ' .. (count * scroll_step) .. 'z' .. key)
       vim.cmd('redraw')
+      count = 1
 
-      local ok, char = pcall(vim.fn.getcharstr)
+      local ok, next_key = pcall(vim.fn.getcharstr)
       if not ok then return end
-      key = char
+      key = next_key
     end
   end
 
-  for _, key in ipairs({ 'H', 'J', 'K', 'L' }) do
+  vim.keymap.set('n', 'zl', function()
+    horizontal_scroll_mode('l')
+  end, { desc = 'Scroll right eight columns (repeat l)' })
+  vim.keymap.set('n', 'zh', function()
+    horizontal_scroll_mode('h')
+  end, { desc = 'Scroll left eight columns (repeat h)' })
+
+  -- Window commands
+  vim.keymap.set('n', '<C-w>v', '<cmd>vnew<CR>', { desc = 'Open new vertical window' })
+  vim.keymap.set('n', '<C-w>s', '<cmd>new<CR>', { desc = 'Open new horizontal window' })
+  vim.keymap.set('n', '<C-w>x', function()
+    if vim.fn.tabpagenr('$') > 1 then
+      vim.cmd.tabclose()
+    else
+      vim.cmd.enew()
+    end
+  end, { desc = 'Close current tab' })
+  -- Start with <C-w>, then hold a standard resize key to repeat.
+  -- Terminals don't report key releases; leave after one second without input.
+  local resize_commands = {
+    ['>'] = 'vertical resize +1',
+    ['<'] = 'vertical resize -1',
+    ['+'] = 'resize +1',
+    ['-'] = 'resize -1',
+    ['='] = 'wincmd =',
+  }
+
+  local function repeat_resize(key, count)
+    while resize_commands[key] do
+      for _ = 1, count do
+        vim.cmd(resize_commands[key])
+      end
+      vim.cmd('redraw')
+      count = 1
+
+      local next_key
+      local ok, received = pcall(vim.wait, 1000, function()
+        local input = vim.fn.getcharstr(0)
+        if input ~= '' then
+          next_key = input
+          return true
+        end
+        return false
+      end, 20)
+      if not ok or not received then return end
+      key = next_key
+    end
+    -- Preserve normal input when another key ends resize mode.
+    vim.api.nvim_feedkeys(key, 'm', false)
+  end
+
+  for key in pairs(resize_commands) do
     vim.keymap.set('n', '<C-w>' .. key, function()
-      resize_mode(key)
-    end, { desc = 'Resize window (repeatable)' })
+      repeat_resize(key, vim.v.count1)
+    end, { desc = 'Resize window (hold to repeat)' })
   end
   vim.keymap.set('n', 'N', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
   vim.keymap.set('n', 'P', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
   vim.keymap.set('n', '<C-n>', 'n', { desc = 'Next search result' })
   vim.keymap.set('n', '<C-p>', 'N', { desc = 'Previous search result' })
   vim.keymap.set('n', 'zz', 'zt', { desc = 'Place current line at top' })
-  -- No <leader>cd here: plugins/oil.lua sets it (oil with the preview split).
-  -- keybinds.lua is required after plugins in init.lua, so a map here would win
-  -- over oil's. To go back to netrw on that key, comment 'oil' out of
-  -- plugins/init.lua and put `vim.keymap.set('n', '<leader>cd',
-  -- '<cmd>Explore<CR>')` back here -- the netrw maps below stay wired either way.
-  -- :Explore replaces the file in the window rather than opening a split, so
-  -- closing netrw means going back to the buffer that was there. Falls back to
-  -- closing the window when netrw is a split, and does nothing when it is the
-  -- only thing on screen (`nvim .`) -- there is nothing to return to.
-  local function close_netrw()
-    local alt = vim.fn.bufnr '#'
-
-    if alt ~= -1 and vim.api.nvim_buf_is_valid(alt) and vim.bo[alt].filetype ~= 'netrw' then
-      vim.cmd.buffer(alt)
-    elseif #vim.api.nvim_list_wins() > 1 then
-      vim.cmd.close()
-    end
-  end
-
-  -- netrw: Tab/S-Tab to descend and ascend, a/A to create, d/D to delete.
-  -- All remap = true because they stand on netrw's own <CR>, -, %, d and D maps.
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = 'netrw',
-    callback = function(event)
-      -- cursorline is off globally; netrw gets it so the current row is visible.
-      vim.opt_local.cursorline = true
-
-      local opts = { buffer = event.buf, remap = true }
-      vim.keymap.set('n', '<Tab>', '<CR>', vim.tbl_extend('force', opts, { desc = 'Open file or folder' }))
-      vim.keymap.set('n', '<S-Tab>', '-', vim.tbl_extend('force', opts, { desc = 'Go up folder' }))
-      vim.keymap.set('n', 'a', '%', vim.tbl_extend('force', opts, { desc = 'Add file' }))
-      vim.keymap.set('n', 'A', 'd', vim.tbl_extend('force', opts, { desc = 'Add directory' }))
-      -- netrw's own `d` is mkdir, which moved to A above; both d and D delete.
-      vim.keymap.set('n', 'd', 'D', vim.tbl_extend('force', opts, { desc = 'Delete file or folder' }))
-      vim.keymap.set('n', '<C-c>', close_netrw, { buffer = event.buf, desc = 'Close explorer' })
-    end,
-  })
 
   vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
   vim.keymap.set('n', '<leader>d', function()
@@ -234,28 +274,34 @@ do
   vim.keymap.set("n", "]f", "]m", { desc = "Next function" })
   vim.keymap.set("n", "[f", "[m", { desc = "Previous function" })
 
-  -- Merge conflicts: choose left/ours or right/theirs
-  vim.keymap.set("n", "grch", "<cmd>diffget //2<CR>", {
-    desc = "Choose left conflict version",
-    silent = true,
-  })
+  -- Merge conflicts (diff mode only; otherwise keep built-in behavior)
+  local function diff_map(lhs, cmd, desc)
+    vim.keymap.set("n", lhs, function()
+      return vim.wo.diff and ("<cmd>" .. cmd .. "<CR>") or lhs
+    end, { expr = true, silent = true, desc = desc })
+  end
 
-  vim.keymap.set("n", "grcl", "<cmd>diffget //3<CR>", {
-    desc = "Choose right conflict version",
-    silent = true,
-  })
+  diff_map("gh", "diffget //2", "Choose left conflict version")
+  diff_map("gl", "diffget //3", "Choose right conflict version")
 
-  -- Merge conflicts: choose the entire file
-  vim.keymap.set("n", "grcH", "<cmd>Gread //2<CR>", {
-    desc = "Choose entire file from ours/left",
-    silent = true,
-  })
+  -- Visual mode: only take the selected lines instead of the whole chunk
+  local function diff_vmap(lhs, cmd, desc)
+    vim.keymap.set("x", lhs, function()
+      return vim.wo.diff and (":" .. cmd .. "<CR>") or lhs
+    end, { expr = true, silent = true, desc = desc })
+  end
 
-  vim.keymap.set("n", "grcL", "<cmd>Gread //3<CR>", {
-    desc = "Choose entire file from theirs/right",
-    silent = true,
-  })
+  diff_vmap("gh", "diffget //2", "Choose selected lines from left")
+  diff_vmap("gl", "diffget //3", "Choose selected lines from right")
+  diff_map("gH", "Gread //2", "Choose entire file from ours/left")
+  diff_map("gL", "Gread //3", "Choose entire file from theirs/right")
 
   vim.keymap.set("n", "D", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+
+-- clear search highlights and multicursors when pressing <esc>
+vim.keymap.set('n', '<esc>', function()
+  vim.cmd.nohlsearch()
+  vim.api.nvim_buf_clear_namespace(0, vim.api.nvim_create_namespace('nvim.multicursor'), 0, -1)
+end, { desc = 'Clear search highlight and multicursors' })
 
 end

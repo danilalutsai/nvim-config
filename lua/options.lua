@@ -1,11 +1,12 @@
 do
   vim.loader.enable()
 
-  -- No g:netrw_bufsettings override. netrw's own default is
-  -- "noma nomod nonu nobl nowrap ro nornu"; this used to swap that nonu for
-  -- nu and drop the nornu, which left the listing with a number column that
-  -- the global relativenumber below turned into hybrid numbering -- relative
-  -- counts down the file names, absolute on the cursor row.
+  -- oil.nvim is the file explorer. Disable netrw and nightly's built-in
+  -- directory viewer (runtime/plugin/dir.lua) so neither grabs `nvim .` or
+  -- `:e dir/` before oil does.
+  vim.g.loaded_netrw = 1
+  vim.g.loaded_netrwPlugin = 1
+  vim.g.loaded_nvim_dir_plugin = true
 
   vim.g.mapleader = " "
   vim.g.maplocalleader = " "
@@ -15,6 +16,11 @@ do
   vim.o.number = true
   vim.o.relativenumber = true
   vim.o.numberwidth = 4
+  -- Wrap long lines visually at the window edge, keeping words together.
+  vim.o.wrap = true
+  vim.o.linebreak = true
+  -- Conventional code-width guide; wrapping does not insert newlines.
+  vim.o.colorcolumn = "80"
   -- Hybrid numbering: absolute on the cursor row, relative everywhere else, and
   -- nothing on the continuation rows of a wrapped line (v:virtnum > 0 there).
   --
@@ -51,7 +57,6 @@ do
   })
 
   vim.o.textwidth = 0
-  vim.o.colorcolumn = '81'
   vim.opt.formatoptions:remove({ 't', 'c' })
 
   vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
@@ -64,7 +69,7 @@ do
 
   vim.o.mouse = 'a'
   vim.o.showmode = false
-  vim.opt.guicursor = 'n-v-c-sm:block-blinkon0-blinkoff0,i-ci-ve:ver25-blinkon0-blinkoff0,r-cr-o:hor20-blinkon0-blinkoff0,t:block-blinkon0-blinkoff0-TermCursor'
+  vim.opt.guicursor = 'n-v-c-sm:block-blinkon0-blinkoff0-Cursor/lCursor,i-ci-ve:block-blinkwait200-blinkon200-blinkoff200-Cursor/lCursor,r-cr-o:block-blinkon0-blinkoff0-Cursor/lCursor,t:block-blinkon0-blinkoff0-TermCursor'
 
   -- Smart automatic code folding using Tree-sitter
   function _G.treesitter_foldexpr()
@@ -86,7 +91,18 @@ do
   vim.o.foldcolumn = "0"
   vim.o.foldminlines = 1
   vim.o.foldtext = 'v:lua.fold_text()'
-  vim.opt.fillchars:append({ fold = ' ' })
+  -- Draw subtle boundaries between split windows. Fugitive relies heavily on
+  -- splits for its status, index, and commit-message panes.
+  vim.opt.fillchars:append({
+    fold = ' ',
+    vert = '│',
+    horiz = '─',
+    horizup = '┴',
+    horizdown = '┬',
+    vertleft = '┤',
+    vertright = '├',
+    verthoriz = '┼',
+  })
 
   function _G.fold_text()
     local line = vim.fn.getline(vim.v.foldstart):gsub('^%s+', '')
@@ -159,7 +175,34 @@ do
 
   vim.o.inccommand = 'split'
   vim.o.cursorline = false
+  -- Highlight the quickfix/location-list row with Telescope's selection color.
+  vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter', 'WinEnter' }, {
+    group = vim.api.nvim_create_augroup('QuickfixCursorLine', { clear = true }),
+    callback = function()
+      if vim.bo.filetype == 'qf' then
+        if not vim.w.quickfix_cursorline_restore then
+          vim.w.quickfix_cursorline_restore = {
+            cursorline = vim.wo.cursorline,
+            cursorlineopt = vim.wo.cursorlineopt,
+            winhighlight = vim.wo.winhighlight,
+          }
+        end
+        vim.wo.cursorline = true
+        vim.wo.cursorlineopt = 'line'
+        vim.opt_local.winhighlight:append({ CursorLine = 'QuickFixLine' })
+      elseif vim.w.quickfix_cursorline_restore then
+        local previous = vim.w.quickfix_cursorline_restore
+        vim.wo.cursorline = previous.cursorline
+        vim.wo.cursorlineopt = previous.cursorlineopt
+        vim.wo.winhighlight = previous.winhighlight
+        vim.w.quickfix_cursorline_restore = nil
+      end
+    end,
+  })
   vim.o.scrolloff = 12
 
+  -- Ask before saving or discarding changes when quitting or closing a buffer.
+  vim.o.autowrite = false
+  vim.o.autowriteall = false
   vim.o.confirm = true
 end

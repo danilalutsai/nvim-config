@@ -1,67 +1,38 @@
 vim.pack.add { 'https://github.com/nvim-lualine/lualine.nvim' }
 
-local colors = {
-  base = '#191724',
-  -- Background of every non-mode section. Ghostty's `background` is #14141f, so
-  -- rose-pine's own #1f1d2e sat only a few points above it and the bar had no
-  -- visible edge. catppuccin's surface0 (#313244) gave it one but still read as
-  -- a faint band; surface1 is the next step up and makes the bar a distinct
-  -- block against that ground. Same step the tmux window tabs took in
-  -- ~/.config/tmux/tmux.conf, so the two bars sit at matching weights.
-  status = '#45475a',
-  muted = '#6e6a86',
-  text = '#cdd6f4',
-  love = '#eb6f92',
-  gold = '#f6c177',
-  rose = '#ebbcba',
-  pine = '#31748f',
-  foam = '#9ccfd8',
-  iris = '#c4a7e7',
-}
+local status_bg = '#282828'
+local status_text = '#d4d4d4'
+local theme = vim.deepcopy(require('lualine.themes.auto'))
 
-local rose_pine_status = {
-  normal = {
-    a = { fg = colors.base, bg = colors.rose, gui = 'bold' },
-    b = { fg = colors.text, bg = colors.status },
-    c = { fg = colors.text, bg = colors.status },
-  },
-  insert = {
-    a = { fg = colors.base, bg = colors.foam, gui = 'bold' },
-    b = { fg = colors.text, bg = colors.status },
-    c = { fg = colors.text, bg = colors.status },
-  },
-  visual = {
-    a = { fg = colors.base, bg = colors.iris, gui = 'bold' },
-    b = { fg = colors.text, bg = colors.status },
-    c = { fg = colors.text, bg = colors.status },
-  },
-  replace = {
-    a = { fg = colors.base, bg = colors.love, gui = 'bold' },
-    b = { fg = colors.text, bg = colors.status },
-    c = { fg = colors.text, bg = colors.status },
-  },
-  command = {
-    a = { fg = colors.base, bg = colors.gold, gui = 'bold' },
-    b = { fg = colors.text, bg = colors.status },
-    c = { fg = colors.text, bg = colors.status },
-  },
-  inactive = {
-    a = { fg = colors.muted, bg = colors.status },
-    b = { fg = colors.muted, bg = colors.status },
-    c = { fg = colors.muted, bg = colors.status },
-  },
-}
+-- Use regular text on one continuous background in every mode.
+for _, mode in pairs(theme) do
+  if type(mode) == 'table' then
+    for _, section in pairs(mode) do
+      if type(section) == 'table' then
+        section.bg = status_bg
+        section.fg = status_text
+        section.gui = 'none'
+      end
+    end
+  end
+end
 
 local function block(component, opts)
   return vim.tbl_extend('force', {
     component,
     separator = '',
     padding = { left = 0, right = 1 },
+    color = { fg = status_text, bg = status_bg, gui = 'none' },
   }, opts or {})
 end
 
 local function current_filetype()
   return vim.bo.filetype == '' and '' or vim.bo.filetype
+end
+
+local function current_location()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  return string.format('%d:%d', cursor[1], cursor[2] + 1)
 end
 
 local function current_filename()
@@ -91,6 +62,18 @@ local function current_filename()
   return path
 end
 
+local multicursor_ns = vim.api.nvim_create_namespace 'nvim.multicursor'
+
+local function current_multicursor()
+  local cursors = #vim.api.nvim_buf_get_extmarks(0, multicursor_ns, 0, -1, {})
+
+  if cursors == 0 then
+    return ''
+  end
+
+  return string.format('mc:%d %s', cursors, vim.bo.follow and 'follow' or 'single')
+end
+
 local git_cache = { value = '', time = 0, cwd = nil }
 
 local function current_branch()
@@ -112,7 +95,7 @@ local function current_branch()
 
     if result ~= '' then
       git_cache.value = 'git:(' .. result .. ')'
-      return git_cache.value
+      return git_cache.value 'hello';
     end
   end
 
@@ -123,25 +106,39 @@ end
 require('lualine').setup {
   options = {
     globalstatus = true,
-    theme = rose_pine_status,
+    theme = theme,
     component_separators = '',
     section_separators = '',
   },
   sections = {
     lualine_a = {},
     lualine_b = {
-      block(current_filename, { color = { fg = colors.text, bg = colors.status } }),
+      block(current_filename),
     },
     lualine_c = {},
     lualine_x = {
+      block(current_multicursor),
       block(current_branch),
-      block 'diff',
+      block('diff', { colored = false }),
       block(current_filetype),
     },
     lualine_y = {},
     lualine_z = {
-      block('progress', { color = { fg = colors.text, bg = colors.status } }),
-      block('location', { padding = { left = 0, right = 1 }, color = { fg = colors.text, bg = colors.status } }),
+      block(current_location),
+      block 'progress',
     },
   },
 }
+
+-- `q=` toggles 'follow' without moving the cursor or firing OptionSet,
+-- so run the builtin and redraw right away.
+vim.keymap.set('n', 'q=', function()
+  vim.cmd.normal { (vim.v.count > 0 and vim.v.count or '') .. 'q=', bang = true }
+  require('lualine').refresh()
+end, { desc = 'Toggle multicursor follow' })
+
+-- Cover any unused statusline cells outside Lualine's rendered sections.
+for _, group in ipairs({ 'StatusLine', 'StatusLineNC' }) do
+  local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+  vim.api.nvim_set_hl(0, group, vim.tbl_extend('force', hl, { fg = status_text, bg = status_bg, bold = false, italic = false }))
+end

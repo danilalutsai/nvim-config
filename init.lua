@@ -9,6 +9,9 @@ vim.api.nvim_create_autocmd("OptionSet", {
     if vim.wo.diff then
       vim.wo.wrap = false
     end
+    -- :diffthis (fugitive's dv, :Gvdiffsplit) only binds scrolling; bind the
+    -- cursor too so it moves in step across diff windows, like diffview.
+    vim.wo.cursorbind = vim.wo.diff
   end,
 })
 
@@ -52,7 +55,7 @@ do
     desc = 'Highlight when yanking (copying) text',
     group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
     callback = function()
-      vim.hl.on_yank()
+      vim.hl.hl_op()
     end,
   })
 end
