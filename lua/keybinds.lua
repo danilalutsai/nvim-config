@@ -261,7 +261,6 @@ do
   vim.keymap.set('n', '<C-n>', 'n', { desc = 'Next search result' })
   vim.keymap.set('n', '<C-p>', 'N', { desc = 'Previous search result' })
   vim.keymap.set('n', 'zz', 'zt', { desc = 'Place current line at top' })
-  -- No <leader>c here: plugins/oil.lua sets it (oil with the preview split).
 
   vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
   vim.keymap.set('n', '<leader>d', function()
