@@ -189,7 +189,6 @@ do
   -- over oil's. To go back to netrw on that key, comment 'oil' out of
   -- plugins/init.lua and put `vim.keymap.set('n', '<leader>cd',
   -- '<cmd>Explore<CR>')` back here -- the netrw maps below stay wired either way.
-
   -- :Explore replaces the file in the window rather than opening a split, so
   -- closing netrw means going back to the buffer that was there. Falls back to
   -- closing the window when netrw is a split, and does nothing when it is the
