@@ -261,6 +261,9 @@ do
   vim.keymap.set('n', '<C-n>', 'n', { desc = 'Next search result' })
   vim.keymap.set('n', '<C-p>', 'N', { desc = 'Previous search result' })
   vim.keymap.set('n', 'zz', 'zt', { desc = 'Place current line at top' })
+  -- gw, not gq: gq goes through the LSP formatexpr, which won't wrap lines.
+  vim.keymap.set('n', '<leader>w', 'gwip', { desc = 'Wrap paragraph to textwidth' })
+  vim.keymap.set('x', '<leader>w', 'gw', { desc = 'Wrap selection to textwidth' })
 
   vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
   vim.keymap.set('n', '<leader>d', function()
