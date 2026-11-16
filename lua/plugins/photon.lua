@@ -18,7 +18,7 @@ local colors = {
   subtle =             '#444444',
   match_paren =        '#6a6a6a',
   match_paren_bg =     '#0f0f0f',
-  match_paren_fg =     '#cc4545',
+  match_paren_fg =     '#ff4f4f',
   comment =            '#626262',
   muted =              '#767676',
   yellow =             '#ded362',
@@ -34,19 +34,30 @@ local colors = {
   -- applies its colors last.
   diff_add =           '#022800',
   diff_delete =        '#3d0101',
-  terminal = {
-    '#3a3a3a', '#d75f5f', '#84c462', '#ded362',
-    '#7f9fcf', '#9f72d4', '#74b8b0', '#b2b2b2',
-    '#626262', '#e27d7d', '#a3d685', '#e8de85',
-    '#9cb8e0', '#b892e0', '#95ccc6', '#e6e6e6',
-  },
 }
+
+-- :terminal takes its 16 ANSI colors from the Ghostty config, so terminal
+-- colors are set in one place: the `palette = N=#rrggbb` lines there.
+local function ghostty_palette()
+  local config_home = vim.env.XDG_CONFIG_HOME or vim.fn.expand('~/.config')
+  local path = config_home .. '/ghostty/config'
+  local palette = {}
+  if vim.fn.filereadable(path) == 0 then return palette end
+
+  for _, line in ipairs(vim.fn.readfile(path)) do
+    local index, color = line:match('^%s*palette%s*=%s*(%d+)%s*=%s*(#%x%x%x%x%x%x)')
+    if index and tonumber(index) <= 15 then
+      palette[tonumber(index)] = color
+    end
+  end
+  return palette
+end
 
 local function apply_text_weights()
   if vim.g.colors_name ~= 'photon' then return end
 
-  -- Only matching pairs are bold; MatchTagAlways reuses MatchParen for tags.
-  local bold_groups = { MatchParen = true, MatchTag = true }
+  -- Only matching pairs are bold; vim-matchup's MatchWord links to MatchParen.
+  local bold_groups = { MatchParen = true }
   for group, spec in pairs(vim.api.nvim_get_hl(0, {})) do
     -- Linked groups inherit their target's color and weight.
     if not spec.link then
@@ -102,6 +113,7 @@ local function apply_colors()
     ['@markup.italic'] = { fg = c.foreground },
     ['@markup.strikethrough'] = { fg = c.types },
     ['@markup.raw'] = { fg = c.types },
+    ['@markup.raw.markdown_inline'] = { fg = c.green }, -- `inline code`
     ['@markup.raw.block'] = { fg = c.types },
     ['@markup.link'] = { fg = c.foreground },
     ['@markup.link.label'] = { fg = c.foreground },
@@ -254,8 +266,11 @@ local function apply_colors()
 
   apply_text_weights()
 
-  for index, color in ipairs(c.terminal) do
-    vim.g['terminal_color_' .. (index - 1)] = color
+  -- Replace upstream photon's terminal colors with Ghostty's. A color missing
+  -- from the Ghostty config falls back to Neovim's default for that slot.
+  local palette = ghostty_palette()
+  for index = 0, 15 do
+    vim.g['terminal_color_' .. index] = palette[index]
   end
 end
 

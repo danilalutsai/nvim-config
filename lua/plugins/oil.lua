@@ -184,6 +184,11 @@ oil.setup({
   -- dd with them. Keeps a cut alive while navigating to the target directory.
   cleanup_delay_ms = false,
 
+  -- Those kept buffers would otherwise show a stale listing when reopened.
+  -- Reload a folder when files change on disk; buffers with unsaved edits are
+  -- left alone.
+  watch_for_changes = true,
+
   columns = {
     "icon",
   },

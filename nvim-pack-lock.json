@@ -5,10 +5,6 @@
       "src": "https://github.com/L3MON4D3/LuaSnip",
       "version": "2.0.0 - 3.0.0"
     },
-    "MatchTagAlways": {
-      "rev": "352eb479a4ad1608e0880b79ab2357aac2cf4bed",
-      "src": "https://github.com/Valloric/MatchTagAlways"
-    },
     "base16-vim": {
       "rev": "3be3cd82cd31acfcab9a41bad853d9c68d30478d",
       "src": "https://github.com/chriskempson/base16-vim"
@@ -170,6 +166,10 @@
     "vim-fugitive": {
       "rev": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0",
       "src": "https://github.com/tpope/vim-fugitive"
+    },
+    "vim-matchup": {
+      "rev": "0106b1afd4a2f7e1098037b5ceb161bab7471088",
+      "src": "https://github.com/andymass/vim-matchup"
     },
     "vim-surround": {
       "rev": "3d188ed2113431cf8dac77be61b842acb64433d9",
