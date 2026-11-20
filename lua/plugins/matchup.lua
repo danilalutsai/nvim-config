@@ -2,6 +2,8 @@
 -- Tags and words use MatchWord, which links to MatchParen, so photon.lua's
 -- match colors cover both.
 vim.g.matchup_matchparen_offscreen = {}
+-- No "◀ function" hint after a closing bracket.
+vim.g.matchup_treesitter_disable_virtual_text = true
 -- Needed for the surround highlight below.
 vim.g.matchup_matchparen_deferred = 1
 
