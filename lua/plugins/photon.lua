@@ -264,6 +264,7 @@ local function apply_colors()
     end
   end
 
+
   apply_text_weights()
 
   -- Replace upstream photon's terminal colors with Ghostty's. A color missing
