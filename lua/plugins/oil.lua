@@ -335,16 +335,19 @@ local function restore_regular_window_line_numbers(winid)
     return
   end
 
-  -- Oil's preview buffers can be real file buffers too. Apply the global
-  -- hybrid numbering to every regular file window, including those previews.
-  vim.wo[winid].number = vim.o.number
-  vim.wo[winid].relativenumber = vim.o.relativenumber
-  -- Oil's preview window can leave a window-local empty statuscolumn behind
-  -- when a regular file replaces its preview buffer. Restore the global
-  -- hybrid column for that regular file.
-  if vim.wo[winid].statuscolumn == "" then
-    vim.wo[winid].statuscolumn = vim.go.statuscolumn
+  local preview_win = require("oil.util").get_preview_win()
+  if winid == preview_win and vim.api.nvim_get_current_win() ~= preview_win then
+    vim.wo[winid].number = false
+    vim.wo[winid].relativenumber = false
+    return
   end
+
+  -- Oil can leave window-local numbering and statuscolumn overrides behind
+  -- when a regular buffer replaces its listing or preview. Reapply the normal
+  -- hybrid setup to regular file windows.
+  vim.wo[winid].number = true
+  vim.wo[winid].relativenumber = true
+  vim.wo[winid].statuscolumn = vim.go.statuscolumn
 end
 
 -- Also repair already-open windows when this config is sourced again.
@@ -355,7 +358,13 @@ end
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "WinEnter" }, {
   group = "OilAutoPreview",
   callback = function()
-    restore_regular_window_line_numbers(vim.api.nvim_get_current_win())
+    local winid = vim.api.nvim_get_current_win()
+    restore_regular_window_line_numbers(winid)
+    vim.schedule(function()
+      if vim.api.nvim_win_is_valid(winid) then
+        restore_regular_window_line_numbers(winid)
+      end
+    end)
   end,
 })
 
@@ -364,10 +373,12 @@ vim.api.nvim_create_autocmd("WinEnter", {
   callback = function()
     local winid = vim.api.nvim_get_current_win()
     local preview_win = require("oil.util").get_preview_win()
-    if winid == preview_win then
-      vim.wo[winid].number = true
-      vim.wo[winid].relativenumber = true
-    elseif vim.bo[vim.api.nvim_win_get_buf(winid)].filetype == "oil" then
+    if preview_win and vim.api.nvim_win_is_valid(preview_win) then
+      local focused = winid == preview_win
+      vim.wo[preview_win].number = focused
+      vim.wo[preview_win].relativenumber = focused
+    end
+    if winid ~= preview_win and vim.bo[vim.api.nvim_win_get_buf(winid)].filetype == "oil" then
       vim.wo[winid].number = false
       vim.wo[winid].relativenumber = false
     end
