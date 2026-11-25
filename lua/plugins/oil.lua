@@ -68,9 +68,31 @@ local function resize_preview_split()
   end
 end
 
+local function initialize_oil_line_numbers()
+  local preview_win = require("oil.util").get_preview_win()
+  for _, winid in ipairs(vim.api.nvim_list_wins()) do
+    local bufnr = vim.api.nvim_win_get_buf(winid)
+    if vim.bo[bufnr].filetype == "oil" or winid == preview_win then
+      vim.wo[winid].number = false
+      vim.wo[winid].relativenumber = false
+      if winid == preview_win then
+        vim.wo[winid].statuscolumn = ""
+      end
+    end
+  end
+
+  -- Opening a preview normally leaves focus in Oil. If an open action does
+  -- focus the preview, show its numbers because it is already active.
+  if preview_win and vim.api.nvim_get_current_win() == preview_win then
+    vim.wo[preview_win].number = true
+    vim.wo[preview_win].relativenumber = true
+  end
+end
+
 local function open_oil_preview()
   oil.open_preview({ vertical = true }, function(err)
     if not err then
+      initialize_oil_line_numbers()
       resize_preview_split()
     end
   end)
@@ -218,7 +240,6 @@ oil.setup({
     number = false,
     relativenumber = false,
     signcolumn = "no",
-    statuscolumn = "  ",
     list = false,
     cursorline = true,
     winhighlight = "CursorLine:" .. CURSOR_LINE_HL,
@@ -226,13 +247,10 @@ oil.setup({
 
   preview_win = {
     update_on_cursor_moved = true,
-    preview_method = "fast_scratch",
+    preview_method = "load",
     win_options = {
-      -- Absolute numbers only: the cursor stays in the listing, so the global
-      -- relativenumber would just count from whatever line the preview opened
-      -- on. An empty statuscolumn falls back to Neovim's built-in number
-      -- column; the "  " the listing uses would blank the numbers out.
-      number = true,
+      -- Start without numbers; the preview gets them when it receives focus.
+      number = false,
       relativenumber = false,
       signcolumn = "no",
       statuscolumn = "",
@@ -285,6 +303,7 @@ oil.setup({
 local function open_oil_with_preview()
   oil.open(nil, { preview = { vertical = true } }, function(err)
     if not err then
+      initialize_oil_line_numbers()
       resize_preview_split()
     end
   end)
@@ -303,7 +322,55 @@ vim.api.nvim_create_autocmd("User", {
   group = vim.api.nvim_create_augroup("OilAutoPreview", { clear = true }),
   pattern = "OilEnter",
   callback = function()
-    vim.schedule(resize_preview_split)
+    vim.schedule(function()
+      initialize_oil_line_numbers()
+      resize_preview_split()
+    end)
+  end,
+})
+
+local function restore_regular_window_line_numbers(winid)
+  local bufnr = vim.api.nvim_win_get_buf(winid)
+  if vim.bo[bufnr].filetype == "oil" or vim.bo[bufnr].buftype ~= "" then
+    return
+  end
+
+  -- Oil's preview buffers can be real file buffers too. Apply the global
+  -- hybrid numbering to every regular file window, including those previews.
+  vim.wo[winid].number = vim.o.number
+  vim.wo[winid].relativenumber = vim.o.relativenumber
+  -- Oil's preview window can leave a window-local empty statuscolumn behind
+  -- when a regular file replaces its preview buffer. Restore the global
+  -- hybrid column for that regular file.
+  if vim.wo[winid].statuscolumn == "" then
+    vim.wo[winid].statuscolumn = vim.go.statuscolumn
+  end
+end
+
+-- Also repair already-open windows when this config is sourced again.
+for _, winid in ipairs(vim.api.nvim_list_wins()) do
+  restore_regular_window_line_numbers(winid)
+end
+
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "WinEnter" }, {
+  group = "OilAutoPreview",
+  callback = function()
+    restore_regular_window_line_numbers(vim.api.nvim_get_current_win())
+  end,
+})
+
+vim.api.nvim_create_autocmd("WinEnter", {
+  group = "OilAutoPreview",
+  callback = function()
+    local winid = vim.api.nvim_get_current_win()
+    local preview_win = require("oil.util").get_preview_win()
+    if winid == preview_win then
+      vim.wo[winid].number = true
+      vim.wo[winid].relativenumber = true
+    elseif vim.bo[vim.api.nvim_win_get_buf(winid)].filetype == "oil" then
+      vim.wo[winid].number = false
+      vim.wo[winid].relativenumber = false
+    end
   end,
 })
 
