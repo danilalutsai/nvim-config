@@ -217,8 +217,10 @@ do
       vim.cmd.enew()
     end
   end, { desc = 'Close current tab' })
-  -- Start with <C-w>, then hold a standard resize key to repeat.
-  -- Terminals don't report key releases; leave after one second without input.
+  -- Start with <C-w>, then press or hold a resize key (no <C-w>) to repeat.
+  -- The keys stay mapped buffer-locally until one second passes without a
+  -- resize; existing buffer mappings are restored afterwards. No on_key check:
+  -- kitty-protocol terminals send extra key events that would end it early.
   local resize_commands = {
     ['>'] = 'vertical resize +1',
     ['<'] = 'vertical resize -1',
@@ -226,35 +228,54 @@ do
     ['-'] = 'resize -1',
     ['='] = 'wincmd =',
   }
+  -- Kitty-keyboard terminals (Ghostty, herdr) can send shifted symbols as
+  -- <S-.> instead of >, so accept both spellings of every resize key.
+  local resize_keys = {
+    ['>'] = '>', ['<S-.>'] = '>', ['<S->>'] = '>',
+    ['<'] = '<', ['<S-,>'] = '<', ['<S-<>'] = '<',
+    ['+'] = '+', ['<S-=>'] = '+', ['<S-+>'] = '+',
+    ['-'] = '-',
+    ['='] = '=',
+  }
+  local resize_timer = vim.uv.new_timer()
+  local resize_state -- { buf = number, saved = { [key] = maparg dict } }
 
-  local function repeat_resize(key, count)
-    while resize_commands[key] do
-      for _ = 1, count do
-        vim.cmd(resize_commands[key])
+  local function stop_resize()
+    resize_timer:stop()
+    local state = resize_state
+    resize_state = nil
+    if not state or not vim.api.nvim_buf_is_valid(state.buf) then return end
+    vim.api.nvim_buf_call(state.buf, function()
+      for key in pairs(resize_keys) do
+        pcall(vim.keymap.del, 'n', key, { buffer = state.buf })
+        if state.saved[key] then vim.fn.mapset(state.saved[key]) end
       end
-      vim.cmd('redraw')
-      count = 1
-
-      local next_key
-      local ok, received = pcall(vim.wait, 1000, function()
-        local input = vim.fn.getcharstr(0)
-        if input ~= '' then
-          next_key = input
-          return true
-        end
-        return false
-      end, 20)
-      if not ok or not received then return end
-      key = next_key
-    end
-    -- Preserve normal input when another key ends resize mode.
-    vim.api.nvim_feedkeys(key, 'm', false)
+    end)
   end
 
-  for key in pairs(resize_commands) do
-    vim.keymap.set('n', '<C-w>' .. key, function()
-      repeat_resize(key, vim.v.count1)
-    end, { desc = 'Resize window (hold to repeat)' })
+  local function resize(key, count)
+    for _ = 1, count do
+      vim.cmd(resize_commands[key])
+    end
+    if not resize_state then
+      local buf = vim.api.nvim_get_current_buf()
+      resize_state = { buf = buf, saved = {} }
+      for lhs, cmd_key in pairs(resize_keys) do
+        local existing = vim.fn.maparg(lhs, 'n', false, true)
+        if existing.buffer == 1 then resize_state.saved[lhs] = existing end
+        vim.keymap.set('n', lhs, function()
+          resize(cmd_key, vim.v.count1)
+        end, { buffer = buf, nowait = true, desc = 'Resize window (repeat)' })
+      end
+    end
+    resize_timer:stop()
+    resize_timer:start(1000, 0, vim.schedule_wrap(stop_resize))
+  end
+
+  for lhs, cmd_key in pairs(resize_keys) do
+    vim.keymap.set('n', '<C-w>' .. lhs, function()
+      resize(cmd_key, vim.v.count1)
+    end, { desc = 'Resize window (press/hold key to repeat)' })
   end
   vim.keymap.set('n', 'N', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
   vim.keymap.set('n', 'P', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
